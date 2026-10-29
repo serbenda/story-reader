@@ -1,0 +1,18 @@
+{
+  "protagonistas": { "lectora": "Alaia", "hermana": "Lucía" },
+  "mascotas": {
+    "perro":  { "chico": "perrito",  "chica": "perrita",  "emoji": "🐶" },
+    "gato":   { "chico": "gatito",   "chica": "gatita",   "emoji": "🐱" },
+    "conejo": { "chico": "conejito", "chica": "conejita", "emoji": "🐰" },
+    "hamster":{ "chico": "hámster",  "chica": "hámster",  "emoji": "🐹" },
+    "pato":   { "chico": "patito",   "chica": "patita",   "emoji": "🐥" },
+    "zorro":  { "chico": "zorrito",  "chica": "zorrita",  "emoji": "🦊" }
+  },
+  "libros": [
+    {
+      "id": "bosque-susurros",
+      "carpeta": "bosque-susurros",
+      "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"]
+    }
+  ]
+}
