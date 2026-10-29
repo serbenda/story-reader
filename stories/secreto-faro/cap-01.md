@@ -81,7 +81,6 @@ Alaia abre su cuaderno y escribe: «Caso número uno: la noche sin luz».
 
 ## desaparece
 @fondo: casa
-@con: mascota
 
 ### aprendiz
 Por la mañana hace mucho sol.

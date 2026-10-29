@@ -8,7 +8,7 @@ pegatina: "🗼"
 
 ## faro
 @fondo: faro
-@con: mascota, buscado
+@con: mascota
 @noche
 
 ### aprendiz
