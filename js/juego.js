@@ -353,7 +353,7 @@
         <button class="boton boton-principal boton-grande" id="empezar">¡Vamos!</button>
         <p class="pista-pequena">Toca cualquier palabra para oírla.</p>
       </section>`;
-    $('#empezar').onclick = () => { Sonido.tocar('pagina'); pantallaPersonalizar(0, true); };
+    $('#empezar').onclick = () => { Sonido.tocar('pagina'); borrador = null; pantallaPersonalizar(0, true); };
   }
 
   // ───────── Pantalla: personalizar ─────────
@@ -365,7 +365,8 @@
   let borrador = null;
 
   function pantallaPersonalizar(paso, primeraVez) {
-    if (paso === 0 || !borrador) borrador = JSON.parse(JSON.stringify(E.perfil || perfilPorDefecto()));
+    // El borrador se crea al entrar; los cambios de cada paso se guardan en él hasta pulsar «¡Listo!»
+    if (!borrador) borrador = JSON.parse(JSON.stringify(E.perfil || perfilPorDefecto()));
     const P = CAT.protagonistas;
     const quien = paso === 0 ? 'alaya' : 'lucia';
     let opciones = '', vista = '', titulo = '';
@@ -479,7 +480,7 @@
       </section>`;
 
     $('#album').onclick = pantallaAlbum;
-    $('#vestir').onclick = () => pantallaPersonalizar(0, false);
+    $('#vestir').onclick = () => { borrador = null; pantallaPersonalizar(0, false); };
     puertaMayores($('#mayores'), pantallaAjustes);
     if (seguir) $('#seguir-leyendo').onclick = () => empezarCapitulo(seguir.libro, seguir.capIndex);
     $$('[data-libro-abrir]').forEach((b) => b.addEventListener('click', () => pantallaLibro(CAT.libros.find((l) => l.id === b.dataset.libroAbrir))));
