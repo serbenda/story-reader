@@ -48,6 +48,29 @@ En la pantalla de inicio, **mantén pulsado** el botón «⚙️ Mayores» dos s
 nivel, el tamaño de letra, cuánto perdona el micro, el modo sin micro y se puede borrar el progreso.
 El progreso se guarda en el propio navegador.
 
+### Informe de lectura
+
+Desde el menú para mayores, **📊 Ver el informe de lectura** muestra:
+
+- Lo de los últimos 7 días: frases leídas en voz alta, porcentaje a la primera (comparado con la
+  semana anterior), preguntas acertadas a la primera, minutos y capítulos.
+- Un gráfico de las dos últimas semanas con las frases leídas cada día.
+- **Palabras que le cuestan**: las que falla en el primer intento con el micro. Se pueden escuchar.
+- **Palabras conquistadas**: las que ya acierta (dos aciertos más que fallos).
+- Las últimas partidas, incluidas las que dejó a medias.
+- Una **recomendación de nivel** (subir, mantener o bajar) a partir de sus últimos capítulos,
+  con un botón para aplicarla.
+- **Copiar resumen**, para pegarlo en un mensaje (por ejemplo, a su profesora o logopeda).
+
+Los nombres propios no cuentan como palabras difíciles, porque el reconocedor de voz se equivoca
+mucho con ellos. Las partidas sin micro cuentan para las frases y los minutos, pero no para los
+porcentajes.
+
+### Palabras mágicas
+
+Al empezar cada capítulo, si hay al menos dos palabras que le cuestan, un animal del bosque le
+pide leer tres de ellas en voz alta para abrir el libro. Así repasa justo lo que necesita.
+
 ## Estructura
 
 ```

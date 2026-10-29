@@ -528,6 +528,60 @@ mark.pista .lupa { font-size: .7em; margin-right: .15em; }
 .interruptor input:checked + .pista-int::after { transform: translateX(22px); }
 .interruptor input:focus-visible + .pista-int { outline: 4px solid var(--cielo); outline-offset: 3px; }
 
+/* ───── Palabras mágicas (repaso) ───── */
+.tarjeta-repaso { border-color: var(--sol); background: #FFF4D6; }
+.tarjeta-repaso .voz-cabecera { color: #8A5A00; }
+.tarjeta-repaso .frase-voz { font-size: 1.2em; font-weight: 500; }
+
+/* ───── Informe para mayores ───── */
+.boton-informe { align-self: flex-start; }
+.informe { display: flex; flex-direction: column; gap: 18px; }
+.informe-titulo { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; justify-content: space-between; }
+.vacio-informe { padding: 14px 18px; border: 3px dashed var(--borde); border-radius: var(--radio); background: var(--hoja); }
+.vacio-informe p { margin: 0; }
+.cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.cifra { display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; border: 3px solid var(--tinta); border-radius: 18px; background: #FFFFFF; }
+.cifra b { font-family: var(--fuente-titulo); font-size: 2.3rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.cifra span { color: var(--tinta-suave); font-size: .95rem; }
+.tendencia { display: inline-block; margin-left: .3em; padding: 0 .5em; border-radius: 999px; font-weight: 600; font-size: .85rem; background: var(--papel-2); color: var(--tinta); }
+.tendencia.sube { background: var(--bien-fondo); color: var(--bien); }
+.tendencia.baja { background: #FBE3E9; color: var(--baya-osc); }
+.recomendacion { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 14px 16px; border-radius: 18px; border: 3px solid var(--borde); background: var(--hoja); }
+.recomendacion p { margin: 0; flex: 1 1 320px; min-width: 0; }
+.rec-etiqueta { font-weight: 600; padding: .2em .8em; border-radius: 999px; background: var(--papel-2); white-space: nowrap; }
+.rec-subir { border-color: var(--bien); } .rec-subir .rec-etiqueta { background: var(--bien-fondo); color: var(--bien); }
+.rec-bajar { border-color: var(--sol); } .rec-bajar .rec-etiqueta { background: var(--sol-claro); color: #8A5A00; }
+.rec-mantener .rec-etiqueta { background: var(--musgo-claro); color: var(--musgo-osc); }
+.tarjeta-informe { min-width: 0; padding: 16px 18px; border: 3px solid var(--borde); border-radius: var(--radio); background: var(--hoja); display: flex; flex-direction: column; gap: 10px; }
+.dos-columnas { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+@media (min-width: 860px) { .dos-columnas { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); } }
+.leyenda { display: flex; flex-wrap: wrap; gap: 16px; font-size: .95rem; color: var(--tinta-suave); }
+.leyenda i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; margin-right: 6px; vertical-align: -2px; }
+.l-primera, .g-primera { background: var(--musgo); fill: var(--musgo); }
+.l-resto, .g-resto { background: var(--sol); fill: var(--sol); }
+.grafico-sitio { overflow-x: auto; }
+.grafico { width: 100%; min-width: 520px; height: auto; display: block; }
+.g-rejilla { stroke: var(--borde); stroke-width: 1; }
+.g-eje { fill: var(--tinta-suave); font-family: var(--fuente-texto); font-size: 13px; font-variant-numeric: tabular-nums; }
+.g-num { font-size: 11px; }
+.g-hoy { fill: var(--tinta); font-weight: 700; }
+.g-valor { fill: var(--tinta); font-family: var(--fuente-texto); font-size: 12px; font-weight: 600; }
+.lista-palabras { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.lista-palabras li { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 6px 0; border-bottom: 2px dotted var(--borde); }
+.palabra-informe { border: 2px solid var(--tinta); border-radius: 12px; background: #FFFFFF; padding: .2em .7em; font-size: 1.25rem; font-weight: 500; letter-spacing: .04em; min-height: 44px; }
+.marcador { color: var(--bien); letter-spacing: .1em; font-size: 1rem; }
+.falta-marca { color: var(--borde); }
+.chip-ganada { background: var(--bien-fondo); border-color: var(--bien); color: var(--bien); min-height: 40px; }
+.tabla-sitio { overflow-x: auto; }
+.tabla { width: 100%; border-collapse: collapse; font-size: .95rem; min-width: 640px; }
+.tabla th { text-align: left; font-weight: 600; color: var(--tinta-suave); padding: 6px 8px; border-bottom: 2px solid var(--tinta); white-space: nowrap; }
+.tabla td { padding: 8px; border-bottom: 1px solid var(--borde); }
+.tabla .num { text-align: right; font-variant-numeric: tabular-nums; }
+.estado { display: inline-block; padding: .1em .6em; border-radius: 999px; font-size: .85rem; font-weight: 600; white-space: nowrap; }
+.est-ok { background: var(--bien-fondo); color: var(--bien); }
+.est-pausa { background: var(--sol-claro); color: #8A5A00; }
+.resumen-copia { width: 100%; font: inherit; font-size: .95rem; padding: 10px; border: 2px solid var(--tinta); border-radius: 12px; background: #FFFFFF; color: var(--tinta); }
+
 /* ───── Avisos y confeti ───── */
 #aviso {
   position: fixed;

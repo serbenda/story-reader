@@ -41,7 +41,9 @@
   const estadoInicial = () => ({
     perfil: null, nivel: 'aprendiz', progreso: {}, estrellas: 0, ofrecidos: {},
     album: { amigos: {}, tesoros: {}, pegatinas: {} },
-    ajustes: { tamano: 'normal', tolerancia: 'normal', sinMicro: false, resaltar: true, sonido: true }
+    ajustes: { tamano: 'normal', tolerancia: 'normal', sinMicro: false, resaltar: true, sonido: true },
+    registro: [],   // una entrada por partida (para el informe)
+    palabras: {}    // palabra → { f: fallos, a: aciertos, u: última vez }
   });
   let E = cargar();
   function cargar() {
@@ -67,6 +69,58 @@
 
   let CAT = null;   // catálogo de libros
   let J = null;     // partida en curso
+
+  // ───────── Registro de lectura (alimenta el informe y el repaso) ─────────
+  const claveDePalabra = (t) => String(t).toLowerCase().replace(/[^\p{L}]/gu, '');
+  // Los nombres propios no se cuentan: el reconocedor de voz se equivoca mucho con ellos
+  function nombresPropios() {
+    const s = new Set([CAT.protagonistas.lectora, CAT.protagonistas.hermana, E.perfil.mascota.nombre].map(claveDePalabra));
+    for (const l of CAT.libros) for (const a of Object.values(l.meta.ayudantes || {})) s.add(claveDePalabra(a.nombre));
+    return s;
+  }
+  function anotarPalabra(clave, bien) {
+    if (!clave || clave.length < 3) return;
+    const p = E.palabras[clave] || (E.palabras[clave] = { f: 0, a: 0, u: 0 });
+    if (bien) p.a++; else p.f++;
+    p.u = Date.now();
+  }
+  // Una palabra está conquistada cuando se ha acertado dos veces más de las que se ha fallado
+  const conquistada = (p) => p.f > 0 && p.a >= p.f + 2;
+  function palabrasDificiles() {
+    return Object.entries(E.palabras)
+      .filter(([, p]) => p.f > 0 && !conquistada(p))
+      .sort((x, y) => (y[1].f - y[1].a) - (x[1].f - x[1].a) || y[1].u - x[1].u);
+  }
+  function cerrarEscenaRegistro() {
+    if (!J || !J.reg || J.tEscena == null) return;
+    const seg = Math.min(600, Math.round((Date.now() - J.tEscena) / 1000));
+    J.reg.escenas.push({ id: J.escena.e.id, seg });
+    J.reg.seg += seg;
+    J.tEscena = null;
+  }
+  function guardarRegistro(terminado) {
+    if (!J || !J.reg || J.reg.guardado) return;
+    cerrarEscenaRegistro();
+    J.reg.guardado = true;
+    const { guardado, ...r } = J.reg;
+    r.terminado = terminado;
+    E.registro.push(r);
+    if (E.registro.length > 300) E.registro = E.registro.slice(-300);
+    guardar();
+  }
+  // Escena extra al empezar: leer en voz alta tres palabras que le cuestan
+  function escenaRepaso() {
+    const lista = palabrasDificiles().slice(0, 6);
+    if (lista.length < 2) return null;
+    const elegidas = barajar(lista).slice(0, 3).map(([k]) => k);
+    const texto = [
+      '{ayudante} ha escrito unas palabras mágicas en una hoja.',
+      'Para abrir el capítulo, hay que leerlas en voz alta.',
+      '> ' + elegidas.join('  ·  '),
+      '¡El libro empieza a brillar!'
+    ].join('\n');
+    return { id: 'repaso', repaso: true, palabras: elegidas, props: { fondo: 'bosque', con: ['ayudante'] }, niveles: { todos: [texto] } };
+  }
 
   // ───────── Sonidos (sin sonidos de error) ─────────
   const Sonido = (() => {
@@ -446,16 +500,29 @@
     const datos = prepararPartida(libro, cap);
     const escenas = cap.escenas.filter((e) => versionesPara(e, E.nivel));
     if (!escenas.length) { aviso('Este capítulo todavía no tiene textos para este nivel.'); return; }
-    J = { libro, cap, capIndex, escenas, i: 0, ...datos, semilla: Math.floor(Math.random() * 1e6), estrellas: 0, leidas: 0, cuaderno: [] };
+    const repaso = escenaRepaso();
+    if (repaso) escenas.unshift(repaso);
+    J = {
+      libro, cap, capIndex, escenas, i: 0, ...datos, semilla: Math.floor(Math.random() * 1e6), estrellas: 0, leidas: 0, cuaderno: [],
+      tEscena: null,
+      reg: {
+        fecha: Date.now(), libro: libro.id, cap: cap.id, titulo: cap.meta.titulo || cap.id, nivel: E.nivel,
+        micro: !(E.ajustes.sinMicro || !Voz.disponible()),
+        frases: 0, frasesPrimera: 0, intentos: 0, preguntas: 0, preguntasPrimera: 0,
+        repaso: repaso ? repaso.palabras : [], escenas: [], seg: 0
+      }
+    };
     Sonido.tocar('pagina');
     mostrarEscena();
   }
 
   function mostrarEscena() {
+    cerrarEscenaRegistro();
     const e = J.escenas[J.i];
     const plantilla = azar(versionesPara(e, E.nivel));
     const texto = Texto.rellenar(plantilla, J.vars);
     J.escena = { e, bloques: Texto.bloques(texto), k: 0 };
+    J.tEscena = Date.now();
 
     for (const c of e.props.con) if (c === 'ayudante' || c === 'ayudante2') E.album.amigos[J.ayudantes[c === 'ayudante' ? 0 : 1]] = true;
     guardar();
@@ -478,7 +545,7 @@
     let confirmar = false;
     $('#salir').onclick = (ev) => {
       if (!confirmar) { confirmar = true; ev.currentTarget.innerHTML = '¿Salir? Toca otra vez'; setTimeout(() => { confirmar = false; const b = $('#salir'); if (b) b.innerHTML = '🏠 <span class="solo-ancho">Casa</span>'; }, 3000); return; }
-      Voz.parar(); pantallaInicio();
+      Voz.parar(); guardarRegistro(false); pantallaInicio();
     };
     $('#cuaderno').onclick = verCuaderno;
     window.scrollTo({ top: 0 });
@@ -528,20 +595,21 @@
   function tarjetaVoz(b) {
     const tol = TOLERANCIAS[E.ajustes.tolerancia] || TOLERANCIAS.normal;
     const limpio = Texto.limpiarPistas(b.texto);
-    b.objetivo = []; b.intentos = 0;
+    b.objetivo = []; b.claves = []; b.intentos = 0;
+    const repaso = !!(J.escena && J.escena.e.repaso);
     const html = limpio.split(/\s+/).filter(Boolean).map((t) => {
       const nrm = Voz.normalizar(t).join('');
       if (!nrm) return `<span class="signo">${esc(t)}</span>`;
-      const k = b.objetivo.length; b.objetivo.push(nrm);
+      const k = b.objetivo.length; b.objetivo.push(nrm); b.claves.push(claveDePalabra(t));
       return `<span class="palabra" data-k="${k}">${esc(t)}</span>`;
     }).join(' ');
     b.marcadas = b.objetivo.map(() => false);
     const sinMicro = E.ajustes.sinMicro || !Voz.disponible();
 
     const el = document.createElement('div');
-    el.className = 'tarjeta-voz aparece';
+    el.className = 'tarjeta-voz aparece' + (repaso ? ' tarjeta-repaso' : '');
     el.innerHTML = `
-      <div class="voz-cabecera"><span class="voz-icono" aria-hidden="true">🎤</span> Lee en voz alta</div>
+      <div class="voz-cabecera"><span class="voz-icono" aria-hidden="true">${repaso ? '✨' : '🎤'}</span> ${repaso ? 'Palabras mágicas' : 'Lee en voz alta'}</div>
       <p class="frase-voz linea">${html}</p>
       <div class="voz-controles">
         <button class="boton boton-mic" ${sinMicro ? 'hidden' : ''}><span class="anillos" aria-hidden="true"></span>🎤 <span class="txt">Leer</span></button>
@@ -568,7 +636,10 @@
       el.classList.add('superada');
       mic.hidden = true; ya.hidden = true; oir.disabled = false;
       estado.textContent = conAyuda ? '¡Lo has intentado muy bien! Seguimos.' : azar(ELOGIOS);
-      J.estrellas++; J.leidas++; E.estrellas++; guardar(); $('#total-estrellas').textContent = E.estrellas;
+      J.estrellas++; J.leidas++; E.estrellas++;
+      J.reg.frases++; J.reg.intentos += Math.max(1, b.intentos);
+      if (b.intentos === 1 && !conAyuda) J.reg.frasesPrimera++;
+      guardar(); $('#total-estrellas').textContent = E.estrellas;
       Sonido.tocar('bien'); confeti(16);
       setTimeout(revelar, 650);
     }
@@ -580,6 +651,11 @@
         if (cuenta > mejorN) { mejorN = cuenta; mejor = r; }
       }
       if (mejor) b.marcadas = b.marcadas.map((m, i) => m || mejor[i]);
+      // Solo cuenta el primer intento: así se ve qué palabras le cuestan de verdad
+      if (b.intentos === 0) {
+        const propios = nombresPropios();
+        for (const i of significativas()) if (!propios.has(b.claves[i])) anotarPalabra(b.claves[i], !!(mejor && mejor[i]));
+      }
       b.intentos++; oir.disabled = false;
       pintar();
       if (aprobado()) return superar(false);
@@ -645,6 +721,8 @@
         btn.classList.add('correcta');
         $$('.opcion', el).forEach((x) => { x.disabled = true; });
         const msg = $('.respuesta', el);
+        J.reg.preguntas++;
+        if (fallos === 0) J.reg.preguntasPrimera++;
         if (fallos === 0) { J.estrellas++; E.estrellas++; guardar(); $('#total-estrellas').textContent = E.estrellas; msg.textContent = '⭐ ' + azar(ELOGIOS); }
         else msg.textContent = '¡Eso es! Lo has encontrado.';
         Sonido.tocar(fallos === 0 ? 'estrella' : 'bien'); confeti(26);
@@ -688,6 +766,7 @@
 
   // ───────── Fin del capítulo ─────────
   function terminarCapitulo() {
+    guardarRegistro(true);
     const { libro, cap } = J;
     const p = (E.progreso[libro.id] = E.progreso[libro.id] || {});
     const pc = (p[cap.id] = p[cap.id] || {});
@@ -795,6 +874,7 @@
       ${cabecera('<button class="boton boton-suave boton-chico" id="volver">← Volver</button>')}
       <section class="ajustes">
         <h1 class="titulo-grande">Para mayores</h1>
+        <button class="boton boton-principal boton-informe" id="ver-informe">📊 Ver el informe de lectura</button>
         <div class="ajuste-bloque">
           <h2 class="titulo">Nivel de lectura</h2>
           <div class="niveles">${NIVELES.map((n) => `<button class="nivel-carta${n.id === E.nivel ? ' elegida' : ''}" data-nivel="${n.id}" aria-pressed="${n.id === E.nivel}">
@@ -821,6 +901,7 @@
         </div>
       </section>`;
     $('#volver').onclick = pantallaInicio;
+    $('#ver-informe').onclick = pantallaInforme;
     $$('[data-nivel]').forEach((b) => b.onclick = () => { E.nivel = b.dataset.nivel; guardar(); pantallaAjustes(); });
     $$('[data-ajuste]').forEach((b) => b.onclick = () => { a[b.dataset.ajuste] = b.dataset.valor; guardar(); aplicarAjustes(); pantallaAjustes(); });
     $$('[data-interruptor]').forEach((i) => i.onchange = () => { a[i.dataset.interruptor] = i.checked; guardar(); aplicarAjustes(); });
@@ -830,6 +911,155 @@
       const perfil = E.perfil; E = estadoInicial(); E.perfil = perfil; guardar(); aplicarAjustes();
       aviso('Progreso borrado. La ropa y la mascota se quedan igual.');
       pantallaAjustes();
+    };
+  }
+
+  // ───────── Informe de lectura (para mayores) ─────────
+  const DIA = 864e5;
+  const suma = (arr, f) => arr.reduce((s, r) => s + (f(r) || 0), 0);
+  const porcentaje = (a, b) => (b ? Math.round((a / b) * 100) : null);
+  const conMicro = (arr) => arr.filter((r) => r.micro && r.frases);
+  const inicioDeHoy = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return +d; };
+  const fechaCorta = (t) => new Date(t).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+  const LETRA_DIA = ['D', 'L', 'M', 'X', 'J', 'V', 'S'];
+
+  function recomendacionNivel() {
+    const i = NIVELES.findIndex((n) => n.id === E.nivel);
+    const n = NIVELES[i];
+    const ult = conMicro(E.registro.filter((r) => r.nivel === E.nivel && r.terminado)).slice(-5);
+    if (ult.length < 3) return { tipo: 'neutro', texto: `Para recomendar un nivel hacen falta 3 capítulos terminados con micro en ${n.nombre}. Lleva ${ult.length}.` };
+    const p = porcentaje(suma(ult, (r) => r.frasesPrimera), suma(ult, (r) => r.frases));
+    const preg = suma(ult, (r) => r.preguntas);
+    const q = preg ? porcentaje(suma(ult, (r) => r.preguntasPrimera), preg) : 100;
+    const datos = `En sus últimos ${ult.length} capítulos lee el ${p} % de las frases a la primera y acierta el ${q} % de las preguntas a la primera.`;
+    if (p >= 85 && q >= 80 && i < NIVELES.length - 1) return { tipo: 'subir', texto: `${datos} Está lista para probar ${NIVELES[i + 1].nombre}.`, nivel: NIVELES[i + 1] };
+    if (p < 50 && i > 0) return { tipo: 'bajar', texto: `${datos} Le está costando: puede venirle bien volver a ${NIVELES[i - 1].nombre} un tiempo.`, nivel: NIVELES[i - 1] };
+    return { tipo: 'mantener', texto: `${datos} ${n.nombre} es un buen nivel para ella ahora mismo.` };
+  }
+
+  function graficoDias(dias) {
+    const max = Math.max(4, ...dias.map((d) => d.total));
+    const tope = Math.ceil(max / 4) * 4;
+    const W = 700, H = 230, izq = 34, abajo = 44, arriba = 12, ancho = (W - izq - 8) / dias.length;
+    const y = (v) => arriba + (H - arriba - abajo) * (1 - v / tope);
+    let s = '';
+    for (const v of [0, tope / 2, tope]) s += `<line x1="${izq}" x2="${W - 4}" y1="${y(v)}" y2="${y(v)}" class="g-rejilla"/><text x="${izq - 8}" y="${y(v) + 4}" class="g-eje" text-anchor="end">${v}</text>`;
+    dias.forEach((d, i) => {
+      const x = izq + i * ancho + ancho * 0.18, w = ancho * 0.64;
+      if (d.primera) s += `<rect x="${x}" y="${y(d.primera)}" width="${w}" height="${y(0) - y(d.primera)}" rx="3" class="g-primera"><title>${d.primera} a la primera</title></rect>`;
+      const resto = d.total - d.primera;
+      if (resto > 0) s += `<rect x="${x}" y="${y(d.total)}" width="${w}" height="${y(d.primera) - y(d.total)}" rx="3" class="g-resto"><title>${resto} repitiendo o sin micro</title></rect>`;
+      if (d.total) s += `<text x="${x + w / 2}" y="${y(d.total) - 5}" class="g-valor" text-anchor="middle">${d.total}</text>`;
+      const f = new Date(d.ini);
+      s += `<text x="${x + w / 2}" y="${H - abajo + 18}" class="g-eje${d.hoy ? ' g-hoy' : ''}" text-anchor="middle">${LETRA_DIA[f.getDay()]}</text><text x="${x + w / 2}" y="${H - abajo + 34}" class="g-eje g-num" text-anchor="middle">${f.getDate()}</text>`;
+    });
+    return `<svg viewBox="0 0 ${W} ${H}" class="grafico" role="img" aria-label="Frases leídas cada día en las últimas dos semanas">${s}</svg>`;
+  }
+
+  function pantallaInforme() {
+    const P = CAT.protagonistas, R = E.registro, hoy = inicioDeHoy();
+    const semana = R.filter((r) => r.fecha >= hoy - 6 * DIA);
+    const anterior = R.filter((r) => r.fecha >= hoy - 13 * DIA && r.fecha < hoy - 6 * DIA);
+    const pctPrimera = (arr) => { const m = conMicro(arr); return porcentaje(suma(m, (r) => r.frasesPrimera), suma(m, (r) => r.frases)); };
+    const s = {
+      capitulos: semana.filter((r) => r.terminado).length,
+      frases: suma(semana, (r) => r.frases),
+      minutos: Math.round(suma(semana, (r) => r.seg) / 60),
+      primera: pctPrimera(semana), primeraAnt: pctPrimera(anterior),
+      preguntas: porcentaje(suma(semana, (r) => r.preguntasPrimera), suma(semana, (r) => r.preguntas))
+    };
+    const dias = [];
+    for (let i = 13; i >= 0; i--) {
+      const ini = hoy - i * DIA, rs = R.filter((r) => r.fecha >= ini && r.fecha < ini + DIA);
+      dias.push({ ini, hoy: i === 0, total: suma(rs, (r) => r.frases), primera: suma(rs.filter((r) => r.micro), (r) => r.frasesPrimera) });
+    }
+    const dificiles = palabrasDificiles().slice(0, 12);
+    const ganadas = Object.entries(E.palabras).filter(([, p]) => conquistada(p)).sort((a, b) => b[1].u - a[1].u);
+    const rec = recomendacionNivel();
+    const tendencia = s.primera == null || s.primeraAnt == null ? ''
+      : s.primera > s.primeraAnt ? `<span class="tendencia sube">▲ ${s.primera - s.primeraAnt} puntos</span>`
+        : s.primera < s.primeraAnt ? `<span class="tendencia baja">▼ ${s.primeraAnt - s.primera} puntos</span>` : '<span class="tendencia">igual</span>';
+    const fmt = (v, suf = '') => (v == null ? '—' : v + suf);
+    const nivelDe = (id) => NIVELES.find((n) => n.id === id) || NIVELES[0];
+    const vacio = !R.length;
+
+    app.innerHTML = `
+      ${cabecera('<button class="boton boton-suave boton-chico" id="volver">← Volver</button>')}
+      <section class="informe">
+        <div class="informe-titulo">
+          <div><p class="sobretitulo">Últimos 7 días</p><h1 class="titulo-grande">Así lee ${esc(P.lectora)}</h1></div>
+          <button class="boton boton-suave" id="copiar" ${vacio ? 'disabled' : ''}>📋 Copiar resumen</button>
+        </div>
+        ${vacio ? `<div class="vacio-informe"><p>${esc(`Todavía no hay partidas. Cuando ${P.lectora} juegue, aquí verás cuántas frases lee, cuáles le salen a la primera y qué palabras le cuestan.`)}</p></div>` : ''}
+        <div class="cifras">
+          <div class="cifra"><b>${s.frases}</b><span>frases leídas en voz alta</span></div>
+          <div class="cifra"><b>${fmt(s.primera, ' %')}</b><span>frases a la primera ${tendencia}</span></div>
+          <div class="cifra"><b>${fmt(s.preguntas, ' %')}</b><span>preguntas acertadas a la primera</span></div>
+          <div class="cifra"><b>${s.minutos}</b><span>minutos leyendo · ${s.capitulos} capítulos</span></div>
+        </div>
+        <div class="recomendacion rec-${rec.tipo}">
+          <span class="rec-etiqueta">${{ subir: '⬆ Subir de nivel', bajar: '⬇ Bajar de nivel', mantener: '✓ Mantener nivel', neutro: 'Nivel' }[rec.tipo]}</span>
+          <p>${esc(rec.texto)}</p>
+          ${rec.nivel ? `<button class="boton boton-suave boton-chico" id="aplicar-nivel">Cambiar a ${rec.nivel.icono} ${esc(rec.nivel.nombre)}</button>` : ''}
+        </div>
+        <div class="tarjeta-informe">
+          <h2 class="titulo">Frases leídas cada día</h2>
+          <div class="leyenda"><span><i class="l-primera"></i>A la primera</span><span><i class="l-resto"></i>Repitiendo o sin micro</span></div>
+          <div class="grafico-sitio">${graficoDias(dias)}</div>
+        </div>
+        <div class="dos-columnas">
+          <div class="tarjeta-informe">
+            <h2 class="titulo">Palabras que le cuestan</h2>
+            <p class="nota">Salen como «palabras mágicas» al empezar cada capítulo hasta que las conquista (acertarlas 2 veces más de las que las ha fallado).</p>
+            ${dificiles.length ? `<ul class="lista-palabras">${dificiles.map(([w, p]) => `
+              <li><button class="palabra-informe" data-oir="${esc(w)}" aria-label="Escuchar ${esc(w)}">🔊 ${esc(w)}</button>
+              <span class="marcador">${'●'.repeat(Math.min(p.a, 8))}<span class="falta-marca">${'○'.repeat(Math.max(0, Math.min(8, p.f + 2 - p.a)))}</span></span>
+              <span class="nota">falla ${p.f} · acierta ${p.a}</span></li>`).join('')}</ul>`
+              : '<p class="nota">Aún no hay palabras difíciles. Necesita jugar con el micro para detectarlas.</p>'}
+          </div>
+          <div class="tarjeta-informe">
+            <h2 class="titulo">Palabras conquistadas</h2>
+            ${ganadas.length ? `<div class="chips">${ganadas.map(([w]) => `<span class="chip chip-ganada">✓ ${esc(w)}</span>`).join('')}</div>` : '<p class="nota">Cuando acierte varias veces una palabra difícil, aparecerá aquí.</p>'}
+          </div>
+        </div>
+        <div class="tarjeta-informe">
+          <h2 class="titulo">Últimas partidas</h2>
+          ${R.length ? `<div class="tabla-sitio"><table class="tabla">
+            <thead><tr><th>Fecha</th><th>Capítulo</th><th>Nivel</th><th class="num">Frases</th><th class="num">A la primera</th><th class="num">Preguntas</th><th class="num">Minutos</th><th>Estado</th></tr></thead>
+            <tbody>${R.slice(-12).reverse().map((r) => `<tr>
+              <td>${fechaCorta(r.fecha)} ${new Date(r.fecha).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</td>
+              <td>${esc(r.titulo)}</td><td>${nivelDe(r.nivel).icono} ${nivelDe(r.nivel).nombre}</td>
+              <td class="num">${r.frases}</td>
+              <td class="num">${r.micro ? fmt(porcentaje(r.frasesPrimera, r.frases), ' %') : 'sin micro'}</td>
+              <td class="num">${r.preguntas ? `${r.preguntasPrimera}/${r.preguntas}` : '—'}</td>
+              <td class="num">${Math.max(1, Math.round(r.seg / 60))}</td>
+              <td>${r.terminado ? '<span class="estado est-ok">Terminado</span>' : '<span class="estado est-pausa">A medias</span>'}</td></tr>`).join('')}</tbody>
+          </table></div>` : '<p class="nota">Sin partidas todavía.</p>'}
+        </div>
+      </section>`;
+
+    $('#volver').onclick = pantallaAjustes;
+    $$('[data-oir]').forEach((b) => b.onclick = () => Voz.hablar(b.dataset.oir, 0.75));
+    if (rec.nivel) $('#aplicar-nivel').onclick = () => { E.nivel = rec.nivel.id; guardar(); aviso(`Nivel cambiado a ${rec.nivel.nombre}.`); pantallaInforme(); };
+    const copiar = $('#copiar');
+    copiar.onclick = () => {
+      const texto = [
+        `Informe de lectura de ${P.lectora} · ${fechaCorta(hoy - 6 * DIA)} – ${fechaCorta(hoy)}`,
+        `Nivel: ${nivelDe(E.nivel).nombre}`,
+        `Capítulos terminados: ${s.capitulos} · Frases leídas: ${s.frases} · Minutos: ${s.minutos}`,
+        `Frases a la primera: ${fmt(s.primera, ' %')}${s.primeraAnt != null ? ` (semana anterior: ${s.primeraAnt} %)` : ''}`,
+        `Preguntas a la primera: ${fmt(s.preguntas, ' %')}`,
+        `Palabras que le cuestan: ${dificiles.map(([w]) => w).join(', ') || '—'}`,
+        `Palabras conquistadas: ${ganadas.map(([w]) => w).join(', ') || '—'}`,
+        `Recomendación: ${rec.texto}`
+      ].join('\n');
+      const exito = () => aviso('Resumen copiado. Puedes pegarlo en un mensaje.');
+      const respaldo = () => {
+        abrirCapa(`<div class="cuaderno"><h2 class="titulo">Resumen</h2><textarea class="resumen-copia" id="resumen-copia" rows="9">${esc(texto)}</textarea>
+          <p class="nota">Selecciona el texto y cópialo.</p><button class="boton boton-principal" data-cerrar>Cerrar</button></div>`);
+        const t = $('#resumen-copia'); t.focus(); t.select();
+      };
+      try { navigator.clipboard.writeText(texto).then(exito, respaldo); } catch (e) { respaldo(); }
     };
   }
 
