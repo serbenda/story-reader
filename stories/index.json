@@ -9,10 +9,11 @@
     "zorro":  { "chico": "zorrito",  "chica": "zorrita",  "emoji": "🦊" }
   },
   "libros": [
-    {
-      "id": "bosque-susurros",
-      "carpeta": "bosque-susurros",
-      "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"]
-    }
+    { "id": "bosque-susurros", "carpeta": "bosque-susurros", "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"] },
+    { "id": "secreto-faro", "carpeta": "secreto-faro", "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"] },
+    { "id": "granja-abuelos", "carpeta": "granja-abuelos", "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"] },
+    { "id": "castillo-nubes", "carpeta": "castillo-nubes", "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"] },
+    { "id": "viaje-luna", "carpeta": "viaje-luna", "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"] },
+    { "id": "montana-nevada", "carpeta": "montana-nevada", "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"] }
   ]
 }

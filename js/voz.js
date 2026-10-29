@@ -100,22 +100,30 @@
   function parar() { if (actual) try { actual.stop(); } catch (e) { /* nada */ } }
 
   // ───── Leer en voz alta ─────
-  let vozES = null;
+  let vozES = null, vozAuto = null, preferida = '', factor = 1;
+  const FACTORES = { lenta: 0.8, normal: 1, rapida: 1.2 };
+  // Las voces «naturales» o «premium» suenan mucho mejor: se prefieren si existen
+  const puntuar = (v) => (/^es[-_]ES/i.test(v.lang) ? 4 : 0) + (/natural|neural|premium|enhanced|mejorad/i.test(v.name) ? 3 : 0)
+    + (/google|monica|mónica|paulina|lucia|lucía|helena|elvira|marisol/i.test(v.name) ? 2 : 0) + (v.localService ? 0 : 1);
+  function voces() {
+    if (!('speechSynthesis' in window)) return [];
+    return speechSynthesis.getVoices().filter((v) => /^es/i.test(v.lang)).sort((a, b) => puntuar(b) - puntuar(a));
+  }
   function buscarVoz() {
-    if (!('speechSynthesis' in window)) return;
-    const vs = speechSynthesis.getVoices();
-    vozES = vs.find((v) => /^es[-_]ES/i.test(v.lang) && /google|monica|paulina|lucia|helena/i.test(v.name))
-      || vs.find((v) => /^es[-_]ES/i.test(v.lang)) || vs.find((v) => /^es/i.test(v.lang)) || null;
+    const vs = voces();
+    vozAuto = vs[0] || null;
+    vozES = (preferida && vs.find((v) => v.name === preferida)) || vozAuto;
   }
   if ('speechSynthesis' in window) { buscarVoz(); speechSynthesis.addEventListener?.('voiceschanged', buscarVoz); }
+  function configurar({ voz = '', velocidad = 'normal' } = {}) { preferida = voz; factor = FACTORES[velocidad] || 1; buscarVoz(); }
 
   function hablar(texto, velocidad = 0.85) {
     if (!('speechSynthesis' in window)) return false;
     try {
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(texto);
-      u.lang = 'es-ES'; u.rate = velocidad; u.pitch = 1.05;
-      if (vozES) u.voice = vozES;
+      u.lang = 'es-ES'; u.rate = velocidad * factor; u.pitch = 1.05;
+      if (vozES) { u.voice = vozES; u.lang = vozES.lang; }
       speechSynthesis.speak(u);
       return true;
     } catch (e) { return false; }
@@ -123,7 +131,8 @@
 
   window.Voz = {
     soportado: !!SR,
-    disponible, escuchar, parar, hablar, normalizar, comparar, parecido,
+    disponible, escuchar, parar, hablar, normalizar, comparar, parecido, voces, configurar,
+    nombreAuto: () => (vozAuto ? vozAuto.name : ''),
     get escuchando() { return !!actual; },
     get bloqueado() { return bloqueado; }
   };

@@ -63,7 +63,7 @@ Lleva un gorro de fiesta.
 > {ayudante_nombre} dice: «La fiesta es {en_lugar}».
 ? ¿Dónde es la fiesta?
 ---
-Las niñas ven a {ayudante}.
+Las niñas ven {al_ayudante}.
 Va muy content{o2}… ¡lleva un globo!
 > «¡Id {al_lugar}!», dice {ayudante_nombre}.
 ? ¿A dónde tienen que ir?
@@ -71,11 +71,14 @@ Va muy content{o2}… ¡lleva un globo!
 ### novatilla
 Entre los árboles aparece {ayudante}, con un gorro de fiesta en la cabeza.
 —¡Uy! Vosotras no deberíais verme todavía —dice. Y del susto, {gracia}.
-> «La fiesta no es {en_falso}», susurra {ayudante_nombre}. «Es {en_lugar}. Pero no digáis que os lo he dicho yo.»
+{ayudante_nombre} se acerca y susurra:
+> «La fiesta no es {en_falso}. Es {en_lugar}.»
+—Pero no digáis que os lo he dicho yo.
 ? ¿Dónde es la fiesta?
 ---
 Junto al sendero está {ayudante}, {ayudante_desc}. Lleva un regalo envuelto en hojas.
-> «Muchos creen que la fiesta es {en_falso}», dice {ayudante_nombre}, «pero se equivocan. Es {en_lugar}.»
+—Os voy a contar un secreto —dice {ayudante_nombre}.
+> «Muchos creen que la fiesta es {en_falso}, pero se equivocan. Es {en_lugar}.»
 ? ¿Adónde tienen que ir Alaia y Lucía?
 
 ### lectora

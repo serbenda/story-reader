@@ -85,7 +85,7 @@ Alaia lo piensa con calma. ¿Qué sitio del bosque deja esa huella?
 ? ¿Dónde puede tener Pepa su nido?
 
 ### superlectora
-Las detectives buscan a {ayudante}, que conoce el bosque mejor que nadie. Lo encuentran en su sitio de siempre: es {ayudante_desc}.
+Las detectives buscan {al_ayudante}, que conoce el bosque mejor que nadie. Está en su sitio de siempre: es {ayudante_desc}.
 Nada más ver a las niñas, {gracia}.
 > «Pepa tiene un nido secreto», dice {ayudante_nombre} en voz baja, «pero yo sé dos cosas de ella».
 —Primera: [[la urraca no tiene el nido {en_falso}]]. Allí no puede ni ver.
