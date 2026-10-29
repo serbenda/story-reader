@@ -99,12 +99,14 @@ Encima de una piedra está {ayudante}.
 Entre los árboles aparece {ayudante}, {ayudante_desc}.
 Nada más ver a las niñas, {gracia}.
 Lucía se ríe tanto que tiene que sentarse en el suelo.
-> «Vi a {mascota}», dice {ayudante_nombre}. «Primero fue {hacia_falso}, pero luego dio la vuelta y se fue {hacia_lugar}.»
+—Vi a {mascota} —dice {ayudante_nombre}—. Y me fijé muy bien.
+> «Primero fue {hacia_falso}, pero luego se dio la vuelta y se fue {hacia_lugar}.»
 ? ¿Dónde está {mascota} ahora?
 ---
 Las niñas siguen el sendero y se encuentran con {ayudante}, {ayudante_desc}.
 —¿Buscáis a {mascota}? —pregunta. Y justo entonces, {gracia}.
-> «No fue {al_falso} ni {al_otro}», explica {ayudante_nombre}. «Se fue {hacia_lugar}.»
+{ayudante_nombre} se lo explica muy despacio:
+> «No fue {al_falso} ni {al_otro}. Se fue {hacia_lugar}.»
 ? ¿A dónde se fue {mascota}?
 
 ### lectora

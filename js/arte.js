@@ -207,6 +207,215 @@
       for (let i = 0; i < 16; i++) { const x = r() * 800, y = 200 + r() * 290, c = ['#E39A45', '#F2B33D', '#C9763A', '#D9683F'][Math.floor(r() * 4)]; b += `<ellipse cx="${n(x)}" cy="${n(y)}" rx="7" ry="4" fill="${c}" transform="rotate(${Math.floor(r() * 180)} ${n(x)} ${n(y)})"/>`; }
       b += P.seta(430, 470, 1.1, '#C9476B') + P.seta(740, 470, .9, '#C9476B');
       return b + velo(r, noche);
+    },
+
+    // ───── Mar ─────
+    playa(r, noche, defs) {
+      let b = cielo(defs, noche, '#8FD3F0', '#E6F6F5') + astros(r, noche, 640, 80);
+      const mar = P.grad('#4FA9D6', '#2C7FB3'); defs.push(mar.def);
+      b += `<rect x="0" y="235" width="800" height="120" fill="url(#${mar.id})"/>`;
+      for (let i = 0; i < 12; i++) { const x = r() * 760, y = 250 + r() * 80; b += `<path d="M${n(x)} ${n(y)} q12 -6 24 0 q12 6 24 0" stroke="#FFFFFF" stroke-width="3" fill="none" opacity=".6" stroke-linecap="round"/>`; }
+      b += '<path d="M0 330 Q200 310 420 328 T800 318 V500 H0 Z" fill="#F3D9A2"/><path d="M0 330 Q200 310 420 328 T800 318" stroke="#FFFFFF" stroke-width="6" fill="none" opacity=".7"/>';
+      // palmera
+      const px = 650 + r() * 80;
+      b += `<path d="M${n(px)} 470 Q${n(px - 20)} 360 ${n(px + 10)} 250" stroke="#9C6A3E" stroke-width="18" fill="none" stroke-linecap="round"/>`;
+      for (const a of [-160, -120, -60, -20, 20]) { const rad = a * Math.PI / 180; b += `<path d="M${n(px + 10)} 250 Q${n(px + 10 + Math.cos(rad) * 50)} ${n(250 + Math.sin(rad) * 50 - 20)} ${n(px + 10 + Math.cos(rad) * 95)} ${n(250 + Math.sin(rad) * 95 + 25)}" stroke="#3F8F4E" stroke-width="16" fill="none" stroke-linecap="round"/>`; }
+      b += `<circle cx="${n(px + 4)}" cy="262" r="8" fill="#7A4E2E"/><circle cx="${n(px + 18)}" cy="264" r="8" fill="#7A4E2E"/>`;
+      for (let i = 0; i < 7; i++) { const x = 60 + r() * 560, y = 380 + r() * 100; b += r() < .5 ? `<path d="M${n(x)} ${n(y)} l6 -14 l6 14 l14 2 l-11 9 l4 14 l-13 -8 l-13 8 l4 -14 l-11 -9 Z" fill="#E9775A"/>` : `<path d="M${n(x - 10)} ${n(y)} Q${n(x)} ${n(y - 18)} ${n(x + 10)} ${n(y)} Z" fill="#F7B7C8" stroke="#D98AA0" stroke-width="2"/>`; }
+      b += `<path d="M${n(120 + r() * 300)} 250 l30 0 l-6 10 l-18 0 Z" fill="#FFFFFF"/>`;
+      return b + velo(r, noche);
+    },
+    faro(r, noche, defs) {
+      let b = cielo(defs, noche, '#9FD8F2', '#EEF7F2') + astros(r, noche, 140, 80);
+      b += '<rect x="0" y="250" width="800" height="250" fill="#3E8DBE"/>';
+      for (let i = 0; i < 10; i++) { const x = 480 + r() * 300, y = 270 + r() * 200; b += `<path d="M${n(x)} ${n(y)} q10 -5 20 0 q10 5 20 0" stroke="#FFFFFF" stroke-width="3" fill="none" opacity=".55"/>`; }
+      b += '<path d="M0 280 Q260 250 470 300 Q520 360 500 500 H0 Z" fill="#8FC96E"/><path d="M470 300 Q520 360 500 500 L440 500 Q470 380 430 300 Z" fill="#8E8A7E"/>';
+      if (noche) b += '<path d="M455 118 L800 40 L800 190 Z" fill="#FFE98A" opacity=".35"/>';
+      b += '<path d="M410 300 L425 140 L485 140 L500 300 Z" fill="#FFFFFF" stroke="#2E2A3B" stroke-width="3"/>';
+      for (const y of [175, 230, 280]) b += `<path d="M${n(422 - (y - 140) * .05)} ${y} L${n(488 + (y - 140) * .05)} ${y} L${n(490 + (y - 140) * .056)} ${y + 22} L${n(420 - (y - 140) * .056)} ${y + 22} Z" fill="#C9476B"/>`;
+      b += `<rect x="428" y="104" width="54" height="36" rx="4" fill="${noche ? '#FFE98A' : '#CFEFFF'}" stroke="#2E2A3B" stroke-width="3"/><path d="M420 104 L455 78 L490 104 Z" fill="#C9476B" stroke="#2E2A3B" stroke-width="3"/>`;
+      b += '<rect x="440" y="258" width="30" height="42" rx="15" fill="#3F7D4E" stroke="#2E2A3B" stroke-width="3"/>';
+      for (let i = 0; i < 12; i++) b += P.hierba(r() * 420, 300 + r() * 190, '#5E9E48', 1 + r() * .5);
+      b += P.piedra(560, 330, 26, '#8E8A7E', '#B5B1A6') + P.piedra(620, 380, 18, '#8E8A7E', '#B5B1A6');
+      return b + velo(r, noche);
+    },
+    barco(r, noche, defs) {
+      let b = cielo(defs, noche, '#8FD3F0', '#E9F6F4') + astros(r, noche, 120, 90);
+      b += '<rect x="0" y="240" width="800" height="120" fill="#3E8DBE"/>';
+      for (let i = 0; i < 8; i++) { const x = r() * 760, y = 255 + r() * 70; b += `<path d="M${n(x)} ${n(y)} q10 -5 20 0 q10 5 20 0" stroke="#FFFFFF" stroke-width="3" fill="none" opacity=".55"/>`; }
+      b += '<rect x="390" y="40" width="16" height="320" fill="#7A5232"/><path d="M406 60 Q560 120 520 300 L406 300 Z" fill="#FFF7E6" stroke="#B89A6A" stroke-width="3"/>';
+      b += `<path d="M406 40 L460 52 L406 64 Z" fill="${['#C9476B', '#3F7D4E', '#F2B33D'][Math.floor(r() * 3)]}"/>`;
+      b += '<path d="M398 60 L120 330 M398 60 L760 330" stroke="#5E4630" stroke-width="3"/>';
+      b += '<rect x="0" y="330" width="800" height="170" fill="#B9874F"/>';
+      for (let x = 0; x < 800; x += 46) b += `<path d="M${x} 330 V500" stroke="#8A6040" stroke-width="2"/>`;
+      b += '<rect x="0" y="318" width="800" height="16" fill="#8A6040"/>';
+      for (let x = 20; x < 800; x += 60) b += `<rect x="${x}" y="290" width="8" height="30" fill="#8A6040"/>`;
+      b += '<rect x="0" y="286" width="800" height="8" fill="#8A6040"/>';
+      for (const x of [600 + r() * 60, 700]) b += `<rect x="${n(x)}" y="370" width="54" height="66" rx="10" fill="#9C6A3E" stroke="#5E3A26" stroke-width="3"/><path d="M${n(x)} 388 H${n(x + 54)} M${n(x)} 418 H${n(x + 54)}" stroke="#5E3A26" stroke-width="3"/>`;
+      b += '<circle cx="520" cy="450" r="26" fill="none" stroke="#C9476B" stroke-width="10"/><circle cx="520" cy="450" r="26" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-dasharray="14 14"/>';
+      return b + velo(r, noche);
+    },
+
+    // ───── Granja ─────
+    granja(r, noche, defs) {
+      let b = cielo(defs, noche, '#9ED6EE', '#F1F7E8') + astros(r, noche, 120, 80);
+      b += '<path d="M0 290 Q220 230 460 280 T800 260 V500 H0 Z" fill="#A9D79A"/><path d="M0 330 Q300 300 800 336 V500 H0 Z" fill="#8FC96E"/>';
+      b += '<rect x="650" y="160" width="70" height="190" fill="#B8C2C8" stroke="#5F6B73" stroke-width="3"/><path d="M650 160 Q685 120 720 160 Z" fill="#8E9AA2" stroke="#5F6B73" stroke-width="3"/>';
+      b += '<rect x="420" y="200" width="230" height="150" fill="#C2453B" stroke="#6E2520" stroke-width="4"/><path d="M405 205 L535 130 L665 205 Z" fill="#8E2F28" stroke="#6E2520" stroke-width="4"/>';
+      b += '<rect x="495" y="250" width="80" height="100" fill="#FFF7E6" stroke="#6E2520" stroke-width="3"/><path d="M495 250 L575 350 M575 250 L495 350" stroke="#C2453B" stroke-width="6"/>';
+      b += `<rect x="515" y="165" width="40" height="30" fill="${noche ? '#FFE08A' : '#FFF7E6'}" stroke="#6E2520" stroke-width="3"/>`;
+      for (let x = 0; x < 400; x += 40) b += `<rect x="${x}" y="320" width="8" height="50" fill="#B98A5A"/>`;
+      b += '<rect x="0" y="330" width="400" height="7" fill="#B98A5A"/><rect x="0" y="352" width="400" height="7" fill="#B98A5A"/>';
+      for (const [x, y] of [[300, 420], [360, 440], [700, 420]]) b += `<rect x="${x}" y="${y}" width="60" height="40" rx="8" fill="#F2C75C" stroke="#C99A2E" stroke-width="3"/><path d="M${x + 6} ${y + 14} H${x + 54} M${x + 6} ${y + 28} H${x + 54}" stroke="#C99A2E" stroke-width="2"/>`;
+      b += '<path d="M520 350 Q500 430 470 500 H600 Q570 430 560 350 Z" fill="#D9B98A"/>';
+      for (let i = 0; i < 14; i++) b += P.hierba(r() * 800, 360 + r() * 140, '#5E9E48', 1 + r() * .5);
+      return b + velo(r, noche);
+    },
+    huerto(r, noche, defs) {
+      let b = cielo(defs, noche, '#A5DAF0', '#F3F8E7') + astros(r, noche, 660, 80);
+      b += '<path d="M0 270 Q300 230 800 270 V500 H0 Z" fill="#A9D79A"/>';
+      for (let i = 0; i < 5; i++) {
+        const y = 300 + i * 42;
+        b += `<path d="M0 ${y} Q400 ${y - 10} 800 ${y} V${y + 26} Q400 ${y + 16} 0 ${y + 26} Z" fill="#8A5A3B"/>`;
+        for (let x = 30 + (i % 2) * 30; x < 800; x += 70) {
+          const t = (i + Math.floor(r() * 3)) % 3;
+          if (t === 0) b += `<circle cx="${x}" cy="${y + 4}" r="14" fill="#7CC36A"/><circle cx="${x}" cy="${y + 4}" r="8" fill="#A8DC8E"/>`;
+          else if (t === 1) b += `<path d="M${x - 5} ${y + 8} L${x} ${y + 22} L${x + 5} ${y + 8} Z" fill="#F08A3C"/><path d="M${x} ${y + 8} l-8 -14 M${x} ${y + 8} l0 -16 M${x} ${y + 8} l8 -14" stroke="#4E9A42" stroke-width="4" stroke-linecap="round"/>`;
+          else b += `<path d="M${x} ${y + 10} V${y - 24}" stroke="#B98A5A" stroke-width="4"/><circle cx="${x - 6}" cy="${y - 8}" r="7" fill="#E04A3C"/><circle cx="${x + 6}" cy="${y - 16}" r="6" fill="#E04A3C"/><circle cx="${x + 2}" cy="${y}" r="5" fill="#4E9A42"/>`;
+        }
+      }
+      const sx = 600 + r() * 120;
+      b += `<path d="M${n(sx)} 330 V200 M${n(sx - 50)} 235 H${n(sx + 50)}" stroke="#8A6040" stroke-width="8"/><path d="M${n(sx - 30)} 230 L${n(sx + 30)} 230 L${n(sx + 24)} 300 L${n(sx - 24)} 300 Z" fill="#5F7FC4"/><circle cx="${n(sx)}" cy="190" r="20" fill="#F2D7A6"/><path d="M${n(sx - 30)} 180 L${n(sx + 30)} 180 L${n(sx)} 150 Z" fill="#E2B04A"/><circle cx="${n(sx - 7)}" cy="190" r="2.5" fill="#2E2A3B"/><circle cx="${n(sx + 7)}" cy="190" r="2.5" fill="#2E2A3B"/>`;
+      return b + velo(r, noche);
+    },
+
+    // ───── Castillo ─────
+    castillo(r, noche, defs) {
+      const g = noche ? P.grad('#2A2558', '#5A4E8A') : P.grad('#F6C9E0', '#D9E8FA'); defs.push(g.def);
+      let b = `<rect width="800" height="500" fill="url(#${g.id})"/>` + (noche ? astros(r, true, 150, 80) : P.sol(130, 90, 34));
+      const torre = (x, y, w, h, techo) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#F7EEF7" stroke="#6E5A8A" stroke-width="3"/><path d="M${x - 8} ${y} L${x + w / 2} ${y - w * 1.2} L${x + w + 8} ${y} Z" fill="${techo}" stroke="#6E5A8A" stroke-width="3"/><rect x="${x + w / 2 - 7}" y="${y + 30}" width="14" height="22" rx="7" fill="${noche ? '#FFE08A' : '#8FC3E8'}"/><path d="M${x + w / 2} ${y - w * 1.2} V${y - w * 1.2 - 26}" stroke="#6E5A8A" stroke-width="3"/><path d="M${x + w / 2} ${y - w * 1.2 - 26} l22 7 l-22 7 Z" fill="#F2B33D"/>`;
+      b += '<rect x="330" y="200" width="300" height="160" fill="#EFE2F1" stroke="#6E5A8A" stroke-width="3"/>';
+      for (let x = 330; x < 630; x += 30) b += `<rect x="${x}" y="186" width="18" height="16" fill="#EFE2F1" stroke="#6E5A8A" stroke-width="3"/>`;
+      b += torre(300, 150, 60, 210, '#B06AB3') + torre(600, 150, 60, 210, '#B06AB3') + torre(450, 110, 64, 120, '#8A62C4');
+      b += '<path d="M450 360 V300 Q480 270 510 300 V360 Z" fill="#7A5232" stroke="#6E5A8A" stroke-width="3"/>';
+      for (let i = 0; i < 9; i++) { const x = i * 100 - 20 + r() * 30, y = 360 + r() * 30; b += `<circle cx="${n(x)}" cy="${n(y)}" r="${n(50 + r() * 30)}" fill="#FFFFFF"/>`; }
+      b += '<rect x="0" y="390" width="800" height="110" fill="#FFFFFF"/>';
+      for (let i = 0; i < 6; i++) { const x = r() * 800; b += `<circle cx="${n(x)}" cy="${n(420 + r() * 60)}" r="${n(30 + r() * 20)}" fill="#F1F4FB"/>`; }
+      if (!noche) b += P.nube(720, 120, .8) + P.nube(220, 200, .6);
+      return b + (noche ? '<rect width="800" height="500" fill="#1C2152" opacity=".25"/>' : '');
+    },
+    torre(r, noche, defs) {
+      const g = P.grad('#B9AFC2', '#8E849A'); defs.push(g.def);
+      let b = `<rect width="800" height="500" fill="url(#${g.id})"/>`;
+      for (let y = 0; y < 380; y += 40) for (let x = (y / 40) % 2 ? -40 : 0; x < 800; x += 80) b += `<rect x="${x + 2}" y="${y + 2}" width="76" height="36" rx="5" fill="#A79DB2" opacity="${n(.5 + r() * .5)}"/>`;
+      const cielo2 = noche ? '#2A3570' : '#9FD8F2';
+      b += `<path d="M420 80 H600 V260 H420 Z M420 80 Q510 10 600 80" fill="${cielo2}" stroke="#5E5470" stroke-width="10"/>`;
+      b += noche ? '<circle cx="560" cy="120" r="22" fill="#FFF4C7"/>' : P.nube(500, 150, .7);
+      b += '<path d="M510 40 V260 M420 170 H600" stroke="#5E5470" stroke-width="6"/>';
+      b += '<rect x="0" y="380" width="800" height="120" fill="#9C6A3E"/>';
+      for (let x = 0; x < 800; x += 60) b += `<path d="M${x} 380 V500" stroke="#7A5232" stroke-width="2"/>`;
+      b += '<rect x="250" y="360" width="200" height="12" fill="#C9476B"/><ellipse cx="350" cy="440" rx="120" ry="30" fill="#C9476B" opacity=".85"/>';
+      b += '<rect x="620" y="340" width="110" height="70" rx="8" fill="#B9874F" stroke="#6B4630" stroke-width="4"/><path d="M620 340 Q675 300 730 340" fill="#C99A5E" stroke="#6B4630" stroke-width="4"/><rect x="666" y="355" width="18" height="18" fill="#F2B33D"/>';
+      for (const x of [140, 760]) b += `<rect x="${x - 26}" y="60" width="52" height="150" fill="${x < 400 ? '#8A62C4' : '#3F7D4E'}"/><path d="M${x - 26} 210 L${x} 190 L${x + 26} 210 Z" fill="#A79DB2"/><circle cx="${x}" cy="110" r="12" fill="#F2B33D"/>`;
+      b += '<rect x="230" y="300" width="10" height="40" fill="#FFF7E6"/><path d="M235 300 q-6 -10 0 -18 q6 8 0 18" fill="#F2B33D"/>';
+      return b + (noche ? '<rect width="800" height="500" fill="#1C2152" opacity=".3"/>' : '');
+    },
+
+    // ───── Espacio ─────
+    luna(r, noche, defs) {
+      let b = '<rect width="800" height="500" fill="#121633"/>';
+      for (let i = 0; i < 90; i++) b += `<circle cx="${n(r() * 800)}" cy="${n(r() * 300)}" r="${n(.6 + r() * 1.6)}" fill="#FFFFFF" opacity="${n(.4 + r() * .6)}"/>`;
+      b += '<circle cx="640" cy="100" r="48" fill="#3E8DBE"/><path d="M610 80 q20 -10 30 10 q10 20 -10 30 q-20 -5 -20 -40 Z M660 110 q16 -8 20 10 q-10 16 -20 -10" fill="#5FB06A"/><circle cx="640" cy="100" r="48" fill="none" stroke="#BFE6F3" stroke-width="4" opacity=".6"/>';
+      b += '<path d="M0 300 Q200 270 400 300 T800 290 V500 H0 Z" fill="#B8B8C6"/><path d="M0 360 Q400 330 800 370 V500 H0 Z" fill="#A2A2B2"/>';
+      for (let i = 0; i < 8; i++) { const x = r() * 800, y = 320 + r() * 160, rr = 14 + r() * 26; b += `<ellipse cx="${n(x)}" cy="${n(y)}" rx="${n(rr)}" ry="${n(rr * .35)}" fill="#8C8C9E"/><ellipse cx="${n(x)}" cy="${n(y - 2)}" rx="${n(rr * .7)}" ry="${n(rr * .2)}" fill="#7A7A8C"/>`; }
+      const cx = 680;
+      b += `<path d="M${cx} 180 Q${cx + 28} 220 ${cx + 28} 320 H${cx - 28} Q${cx - 28} 220 ${cx} 180 Z" fill="#F4F4F8" stroke="#2E2A3B" stroke-width="3"/><circle cx="${cx}" cy="250" r="12" fill="#5FA8CF" stroke="#2E2A3B" stroke-width="3"/><path d="M${cx - 28} 290 L${cx - 48} 330 L${cx - 28} 320 Z M${cx + 28} 290 L${cx + 48} 330 L${cx + 28} 320 Z" fill="#C9476B" stroke="#2E2A3B" stroke-width="3"/>`;
+      b += '<path d="M120 300 V250" stroke="#E2E2EA" stroke-width="4"/><path d="M120 250 h40 v24 h-40 Z" fill="#C9476B"/>';
+      return b;
+    },
+    planeta(r, noche, defs) {
+      const g = P.grad('#3A1F5C', '#B0558C'); defs.push(g.def);
+      let b = `<rect width="800" height="500" fill="url(#${g.id})"/>`;
+      for (let i = 0; i < 60; i++) b += `<circle cx="${n(r() * 800)}" cy="${n(r() * 260)}" r="${n(.6 + r() * 1.4)}" fill="#FFFFFF" opacity="${n(.4 + r() * .5)}"/>`;
+      b += '<circle cx="180" cy="90" r="30" fill="#F2B33D"/><circle cx="260" cy="130" r="16" fill="#9FE0D6"/>';
+      b += '<path d="M0 290 Q180 250 380 290 T800 270 V500 H0 Z" fill="#D9683F"/><path d="M0 350 Q380 320 800 360 V500 H0 Z" fill="#C2532E"/>';
+      for (let i = 0; i < 6; i++) { const x = 60 + r() * 700, y = 330 + r() * 120; b += `<path d="M${n(x - 18)} ${n(y)} L${n(x - 8)} ${n(y - 26)} L${n(x + 10)} ${n(y - 18)} L${n(x + 20)} ${n(y)} Z" fill="#9E3E22"/>`; }
+      for (let i = 0; i < 5; i++) { const x = 80 + r() * 640, y = 330 + r() * 100, h = 40 + r() * 40; b += `<path d="M${n(x)} ${n(y)} V${n(y - h)}" stroke="#4FC7B0" stroke-width="10" stroke-linecap="round"/><circle cx="${n(x)}" cy="${n(y - h - 8)}" r="10" fill="#B7F5E6"/><circle cx="${n(x)}" cy="${n(y - h - 8)}" r="20" fill="#B7F5E6" opacity=".25"/>`; }
+      return b;
+    },
+    nave(r, noche, defs) {
+      const g = P.grad('#D9E0E8', '#9AA6B4'); defs.push(g.def);
+      let b = `<rect width="800" height="500" fill="url(#${g.id})"/>`;
+      b += '<circle cx="520" cy="190" r="140" fill="#121633" stroke="#5F6B7A" stroke-width="18"/>';
+      for (let i = 0; i < 40; i++) { const a = r() * Math.PI * 2, d = r() * 125; b += `<circle cx="${n(520 + Math.cos(a) * d)}" cy="${n(190 + Math.sin(a) * d)}" r="${n(.6 + r() * 1.5)}" fill="#FFFFFF"/>`; }
+      b += '<circle cx="570" cy="230" r="44" fill="#E9775A"/><ellipse cx="570" cy="230" rx="70" ry="14" fill="none" stroke="#F2B33D" stroke-width="5"/>';
+      for (const x of [60, 760]) b += `<rect x="${x - 40}" y="40" width="80" height="300" rx="20" fill="#C3CCD6" stroke="#5F6B7A" stroke-width="3"/>`;
+      b += '<rect x="0" y="360" width="800" height="140" fill="#6E7A88"/><path d="M0 360 H800" stroke="#4A5562" stroke-width="6"/>';
+      b += '<rect x="150" y="300" width="230" height="80" rx="14" fill="#4A5562" stroke="#2E2A3B" stroke-width="3"/>';
+      const colores = ['#E04A3C', '#F2B33D', '#4FC7B0', '#5FA8CF', '#C9476B'];
+      for (let i = 0; i < 10; i++) b += `<circle cx="${175 + (i % 5) * 45}" cy="${322 + Math.floor(i / 5) * 30}" r="9" fill="${colores[Math.floor(r() * 5)]}"/>`;
+      return b;
+    },
+    espacio(r, noche, defs) {
+      let b = '<rect width="800" height="500" fill="#0E1230"/>';
+      b += '<ellipse cx="250" cy="160" rx="220" ry="90" fill="#6A3FA0" opacity=".25"/><ellipse cx="560" cy="260" rx="200" ry="70" fill="#2F8FB0" opacity=".2"/>';
+      for (let i = 0; i < 120; i++) b += `<circle cx="${n(r() * 800)}" cy="${n(r() * 500)}" r="${n(.5 + r() * 1.8)}" fill="#FFFFFF" opacity="${n(.4 + r() * .6)}"/>`;
+      b += '<circle cx="600" cy="140" r="60" fill="#F2B33D"/><ellipse cx="600" cy="140" rx="105" ry="20" fill="none" stroke="#E9775A" stroke-width="8" transform="rotate(-15 600 140)"/>';
+      for (let i = 0; i < 5; i++) { const x = r() * 800, y = 100 + r() * 220, rr = 8 + r() * 16; b += `<ellipse cx="${n(x)}" cy="${n(y)}" rx="${n(rr)}" ry="${n(rr * .8)}" fill="#7A6F80"/>`; }
+      b += '<path d="M-20 420 Q100 330 260 360 Q420 320 520 380 Q640 340 820 400 V520 H-20 Z" fill="#8C8098"/><path d="M-20 450 Q300 400 820 450 V520 H-20 Z" fill="#776B84"/>';
+      for (let i = 0; i < 5; i++) b += `<ellipse cx="${n(r() * 800)}" cy="${n(430 + r() * 50)}" rx="18" ry="6" fill="#665A72"/>`;
+      return b;
+    },
+
+    // ───── Nieve ─────
+    nieve(r, noche, defs) {
+      let b = cielo(defs, noche, '#BFE3F5', '#F2F8FB') + astros(r, noche, 650, 80);
+      b += '<path d="M-20 300 L160 120 L280 240 L420 90 L600 280 L700 170 L820 300 Z" fill="#9FB8CC"/><path d="M160 120 L130 150 L150 160 L175 140 L200 165 L215 150 Z M420 90 L380 135 L405 145 L430 120 L455 150 L470 135 Z M700 170 L675 195 L700 205 L720 190 Z" fill="#FFFFFF"/>';
+      b += '<path d="M0 300 Q300 270 800 310 V500 H0 Z" fill="#F4F9FC"/><path d="M0 380 Q400 350 800 390 V500 H0 Z" fill="#E6F0F7"/>';
+      for (let i = 0; i < 6; i++) { const x = r() < .5 ? r() * 250 : 520 + r() * 280, s = .8 + r() * .5; b += P.pino(x, 330 + r() * 40, 110 * s, 70 * s, '#3F6E58') + `<path d="M${n(x - 25 * s)} ${n(300 - 10 * s)} L${n(x)} ${n(270 - 20 * s)} L${n(x + 25 * s)} ${n(300 - 10 * s)} Z" fill="#FFFFFF" opacity=".85"/>`; }
+      const mx = 560 + r() * 120;
+      b += `<circle cx="${n(mx)}" cy="430" r="34" fill="#FFFFFF" stroke="#BFD3E2" stroke-width="3"/><circle cx="${n(mx)}" cy="378" r="24" fill="#FFFFFF" stroke="#BFD3E2" stroke-width="3"/><path d="M${n(mx)} 380 l18 4 l-18 4 Z" fill="#F08A3C"/><circle cx="${n(mx - 8)}" cy="372" r="3" fill="#2E2A3B"/><circle cx="${n(mx + 6)}" cy="372" r="3" fill="#2E2A3B"/><rect x="${n(mx - 22)}" y="392" width="44" height="8" rx="4" fill="#C9476B"/>`;
+      for (let i = 0; i < 40; i++) b += `<circle cx="${n(r() * 800)}" cy="${n(r() * 500)}" r="${n(1.5 + r() * 2.5)}" fill="#FFFFFF" opacity=".85"/>`;
+      return b + velo(r, noche);
+    },
+    lago(r, noche, defs) {
+      let b = cielo(defs, noche, '#C3E4F4', '#F3F9FC') + astros(r, noche, 150, 80);
+      b += '<path d="M-20 280 L180 140 L330 260 L520 120 L820 280 Z" fill="#A9BFD1"/><path d="M180 140 L150 165 L180 172 L205 160 Z M520 120 L485 150 L515 158 L545 140 Z" fill="#FFFFFF"/>';
+      b += '<path d="M0 280 Q400 260 800 285 V500 H0 Z" fill="#F4F9FC"/>';
+      const hielo = P.grad('#D6EEF8', '#A7D3EA'); defs.push(hielo.def);
+      b += `<ellipse cx="520" cy="390" rx="300" ry="80" fill="url(#${hielo.id})" stroke="#FFFFFF" stroke-width="6"/>`;
+      b += '<path d="M380 370 l40 10 l20 -14 l30 20 M560 420 l30 -12 l24 16 M620 360 l-20 20" stroke="#FFFFFF" stroke-width="3" fill="none"/><path d="M460 350 L560 350" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity=".7"/>';
+      for (const x of [60, 130, 760]) b += P.pino(x, 320, 120, 74, '#3F6E58') + `<path d="M${x - 24} 296 L${x} 266 L${x + 24} 296 Z" fill="#FFFFFF" opacity=".85"/>`;
+      for (let i = 0; i < 30; i++) b += `<circle cx="${n(r() * 800)}" cy="${n(r() * 500)}" r="${n(1.5 + r() * 2.5)}" fill="#FFFFFF" opacity=".85"/>`;
+      return b + velo(r, noche);
+    },
+    iglu(r, noche, defs) {
+      let b = cielo(defs, noche, '#C9E6F5', '#F4FAFD') + astros(r, noche, 640, 80);
+      if (noche) b += '<path d="M0 120 Q200 60 400 130 T800 100" stroke="#5FE0A8" stroke-width="40" fill="none" opacity=".35"/><path d="M0 160 Q260 100 520 170 T800 140" stroke="#8A62C4" stroke-width="26" fill="none" opacity=".3"/>';
+      b += '<path d="M0 290 Q400 260 800 300 V500 H0 Z" fill="#F4F9FC"/>';
+      b += '<path d="M380 360 A140 120 0 0 1 660 360 Z" fill="#FFFFFF" stroke="#BFD3E2" stroke-width="4"/>';
+      for (const y of [270, 310, 340]) b += `<path d="M${n(520 - Math.sqrt(Math.max(0, 1 - ((360 - y) / 120) ** 2)) * 140)} ${y} H${n(520 + Math.sqrt(Math.max(0, 1 - ((360 - y) / 120) ** 2)) * 140)}" stroke="#D3E3EE" stroke-width="3"/>`;
+      b += `<path d="M590 360 V320 A28 28 0 0 1 646 320 V360 Z" fill="${noche ? '#FFD27A' : '#5B7E99'}" stroke="#BFD3E2" stroke-width="4"/>`;
+      b += '<path d="M0 360 Q400 340 800 370 V500 H0 Z" fill="#E6F0F7"/>';
+      b += '<rect x="150" y="380" width="90" height="12" rx="6" fill="#C9476B"/><path d="M150 392 Q140 404 160 404 H250" stroke="#8A6040" stroke-width="5" fill="none"/>';
+      for (let i = 0; i < 35; i++) b += `<circle cx="${n(r() * 800)}" cy="${n(r() * 500)}" r="${n(1.5 + r() * 2.5)}" fill="#FFFFFF" opacity=".85"/>`;
+      return b + velo(r, noche);
+    },
+    cabana(r, noche, defs) {
+      let b = cielo(defs, noche, '#BFE3F5', '#F2F8FB') + astros(r, noche, 140, 80);
+      b += '<path d="M0 300 Q400 270 800 305 V500 H0 Z" fill="#F4F9FC"/>';
+      for (let i = 0; i < 5; i++) { const x = r() < .5 ? r() * 200 : 640 + r() * 160; b += P.pino(x, 320, 120, 70, '#3F6E58') + `<path d="M${n(x - 22)} 296 L${n(x)} 268 L${n(x + 22)} 296 Z" fill="#FFFFFF" opacity=".85"/>`; }
+      b += '<rect x="330" y="220" width="250" height="140" fill="#9C6A3E" stroke="#5E3A26" stroke-width="4"/>';
+      for (let y = 236; y < 360; y += 22) b += `<path d="M330 ${y} H580" stroke="#7A5232" stroke-width="3"/>`;
+      b += '<path d="M310 226 L455 140 L600 226 Z" fill="#7A5232" stroke="#5E3A26" stroke-width="4"/><path d="M318 222 L455 142 L592 222 L586 232 L455 156 L324 232 Z" fill="#FFFFFF"/>';
+      b += '<rect x="520" y="150" width="30" height="56" fill="#8E8A7E" stroke="#5E3A26" stroke-width="3"/>';
+      for (let i = 0; i < 4; i++) b += `<circle cx="${535 + i * 8}" cy="${130 - i * 22}" r="${10 + i * 4}" fill="#FFFFFF" opacity="${n(.7 - i * .14)}"/>`;
+      const luz = noche ? '#FFD27A' : '#CFEFFF';
+      b += `<rect x="360" y="260" width="60" height="50" fill="${luz}" stroke="#5E3A26" stroke-width="4"/><path d="M390 260 V310 M360 285 H420" stroke="#5E3A26" stroke-width="3"/>`;
+      b += '<rect x="470" y="270" width="60" height="90" rx="6" fill="#C9476B" stroke="#5E3A26" stroke-width="4"/><circle cx="518" cy="318" r="4" fill="#F2B33D"/>';
+      b += '<path d="M0 380 Q400 360 800 390 V500 H0 Z" fill="#E6F0F7"/>';
+      for (let i = 0; i < 35; i++) b += `<circle cx="${n(r() * 800)}" cy="${n(r() * 500)}" r="${n(1.5 + r() * 2.5)}" fill="#FFFFFF" opacity=".85"/>`;
+      return b + velo(r, noche);
     }
   };
 

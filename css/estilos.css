@@ -163,6 +163,16 @@ mark.pista .lupa { font-size: .7em; margin-right: .15em; }
 }
 .escenario .fondo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .personajes { position: absolute; inset: 0; pointer-events: none; }
+.pj[data-saludo] { pointer-events: auto; cursor: pointer; }
+/* Todos los emojis con la misma fuente: se ven igual en la tablet, el iPad y el portátil */
+.emoji, .tesoro, .pegatina-grande, .opcion-icono, .emoji-grande, .insignia-nivel, .tapa-progreso .emoji {
+  font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+}
+.pj.salta { animation: saltito .5s ease; }
+.pj-emoji.habla .emoji { animation: hablar .32s ease-in-out 4; }
+.pj-alaya.habla svg, .pj-lucia.habla svg { animation: hablar .32s ease-in-out 3; transform-origin: bottom center; }
+@keyframes saltito { 40% { transform: translateY(-14%); } }
+@keyframes hablar { 50% { transform: scale(1.08, .94) translateY(2%); } }
 .pj { position: absolute; bottom: 3%; display: flex; flex-direction: column; align-items: center; }
 .pj svg { display: block; height: 100%; width: auto; filter: drop-shadow(0 3px 0 rgba(46, 42, 59, .2)); }
 .pj-alaya { left: 3%; height: 56%; animation: respirar 3.2s ease-in-out infinite; }
@@ -295,6 +305,35 @@ mark.pista .lupa { font-size: .7em; margin-right: .15em; }
 .boton-mayores .carga { position: absolute; inset: 0; background: var(--sol-claro); transform: scaleX(0); transform-origin: left; z-index: -1; }
 .boton-mayores { isolation: isolate; }
 .boton-mayores.cargando .carga { transform: scaleX(1); transition: transform 1.8s linear; }
+
+/* Estantería de la portada */
+.estanteria-sitio { display: flex; flex-direction: column; gap: 12px; }
+.estanteria { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.libro-tapa {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  padding: 0; text-align: left;
+  border: 3px solid var(--tinta);
+  border-left: 14px solid var(--tapa);
+  border-radius: 10px 18px 18px 10px;
+  background: #FFFFFF;
+  box-shadow: 0 5px 0 var(--tinta);
+  overflow: hidden;
+  touch-action: manipulation;
+}
+.libro-tapa:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--tinta); }
+.tapa-dibujo { display: block; aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 3px solid var(--tinta); }
+.tapa-dibujo svg { width: 100%; height: 100%; display: block; }
+.tapa-texto { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px 14px; flex: 1; }
+.tapa-titulo { font-family: var(--fuente-titulo); font-weight: 800; font-size: 1.35rem; line-height: 1.15; }
+.tapa-resumen { color: var(--tinta-suave); font-size: .95rem; line-height: 1.4; }
+.tapa-progreso { display: flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 8px; }
+.tapa-progreso .emoji { font-size: 1.3rem; }
+.tapa-progreso .hueco { width: 22px; height: 22px; border-radius: 50%; border: 2px dashed var(--borde); }
+.tapa-cuenta { margin-left: auto; font-weight: 600; font-size: .9rem; color: var(--musgo-osc); }
+.boton-seguir { align-self: flex-start; text-align: left; }
+.boton-seguir > span { display: flex; flex-direction: column; line-height: 1.2; }
+.seguir-sub { font-size: .8rem; font-weight: 500; opacity: .85; text-transform: uppercase; letter-spacing: .08em; }
 
 .libro {
   background: var(--hoja);
@@ -520,6 +559,8 @@ mark.pista .lupa { font-size: .7em; margin-right: .15em; }
 .nivel-carta span:last-child { font-size: .95rem; color: var(--tinta-suave); }
 .nivel-carta.elegida { background: var(--musgo-claro); border-color: var(--musgo); box-shadow: 0 0 0 3px var(--musgo); }
 .muestra-texto { margin: .3em 0; }
+.fila-voz { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.selector { font: inherit; font-size: 1rem; min-height: 44px; max-width: 100%; padding: .3em .6em; border: 3px solid var(--tinta); border-radius: 12px; background: #FFFFFF; color: var(--tinta); }
 .interruptor { display: flex; align-items: center; gap: 12px; font-weight: 500; cursor: pointer; min-height: 44px; }
 .interruptor input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .pista-int { flex: none; width: 54px; height: 32px; border-radius: 999px; background: var(--borde); border: 3px solid var(--tinta); position: relative; transition: background .2s; }
@@ -532,6 +573,19 @@ mark.pista .lupa { font-size: .7em; margin-right: .15em; }
 .tarjeta-repaso { border-color: var(--sol); background: #FFF4D6; }
 .tarjeta-repaso .voz-cabecera { color: #8A5A00; }
 .tarjeta-repaso .frase-voz { font-size: 1.2em; font-weight: 500; }
+
+/* ───── Cerraduras mágicas ───── */
+.tarjeta-reto { margin: .6em 0 1em; padding: 14px 16px; border: 3px solid var(--cielo); border-radius: 18px; background: #E6F2F9; }
+.tarjeta-reto .voz-cabecera { color: #1F5F86; }
+.tarjeta-reto.abierta { border-color: var(--bien); background: var(--bien-fondo); }
+.reto-palabra { margin: .2em 0 .5em; font-size: calc(var(--tam-lectura) * 1.6); font-weight: 500; letter-spacing: .14em; }
+.reto-hueco { display: inline-block; min-width: 1.1em; text-align: center; border-bottom: 4px solid var(--tinta); color: var(--tinta-suave); }
+.reto-hueco.puesta { color: var(--bien); border-color: var(--bien); animation: pegar .5s ease; }
+.reto-opciones { display: grid; gap: 10px; margin-bottom: 10px; }
+.reto-letra { grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); max-width: 420px; }
+.reto-letra .reto-opcion { justify-content: center; font-size: calc(var(--tam-lectura) * 1.4); min-height: 72px; }
+.reto-escrita { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.reto-escrita .reto-opcion { justify-content: center; font-size: calc(var(--tam-lectura) * 1.05); letter-spacing: .08em; }
 
 /* ───── Informe para mayores ───── */
 .boton-informe { align-self: flex-start; }

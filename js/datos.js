@@ -62,7 +62,8 @@
 
     async cargarCatalogo() {
       const index = JSON.parse(await this.texto('stories/index.json'));
-      const libros = await Promise.all(index.libros.map(async (L) => {
+      // Si un libro tiene un error, se avisa en la consola y se cargan los demás
+      const resultados = await Promise.allSettled(index.libros.map(async (L) => {
         const base = `stories/${L.carpeta || L.id}/`;
         const libro = this.separarCabecera(await this.texto(base + 'libro.md'));
         const capitulos = await Promise.all(L.capitulos.map(async (archivo) => {
@@ -71,6 +72,12 @@
         }));
         return { id: L.id, meta: libro.meta, descripcion: libro.cuerpo.trim(), capitulos };
       }));
+      const libros = [];
+      resultados.forEach((r, i) => {
+        if (r.status === 'fulfilled') libros.push(r.value);
+        else console.error(`No se ha podido cargar el libro «${index.libros[i].id}»:`, r.reason);
+      });
+      if (!libros.length) throw new Error('No se ha podido cargar ningún libro.');
       return { protagonistas: index.protagonistas || { lectora: 'Alaia', hermana: 'Lucía' }, mascotas: index.mascotas, libros };
     }
   };
