@@ -123,9 +123,13 @@ En la pantalla de inicio, **mantén pulsado «⚙️ Mayores» dos segundos**.
 
 ## 📸 Capturas
 
-| Estantería | Lectura en voz alta | Cerradura mágica |
+| Estantería y meta del día | Lectura en voz alta | Cerradura mágica |
 |---|---|---|
-| ![Estantería de libros con el botón Seguir leyendo](docs/capturas/estanteria.png) | ![Frase para leer en voz alta con las palabras leídas en verde y las que faltan subrayadas](docs/capturas/lectura.png) | ![Minijuego para elegir la letra que falta](docs/capturas/cerradura.png) |
+| ![Portada con la meta del día y la estantería de libros](docs/capturas/estanteria.png) | ![Frase para leer en voz alta con las palabras leídas en verde y las que faltan subrayadas](docs/capturas/lectura.png) | ![Minijuego para elegir la letra que falta](docs/capturas/cerradura.png) |
+
+| Elegir protagonistas | Tienda |
+|---|---|
+| ![Pantalla para elegir una o dos niñas y sus nombres](docs/capturas/protagonistas.png) | ![Tienda con complementos que se compran con estrellas](docs/capturas/tienda.png) |
 
 ## 📱 Instalarlo en la tablet
 
@@ -175,8 +179,14 @@ La primera vez el navegador pide permiso para usar el micro.
 - `main`: producción, lo que se publica en GitHub Pages. **Nada se sube directamente**: los cambios
   llegan solo por **pull request de `development` a `main`**, que se revisa antes de fusionar.
 
-Antes de abrir el PR, comprueba los cuentos con `python herramientas/validar.py todos`.
-Además, la GitHub Action **Comprobar cuentos** (`.github/workflows/validar-cuentos.yml`) lo hace sola en cada
+Antes de abrir el PR, comprueba los cuentos y juega las partidas de prueba:
+
+```bash
+python herramientas/validar.py todos   # cuentos: cientos de partidas al azar, con una y con dos niñas
+python tests/partidas.py               # juego: partidas completas con micro simulado, tienda, meta, sílabas, copias…
+```
+
+Además, la GitHub Action **Comprobar cuentos** (`.github/workflows/validar-cuentos.yml`) hace las dos cosas sola en cada
 PR a `main` y en cada subida a `development`. Para que un PR con cuentos rotos no se pueda fusionar:
 *Settings → Branches → Add rule* para `main` → *Require status checks to pass* → **Validar los cuentos**.
 
@@ -315,7 +325,12 @@ js/
   voz.js                 reconocimiento de voz y lectura en voz alta
   grabaciones.js         la voz de la familia para las palabras difíciles
   arte.js                paisajes y personajes dibujados con código
-  juego.js               pantallas, partida, niveles, minijuegos, tienda, meta, álbum, informe y ajustes
+  juego/                 el juego, en orden de carga:
+    01-base.js           estado, registro, sonidos, palabras, variables y escenario
+    02-portada.js        bienvenida, protagonistas, meta del día, tienda y estantería
+    03-partida.js        escenas, cerraduras, lectura en voz alta, preguntas y final
+    04-mayores.js        álbum, progreso, tu voz, ajustes e informe
+    05-arranque.js       carga los libros y abre la primera pantalla
 .github/workflows/       comprobación automática de los cuentos
 stories/
   index.json             libros, mascotas y nombres de las protagonistas
@@ -323,6 +338,7 @@ stories/
   <libro>/libro.md       el mundo de cada libro
   <libro>/cap-XX.md      los capítulos
 herramientas/validar.py  comprobador de cuentos
+tests/partidas.py        pruebas: partidas completas con micro simulado y funciones
 docs/                    imágenes del README
 ```
 </details>
