@@ -162,7 +162,8 @@ La primera vez el navegador pide permiso para usar el micro.
 <details>
 <summary><b>🔒 Privacidad</b></summary>
 
-- No hay cuentas, servidores ni publicidad. Todo el progreso se guarda **solo en el navegador** del dispositivo.
+- No hay cuentas ni publicidad. Todo el progreso (partidas, palabras, estrellas, informe) se guarda **solo en el navegador** del dispositivo.
+- Para saber cuánto se usa, se cuentan las **visitas y las partidas empezadas** con [GoatCounter](https://www.goatcounter.com/), sin cookies y sin datos personales: no se envía ningún nombre, texto leído, voz ni progreso. Si un bloqueador lo impide, el juego funciona igual.
 - El juego pide al navegador que **no borre** esos datos. En iPad conviene **instalarlo en la pantalla de inicio**:
   si no, Safari puede borrar los datos de una web que no se abre en varias semanas.
 - El reconocimiento de voz lo hace el propio navegador (en Chrome, a través de los servicios de Google).
