@@ -59,28 +59,50 @@ COMPROBAR = r"""
     for (const nv of niveles) {
       const escenas = cap.escenas.filter(e => (e.niveles[nv] || e.niveles.todos || []).length);
       if (!escenas.length) { fallos.push(`${cap.id}/${nv}: sin escenas`); continue; }
-      let preguntas = 0, voces = 0;
+      const preguntas = [0, 0], voces = [0, 0];   // [dos niñas, una niña]
       for (let it = 0; it < 60; it++) {
         const d = Juego.prepararPartida(libro, cap);
+        // Las partidas impares se juegan con una sola protagonista
+        const una = it % 2 === 1;
+        d.vars.__dos = !una;
+        d.vars.las_ninas = una ? d.vars.lectora : `${d.vars.lectora} y ${d.vars.hermana}`;
+        const modo = una ? ' [una niña]' : '';
         for (const e of escenas) (e.niveles[nv] || e.niveles.todos).forEach((v, vi) => {
           const t = Texto.rellenar(v, d.vars); total++;
+          if (una) {
+            const plano = t.replace(/\n/g, ' ');
+            const lineaCon = (re) => (t.split('\n').find((x) => re.test(x)) || '').trim();
+            if (plano.includes(d.vars.hermana)) fallos.push(`${cap.id}/${e.id}/${nv}${modo}: sale la hermana: «${lineaCon(new RegExp(d.vars.hermana))}»`);
+            for (const re of [/\blas niñas\b/i, /\blas detectives\b/i, /\bhermanas\b/i, /\blas dos niñas\b/i])
+              if (re.test(plano)) fallos.push(`${cap.id}/${e.id}/${nv}${modo}: plural con una sola niña: «${lineaCon(re)}»`);
+            for (const re of [/\bellas\b/i, /\bambas\b/i, /\bvosotras\b/i, /\bnosotras\b/i, /\bvuestr[oa]s?\b/i, /\blas dos\b/i])
+              if (re.test(plano)) avisos.push(`${cap.id}/${e.id}/${nv}${modo}: revisa «${plano.match(re)[0]}» en «${lineaCon(re)}»`);
+          }
           const m = t.match(/\{[^}]*\}/g); if (m) fallos.push(`${cap.id}/${e.id}/${nv}: sin rellenar ${m.join(',')}`);
           if (/undefined|null|NaN/.test(t)) fallos.push(`${cap.id}/${e.id}/${nv}: aparece undefined`);
           const mm = t.match(/(?:^|[\s¡¿«"—(])(el el|la la|a el|de el|en en)(?=[\s,.!?»])/iu);
           if (mm) fallos.push(`${cap.id}/${e.id}/${nv}: «${mm[1]}» en «${t.split('\n').find(x => x.includes(mm[1]))}»`);
           for (const b of Texto.bloques(t)) {
-            if (b.tipo === 'pregunta') { if (it === 0) preguntas++; if (b.opciones.length && b.opciones.filter(o => o.correcta).length !== 1) fallos.push(`${cap.id}/${e.id}/${nv}: la pregunta no tiene exactamente una respuesta * correcta`); if (b.opciones.length === 1) fallos.push(`${cap.id}/${e.id}/${nv}: solo una opción`); }
-            if (b.tipo === 'voz') { if (it === 0) voces++; const nw = Voz.normalizar(b.texto).length; if (nw < 3) avisos.push(`${cap.id}/${e.id}/${nv}: frase de voz muy corta`); if (nw > (nv === 'aprendiz' ? 12 : nv === 'novatilla' ? 22 : 32)) avisos.push(`${cap.id}/${e.id}/${nv}: frase de voz larga (${nw} palabras)`); }
+            if (b.tipo === 'pregunta') { if (it < 2) preguntas[it]++; if (b.opciones.length && b.opciones.filter(o => o.correcta).length !== 1) fallos.push(`${cap.id}/${e.id}/${nv}: la pregunta no tiene exactamente una respuesta * correcta`); if (b.opciones.length === 1) fallos.push(`${cap.id}/${e.id}/${nv}: solo una opción`); }
+            if (b.tipo === 'voz') { if (it < 2) voces[it]++; const nw = Voz.normalizar(b.texto).length; if (nw < 3) avisos.push(`${cap.id}/${e.id}/${nv}: frase de voz muy corta`); if (nw > (nv === 'aprendiz' ? 12 : nv === 'novatilla' ? 22 : 32)) avisos.push(`${cap.id}/${e.id}/${nv}: frase de voz larga (${nw} palabras)`); }
             if (b.tipo === 'texto' && /^[*-]\s/.test(b.texto)) fallos.push(`${cap.id}/${e.id}/${nv}: línea que empieza por «${b.texto[0]} » fuera de una pregunta`);
           }
-          if (muestras && it === 0) ejemplos.push(`── ${cap.id} · ${e.id} · ${nv} · versión ${vi + 1}\n${t}`);
+          if (muestras && it < 2) ejemplos.push(`── ${cap.id} · ${e.id} · ${nv} · versión ${vi + 1}${modo}\n${t}`);
         });
       }
-      if (!preguntas) fallos.push(`${cap.id}/${nv}: no hay ninguna pregunta`);
-      if (!voces) fallos.push(`${cap.id}/${nv}: no hay ninguna frase > de voz`);
+      ['', ' [una niña]'].forEach((m, k) => {
+        if (!preguntas[k]) fallos.push(`${cap.id}/${nv}${m}: no hay ninguna pregunta`);
+        if (!voces[k]) fallos.push(`${cap.id}/${nv}${m}: no hay ninguna frase > de voz`);
+      });
+      // El título del capítulo también puede llevar nombres y alternativas
+      if (nv === 'aprendiz') for (const dos of [true, false]) {
+        const t = Texto.rellenar(cap.meta.titulo || '', { lectora: 'Alaia', hermana: 'Lucía', __dos: dos });
+        if (/[{}]/.test(t)) fallos.push(`${cap.id}: el título tiene llaves sin resolver: «${t}»`);
+        if (!dos && /Lucía|Bienvenidas|\blas niñas\b/.test(t)) avisos.push(`${cap.id} [una niña]: revisa el título «${t}»`);
+      }
     }
   }
-  return { total, fallos: [...new Set(fallos)], avisos: [...new Set(avisos)].slice(0, 40), ejemplos };
+  return { total, fallos: [...new Set(fallos)], avisos: [...new Set(avisos)].slice(0, 60), ejemplos };
 }
 """
 
@@ -112,7 +134,7 @@ async def comprobar(navegador, puerto, libro_id):
     await ctx.close()
     print(f"\n■ {libro_id}: {r['total']} textos generados")
     print('  FALLOS: ninguno' if not r['fallos'] else '  FALLOS:')
-    for f in r['fallos'][:60]: print('   ✗', f)
+    for f in r['fallos'][:200]: print('   ✗', f)
     for a in r['avisos']: print('   · aviso:', a)
     for e in errores[:5]: print('   ✗ error de página:', e[:300])
     if muestras: print('\n' + '\n\n'.join(r['ejemplos']))

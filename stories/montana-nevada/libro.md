@@ -2,10 +2,10 @@
 # ─────────────────────────────────────────────────────────────
 #  LIBRO: La montaña nevada
 #  Vacaciones de invierno en una cabaña de la montaña.
-#  Lugares, animales que ayudan, tesoros de Lucía y frases de humor.
+#  Lugares, animales que ayudan, tesoros de {hermana} y frases de humor.
 # ─────────────────────────────────────────────────────────────
 titulo: "La montaña nevada"
-resumen: "Nieva sin parar en la montaña y los animales del frío necesitan a las mejores detectives."
+resumen: "{{Nieva sin parar en la montaña y los animales del frío necesitan a las mejores detectives.|Nieva sin parar en la montaña y los animales del frío necesitan a la mejor detective.}}"
 portada: nieve
 
 lugares:
@@ -148,14 +148,14 @@ ayudantes:
 
 # Cuando se elige un camino equivocado. Variables: {elegido}, {al_elegido}, {en_elegido}, {buscado}
 equivocado:
-  - "Alaia y Lucía van {al_elegido}. Allí solo hay un muñeco de nieve, y no ha visto a nadie."
-  - "En {elegido} solo encuentran una marmota dormida. Ronca muy fuerte, pero no sabe nada."
-  - "Llegan {al_elegido} y buscan por todas partes. Solo encuentran un guante perdido que no es de nadie."
-  - "Lucía busca {en_elegido} debajo de cada montón de nieve. Solo encuentra una bola de nieve que le cae en la cabeza: ¡plof!"
+  - "{{{lectora} y {hermana} van {al_elegido}. Allí solo hay un muñeco de nieve, y no ha visto a nadie.|{lectora} va {al_elegido}. Allí solo hay un muñeco de nieve, y no ha visto a nadie.}}"
+  - "{{En {elegido} solo encuentran una marmota dormida. Ronca muy fuerte, pero no sabe nada.|En {elegido} solo encuentra una marmota dormida. Ronca muy fuerte, pero no sabe nada.}}"
+  - "{{Llegan {al_elegido} y buscan por todas partes. Solo encuentran un guante perdido que no es de nadie.|Llega {al_elegido} y busca por todas partes. Solo encuentra un guante perdido que no es de nadie.}}"
+  - "{{{hermana} busca {en_elegido} debajo de cada montón de nieve. Solo encuentra una bola de nieve que le cae en la cabeza: ¡plof!|{lectora} busca {en_elegido} debajo de cada montón de nieve. Solo encuentra una bola de nieve que le cae en la cabeza: ¡plof!}}"
 
 equivocado_pregunta:
   - "¡Casi! Vuelve a leer el texto despacito. La respuesta está escondida ahí."
-  - "Esa no es. Lucía dice que ella tampoco lo sabía. ¡Prueba otra vez!"
+  - "{{Esa no es. {hermana} dice que ella tampoco lo sabía. ¡Prueba otra vez!|Esa no es. {mascota} tampoco lo sabía. ¡Prueba otra vez!}}"
   - "¡Inténtalo de nuevo! Las buenas detectives siempre leen dos veces."
 
 tesoros:
@@ -172,4 +172,4 @@ tesoros:
 ---
 
 En esta montaña nieva sin parar y los animales del frío hablan en voz baja para no despertar a los osos.
-Alaia y Lucía descubren que también son unas detectives estupendas en la nieve.
+{{{lectora} y {hermana} descubren que también son unas detectives estupendas en la nieve.|{lectora} descubre que también es una detective estupenda en la nieve.}}

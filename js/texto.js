@@ -15,8 +15,35 @@
       .replace(/(:\s+[«"“][¡¿]?)(\p{Ll})/gu, (m, a, b) => a + b.toUpperCase());
   }
 
+  /**
+   * Alternativas según cuántas protagonistas haya: {{texto con dos|texto con una}}
+   * Dentro puede haber variables ({lectora}…). Si la parte de «una» está vacía, la línea desaparece.
+   */
+  function alternativas(texto, dos) {
+    let out = '', i = 0;
+    while (i < texto.length) {
+      const ini = texto.indexOf('{{', i);
+      if (ini < 0) { out += texto.slice(i); break; }
+      out += texto.slice(i, ini);
+      let j = ini + 2, prof = 0, barra = -1;
+      for (; j < texto.length; j++) {
+        const c = texto[j];
+        if (c === '{') prof++;
+        else if (c === '}') { if (prof === 0 && texto[j + 1] === '}') break; prof = Math.max(0, prof - 1); }
+        else if (c === '|' && prof === 0 && barra < 0) barra = j;
+      }
+      if (j >= texto.length) { out += texto.slice(ini); break; }   // sin cerrar: se deja tal cual
+      const dentro = texto.slice(ini + 2, j);
+      const [conDos, conUna] = barra < 0 ? [dentro, ''] : [texto.slice(ini + 2, barra), texto.slice(barra + 1, j)];
+      out += dos ? conDos : conUna;
+      i = j + 2;
+    }
+    // Las líneas que se quedan vacías por una alternativa desaparecen
+    return out.split('\n').filter((l, k, arr) => l.trim() || !/\{\{/.test(texto.split('\n')[k] || '')).join('\n');
+  }
+
   function rellenar(plantilla, vars) {
-    let s = plantilla;
+    let s = alternativas(plantilla, vars.__dos !== false);
     for (let vuelta = 0; vuelta < 4; vuelta++) {
       const antes = s;
       s = s.replace(/\{([\p{L}\d_]+)\}/gu, (m, k) => {
@@ -25,6 +52,8 @@
         if (kl in vars && vars[kl] != null) return capitalizar(String(vars[kl]));
         return m;
       });
+      // Las piezas que vienen de libro.md (gracias, pistas…) también pueden llevar alternativas
+      s = alternativas(s, vars.__dos !== false);
       if (s === antes) break;
     }
     const sobra = s.match(/\{[\p{L}\d_]+\}/gu);
@@ -124,5 +153,5 @@
     return m ? [m[1], m[2], m[3]] : [token, '', ''];
   }
 
-  window.Texto = { rellenar, bloques, capitalizar, limpiarPistas, pistasDe, silabas, partesDePalabra };
+  window.Texto = { rellenar, alternativas, bloques, capitalizar, limpiarPistas, pistasDe, silabas, partesDePalabra };
 })();

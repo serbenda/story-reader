@@ -24,34 +24,34 @@ Glup llama por la radio: «¿Tuerca?».
 ¿Dónde estará el robot?
 
 ### novatilla
-Las niñas bajan del cohete y miran a su alrededor. ¡Todo es rojo!
+{{Las niñas bajan del cohete y miran a su alrededor. ¡Todo es rojo!|{lectora} baja del cohete y mira a su alrededor. ¡Todo es rojo!}}
 En el cielo hay dos lunas pequeñas, una amarilla y otra azul.
 > Glup llama a Tuerca por la radio una vez, dos veces, tres veces… pero nadie contesta.
 Glup se pone de color gris, que es el color de la preocupación.
-—Tranquilo —dice Alaia—. Somos detectives: lo vamos a encontrar.
+{{—Tranquilo —dice {lectora}—. Somos detectives: lo vamos a encontrar.|—Tranquilo —dice {lectora}—. Soy detective: lo vamos a encontrar.}}
 ---
 El planeta rojo está lleno de plantas raras que brillan como lámparas.
-Lucía quiere tocarlas todas, pero Alaia le dice que primero hay que trabajar.
+{{{hermana} quiere tocarlas todas, pero {lectora} le dice que primero hay que trabajar.|{lectora} quiere tocarlas todas, pero primero hay que trabajar.}}
 > Tuerca salió a explorar con su linterna hace un rato y todavía no ha vuelto.
 —Mi amigo es muy curioso —suspira Glup—. Seguro que se ha distraído con algo.
 
 ### lectora
-Las niñas salen del cohete con el casco bien cerrado. El suelo cruje bajo sus botas.
+{{Las niñas salen del cohete con el casco bien cerrado. El suelo cruje bajo sus botas.|{lectora} sale del cohete con el casco bien cerrado. El suelo cruje bajo sus botas.}}
 Todo es rojo: las piedras, la arena y hasta el polvo que se levanta al andar.
 —Es rojo porque está oxidado, como un clavo viejo —explica Glup.
 > En el cielo morado brillan dos lunas pequeñas, una amarilla y otra azul, que parecen dos caramelos.
 Pero Glup no las mira. Llama por la radio sin parar: «¿Tuerca? ¿Me oyes, Tuerca?».
 Nadie contesta. Solo se oye un ruidito: «shhhh».
-Alaia saca el cuaderno. Tienen un caso nuevo: encontrar al robot.
+{{{lectora} saca el cuaderno. Tienen un caso nuevo: encontrar al robot.|{lectora} saca el cuaderno. Tiene un caso nuevo: encontrar al robot.}}
 
 ### superlectora
 El cohete se ha posado en una llanura de arena roja, rodeada de plantas que brillan como farolillos.
 —Este planeta es rojo porque su polvo está oxidado, igual que un clavo que se queda al sol y a la lluvia —explica Glup.
-Lucía mira las dos lunas del cielo, una amarilla y otra azul, y decide que una es de limón y la otra de chicle.
+{{{hermana} mira las dos lunas del cielo, una amarilla y otra azul, y decide que una es de limón y la otra de chicle.|{lectora} mira las dos lunas del cielo, una amarilla y otra azul, y decide que una es de limón y la otra de chicle.}}
 > Pero Glup no está para caramelos: llama a Tuerca por la radio una y otra vez, y solo se oye un «shhhh» muy largo.
 Se pone de color gris, que es el color de la preocupación, y después de color gris oscuro, que es el color de la preocupación muy grande.
-Alaia le pone una mano en el hombro.
-—No te preocupes. Encontrar cosas perdidas es nuestra especialidad.
+{lectora} le pone una mano en el hombro.
+{{—No te preocupes. Encontrar cosas perdidas es nuestra especialidad.|—No te preocupes. Encontrar cosas perdidas es mi especialidad.}}
 Abre el cuaderno y escribe: «Caso número dos: el robot desaparecido».
 
 ## pista
@@ -64,7 +64,7 @@ Es {ayudante_desc}.
 > {ayudante_nombre} dice que Tuerca fue {hacia_lugar}.
 ? ¿A dónde fue el robot Tuerca?
 ---
-Las niñas ven {al_ayudante}.
+{{Las niñas ven {al_ayudante}.|{lectora} ve {al_ayudante}.}}
 > «El robot fue {hacia_lugar}», dice {ayudante_nombre}.
 ? ¿A dónde tienen que ir?
 
@@ -76,26 +76,26 @@ Entre las plantas que brillan aparece {ayudante}, {ayudante_desc}.
 ---
 Sentad{o2} en una piedra roja está {ayudante}, {ayudante_desc}.
 > «El robot no fue {al_falso}», dice {ayudante_nombre}. «Fue {al_lugar}. ¡Lo vi con mis propios ojos!»
-Lucía se lo cree enseguida. Alaia también, pero lo piensa dos veces, como hacen las detectives.
+{{{hermana} se lo cree enseguida. {lectora} también, pero lo piensa dos veces, como hacen las detectives.|{lectora} se lo cree, pero lo piensa dos veces, como hace toda buena detective.}}
 ? ¿A dónde fue el robot Tuerca?
 
 ### lectora
-Las niñas caminan por la arena roja buscando huellas de ruedas.
+{{Las niñas caminan por la arena roja buscando huellas de ruedas.|{lectora} camina por la arena roja buscando huellas de ruedas.}}
 —¡Cuidado, que me pisáis! —dice una voz. Es {ayudante}, {ayudante_desc}.
-Lucía da un saltito del susto. Y entonces {gracia}.
-> Alaia le pregunta si ha visto pasar a un robot con ruedas y ojos de bombilla.
+{{{hermana} da un saltito del susto. Y entonces {gracia}.|{mascota} da un saltito del susto. Y entonces {gracia}.}}
+> {lectora} le pregunta si ha visto pasar a un robot con ruedas y ojos de bombilla.
 —Claro que sí. Pasó por aquí haciendo bip, bip. No sé a dónde iba, pero me fijé en que {buscado} {pista1}.
-Alaia lo piensa con calma. ¿Qué sitio del planeta deja esa huella?
+{lectora} lo piensa con calma. ¿Qué sitio del planeta deja esa huella?
 ? ¿Dónde puede estar Tuerca?
 
 ### superlectora
-Las detectives siguen unas marcas de ruedas por la arena hasta que el viento las borra.
+{{Las detectives siguen unas marcas de ruedas por la arena hasta que el viento las borra.|La detective sigue unas marcas de ruedas por la arena hasta que el viento las borra.}}
 Justo ahí, medio escondid{o2} detrás de una roca, está {ayudante}, {ayudante_desc}.
-Nada más ver a las niñas, {gracia}.
+{{Nada más ver a las niñas, {gracia}.|Nada más ver a {lectora}, {gracia}.}}
 > «Sé dónde está vuestro robot», dice {ayudante_nombre} en voz baja, «bueno, casi: sé dos cosas».
 —Primera: [[el robot no está {en_falso}]]. Por allí no ha pasado nadie en todo el día.
 —Segunda: cuando lo vi, [[{buscado} {pista1}]].
-Alaia escribe en su cuaderno con letra muy clara. Lucía le sujeta la linterna, por si acaso.
+{{{lectora} escribe en su cuaderno con letra muy clara. {hermana} le sujeta la linterna, por si acaso.|{lectora} escribe en su cuaderno con letra muy clara. Glup le sujeta la linterna, por si acaso.}}
 
 ## pista2
 @fondo: planeta
@@ -104,9 +104,9 @@ Alaia escribe en su cuaderno con letra muy clara. Lucía le sujeta la linterna, 
 ### superlectora
 Un poco más allá, junto a una planta que brilla como un farolillo, está {ayudante2}, {ayudante2_desc}.
 —¿Un robot? ¿Con ruedas? ¿Que hace bip? —pregunta—. Sí, sí, lo vi hace un rato.
-Entonces {gracia2}, y Lucía se tapa la boca para no reírse demasiado alto.
+{{Entonces {gracia2}, y {hermana} se tapa la boca para no reírse demasiado alto.|Entonces {gracia2}, y {lectora} se tapa la boca para no reírse demasiado alto.}}
 > «Lo único que recuerdo», continúa {ayudante2_nombre}, «es que cuando volvió a pasar, [[{buscado} {pista2}]]».
-Alaia lee su cuaderno de arriba abajo. Cada pista, por separado, no dice mucho. Juntas, lo dicen todo.
+{lectora} lee su cuaderno de arriba abajo. Cada pista, por separado, no dice mucho. Juntas, lo dicen todo.
 ? Junta las pistas de tu cuaderno. ¿Dónde está el robot Tuerca?
 
 ## encuentro
@@ -114,21 +114,21 @@ Alaia lee su cuaderno de arriba abajo. Cada pista, por separado, no dice mucho. 
 @con: buscado, mascota
 
 ### aprendiz
-Alaia y Lucía llegan {al_lugar}.
+{{{lectora} y {hermana} llegan {al_lugar}.|{lectora} llega {al_lugar}.}}
 > ¡Allí está Tuerca!
 Tiene una rueda atascada.
-Las niñas le ayudan.
+{{Las niñas le ayudan.|{lectora} le ayuda.}}
 ¡Bip, bip! ¡Gracias!
 ---
-Las niñas buscan {en_lugar}.
+{{Las niñas buscan {en_lugar}.|{lectora} busca {en_lugar}.}}
 > ¡Se oye un bip, bip!
 ¡Es Tuerca!
 Glup se pone muy contento.
 
 ### novatilla
-Las niñas llegan {al_lugar} y oyen un ruidito: «bip… bip…».
+{{Las niñas llegan {al_lugar} y oyen un ruidito: «bip… bip…».|{lectora} llega {al_lugar} y oye un ruidito: «bip… bip…».}}
 Allí está Tuerca, con una rueda atascada entre dos piedras y la radio estropeada.
-> Alaia, Lucía y {mascota} empujan a la vez y… ¡plop! La rueda sale.
+{{> {lectora}, {hermana} y {mascota} empujan a la vez y… ¡plop! La rueda sale.|> {lectora} y {mascota} empujan a la vez y… ¡plop! La rueda sale.}}
 Glup se pone de color rosa, que es el color de la alegría, y abraza a su amigo.
 ---
 Cuando llegan {al_lugar}, {mascota} empieza a dar vueltas muy nervios{mo}.
@@ -140,7 +140,7 @@ Entre todos tiran de él y lo sacan con un «¡plop!».
 Cuando llegan {al_lugar}, al principio no ven nada. Pero entonces oyen un ruidito muy débil: «bip… bip…».
 Detrás de una roca brillan dos ojos de bombilla. ¡Es Tuerca!
 Tiene una rueda atascada entre dos piedras y la radio llena de arena.
-> Alaia, Lucía y {mascota} tiran a la vez, y la rueda sale de golpe: ¡plop!
+{{> {lectora}, {hermana} y {mascota} tiran a la vez, y la rueda sale de golpe: ¡plop!|> {lectora} y {mascota} tiran a la vez, y la rueda sale de golpe: ¡plop!}}
 ? ¿Por qué el robot Tuerca {pista1}?
 * Porque había estado {en_lugar}.
 - Porque había estado {en_falso}.
@@ -148,9 +148,9 @@ Tiene una rueda atascada entre dos piedras y la radio llena de arena.
 Glup se pone de color rosa, que es el color de la alegría, y le da a Tuerca un abrazo que le hace sonar todos los tornillos.
 
 ### superlectora
-Las detectives llegan {al_lugar} sin hacer ruido.
+{{Las detectives llegan {al_lugar} sin hacer ruido.|La detective llega {al_lugar} sin hacer ruido.}}
 Allí, con una rueda atascada entre dos piedras y la radio llena de arena, está Tuerca. Sus ojos de bombilla parpadean muy despacio.
-> —¡Caso resuelto! —dice Alaia, y entre todos lo sacan de un tirón: ¡plop!
+> —¡Caso resuelto! —dice {lectora}, y entre todos lo sacan de un tirón: ¡plop!
 ? ¿Qué te ayudó a encontrar al robot?
 * Que no estaba {en_falso} y que {pista1}.
 - Que {pista_falsa}.
@@ -184,7 +184,7 @@ Entonces, en mitad del silencio, algo golpea la ventana redonda: toc, toc, toc.
 ### superlectora
 Ya dentro del cohete, Tuerca abre una puertecita que tiene en la tripa y saca una escama dorada, del tamaño de una moneda.
 —Chispa debió de pasar por aquí hace poco —dice—. Las escamas de dragoncito todavía están calientes.
-Alaia la apunta en el cuaderno: [[una escama dorada y calentita]].
+{lectora} la apunta en el cuaderno: [[una escama dorada y calentita]].
 Glup se pone a los mandos, el cohete despega y el planeta rojo se hace pequeño por la ventana.
-Viajan un buen rato entre las estrellas, en silencio. Lucía empieza a bostezar.
+{{Viajan un buen rato entre las estrellas, en silencio. {hermana} empieza a bostezar.|Viajan un buen rato entre las estrellas, en silencio. {mascota} empieza a bostezar.}}
 Y de repente, algo pequeño y brillante golpea la ventana redonda: toc, toc, toc.
