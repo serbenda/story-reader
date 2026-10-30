@@ -1,19 +1,130 @@
 {
-  "protagonistas": { "lectora": "Alaia", "hermana": "Lucía" },
+  "protagonistas": {
+    "lectora": "Alaia",
+    "hermana": "Lucía"
+  },
   "mascotas": {
-    "perro":  { "chico": "perrito",  "chica": "perrita",  "emoji": "🐶" },
-    "gato":   { "chico": "gatito",   "chica": "gatita",   "emoji": "🐱" },
-    "conejo": { "chico": "conejito", "chica": "conejita", "emoji": "🐰" },
-    "hamster":{ "chico": "hámster",  "chica": "hámster",  "emoji": "🐹" },
-    "pato":   { "chico": "patito",   "chica": "patita",   "emoji": "🐥" },
-    "zorro":  { "chico": "zorrito",  "chica": "zorrita",  "emoji": "🦊" }
+    "perro": {
+      "chico": "perrito",
+      "chica": "perrita",
+      "emoji": "🐶"
+    },
+    "gato": {
+      "chico": "gatito",
+      "chica": "gatita",
+      "emoji": "🐱"
+    },
+    "conejo": {
+      "chico": "conejito",
+      "chica": "conejita",
+      "emoji": "🐰"
+    },
+    "hamster": {
+      "chico": "hámster",
+      "chica": "hámster",
+      "emoji": "🐹"
+    },
+    "pato": {
+      "chico": "patito",
+      "chica": "patita",
+      "emoji": "🐥"
+    },
+    "zorro": {
+      "chico": "zorrito",
+      "chica": "zorrita",
+      "emoji": "🦊"
+    },
+    "pinguino": {
+      "chico": "pingüinito",
+      "chica": "pingüinita",
+      "emoji": "🐧",
+      "precio": 30
+    },
+    "panda": {
+      "chico": "pandita",
+      "chica": "pandita",
+      "emoji": "🐼",
+      "precio": 30
+    },
+    "koala": {
+      "chico": "koalita",
+      "chica": "koalita",
+      "emoji": "🐨",
+      "precio": 30
+    },
+    "leon": {
+      "chico": "leoncito",
+      "chica": "leoncita",
+      "emoji": "🦁",
+      "precio": 40
+    },
+    "tortuga": {
+      "chico": "tortuguito",
+      "chica": "tortuguita",
+      "emoji": "🐢",
+      "precio": 35
+    },
+    "dragon": {
+      "chico": "dragoncito",
+      "chica": "dragoncita",
+      "emoji": "🐲",
+      "precio": 50
+    }
   },
   "libros": [
-    { "id": "bosque-susurros", "carpeta": "bosque-susurros", "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"] },
-    { "id": "secreto-faro", "carpeta": "secreto-faro", "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"] },
-    { "id": "granja-abuelos", "carpeta": "granja-abuelos", "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"] },
-    { "id": "castillo-nubes", "carpeta": "castillo-nubes", "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"] },
-    { "id": "viaje-luna", "carpeta": "viaje-luna", "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"] },
-    { "id": "montana-nevada", "carpeta": "montana-nevada", "capitulos": ["cap-01.md", "cap-02.md", "cap-03.md"] }
+    {
+      "id": "bosque-susurros",
+      "carpeta": "bosque-susurros",
+      "capitulos": [
+        "cap-01.md",
+        "cap-02.md",
+        "cap-03.md"
+      ]
+    },
+    {
+      "id": "secreto-faro",
+      "carpeta": "secreto-faro",
+      "capitulos": [
+        "cap-01.md",
+        "cap-02.md",
+        "cap-03.md"
+      ]
+    },
+    {
+      "id": "granja-abuelos",
+      "carpeta": "granja-abuelos",
+      "capitulos": [
+        "cap-01.md",
+        "cap-02.md",
+        "cap-03.md"
+      ]
+    },
+    {
+      "id": "castillo-nubes",
+      "carpeta": "castillo-nubes",
+      "capitulos": [
+        "cap-01.md",
+        "cap-02.md",
+        "cap-03.md"
+      ]
+    },
+    {
+      "id": "viaje-luna",
+      "carpeta": "viaje-luna",
+      "capitulos": [
+        "cap-01.md",
+        "cap-02.md",
+        "cap-03.md"
+      ]
+    },
+    {
+      "id": "montana-nevada",
+      "carpeta": "montana-nevada",
+      "capitulos": [
+        "cap-01.md",
+        "cap-02.md",
+        "cap-03.md"
+      ]
+    }
   ]
 }

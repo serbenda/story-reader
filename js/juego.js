@@ -25,6 +25,20 @@
     vestido: ['#C9476B', '#3F7D4E', '#5FA8CF', '#8A62C4', '#F2B33D', '#E9775A'],
     accesorio: { ninguno: 'Nada', sombrero: 'Sombrero', corona: 'Corona', lazo: 'Lazo', gorra: 'Gorra', gafas: 'Gafas' }
   };
+  // Cosas que se compran con estrellas (las mascotas de pago están en stories/index.json, con «precio»)
+  const TIENDA = [
+    { id: 'acc-flores', tipo: 'accesorio', valor: 'flores', nombre: 'Corona de flores', precio: 15 },
+    { id: 'acc-orejas', tipo: 'accesorio', valor: 'orejas', nombre: 'Orejas de gato', precio: 15 },
+    { id: 'acc-gorro', tipo: 'accesorio', valor: 'gorro', nombre: 'Gorro de lana', precio: 20 },
+    { id: 'acc-tiara', tipo: 'accesorio', valor: 'tiara', nombre: 'Tiara de estrellas', precio: 25 },
+    { id: 'acc-pirata', tipo: 'accesorio', valor: 'pirata', nombre: 'Pañuelo pirata', precio: 25 },
+    { id: 'acc-casco', tipo: 'accesorio', valor: 'casco', nombre: 'Casco de astronauta', precio: 35 },
+    { id: 'est-lunares', tipo: 'estampado', valor: 'lunares', nombre: 'Vestido de lunares', precio: 15 },
+    { id: 'est-rayas', tipo: 'estampado', valor: 'rayas', nombre: 'Vestido de rayas', precio: 15 },
+    { id: 'est-flores', tipo: 'estampado', valor: 'flores', nombre: 'Vestido de flores', precio: 20 },
+    { id: 'est-estrellas', tipo: 'estampado', valor: 'estrellas', nombre: 'Vestido de estrellas', precio: 25 }
+  ];
+  const ESTAMPADO_LISO = { liso: 'Liso' };
   const COLORES_TAPA = ['#3F7D4E', '#2F7FB3', '#C2453B', '#8A62C4', '#2E3A70', '#5F8FA8', '#C9763A'];
   const NOMBRES_MASCOTA =['Toby', 'Luna', 'Coco', 'Nala', 'Bolita', 'Pipo', 'Kiwi', 'Lola'];
   const CLAVE = 'biblioteca-magica-v1';
@@ -42,7 +56,11 @@
   const estadoInicial = () => ({
     perfil: null, nivel: 'aprendiz', progreso: {}, estrellas: 0, ofrecidos: {},
     album: { amigos: {}, tesoros: {}, pegatinas: {} },
-    ajustes: { tamano: 'normal', tolerancia: 'normal', sinMicro: false, resaltar: true, sonido: true },
+    ajustes: { tamano: 'normal', tolerancia: 'normal', sinMicro: false, resaltar: true, sonido: true, silabas: false, regla: false, meta: 'm10' },
+    gastadas: 0,      // estrellas gastadas en la tienda (el saldo es estrellas - gastadas)
+    desbloqueado: {}, // cosas compradas en la tienda
+    metaDias: {},     // días en los que se cumplió la meta ('2026-10-30': true)
+    cofres: {},       // cofres semanales abiertos
     registro: [],   // una entrada por partida (para el informe)
     palabras: {}    // palabra → { f: fallos, a: aciertos, u: última vez }
   });
@@ -65,12 +83,22 @@
 
   function aplicarAjustes() {
     document.documentElement.style.setProperty('--tam-lectura', TAMANOS[E.ajustes.tamano] || TAMANOS.normal);
-    document.body.classList.toggle('con-resaltado', !!E.ajustes.resaltar);
+    document.body.classList.toggle('con-resaltado', !!E.ajustes.resaltar || !!E.ajustes.regla);
+    document.body.classList.toggle('con-silabas', !!E.ajustes.silabas);
+    document.body.classList.toggle('con-regla', !!E.ajustes.regla);
     Voz.configurar({ voz: E.ajustes.voz, velocidad: E.ajustes.velocidad });
   }
 
   let CAT = null;   // catálogo de libros
   let J = null;     // partida en curso
+
+  const saldo = () => Math.max(0, (E.estrellas || 0) - (E.gastadas || 0));
+  function ganarEstrellas(n) {
+    E.estrellas = (E.estrellas || 0) + n;
+    if (J) J.estrellas = (J.estrellas || 0) + n;
+    const c = $('#total-estrellas');
+    if (c) { c.textContent = saldo(); const caja = c.closest('.contador-estrellas'); caja.classList.remove('brilla'); void caja.offsetWidth; caja.classList.add('brilla'); }
+  }
 
   // ───────── Registro de lectura (alimenta el informe y el repaso) ─────────
   const claveDePalabra = (t) => String(t).toLowerCase().replace(/[^\p{L}]/gu, '');
@@ -192,23 +220,74 @@
   function cerrarCapa() { $$('.capa').forEach((c) => c.remove()); }
 
   // ───────── Palabras que se pueden tocar para oírlas ─────────
+  // Con la opción «sílabas de colores», cada palabra se pinta por sílabas alternas: ma·ri·po·sa
+  function htmlPalabra(token) {
+    const [antes, letras, despues] = Texto.partesDePalabra(token);
+    if (!letras || !E.ajustes.silabas) return esc(token);
+    return esc(antes) + Texto.silabas(letras).map((s, i) => `<span class="sil s${i % 2}">${esc(s)}</span>`).join('') + esc(despues);
+  }
+  /** Texto con sílabas de colores pero sin palabras tocables (para botones) */
+  const htmlTexto = (texto) => String(texto).split(/(\s+)/).map((t) => (/^\s*$/.test(t) ? t : htmlPalabra(t))).join('');
   function palabras(texto) {
     return String(texto).split(/\[\[(.+?)\]\]/).map((trozo, i) => {
-      const html = trozo.split(/(\s+)/).map((t) => (!t || /^\s+$/.test(t)) ? t : `<span class="palabra">${esc(t)}</span>`).join('');
+      const html = trozo.split(/(\s+)/).map((t) => (!t || /^\s+$/.test(t)) ? t : `<span class="palabra">${htmlPalabra(t)}</span>`).join('');
       return i % 2 ? `<mark class="pista"><span class="lupa" aria-hidden="true">🔎</span>${html}</mark>` : html;
     }).join('');
   }
+
+  /** Dice una palabra: con la voz grabada por la familia si existe, si no con la del dispositivo */
+  function decir(palabra, velocidad = 0.75) {
+    const limpia = String(palabra).replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+    if (!limpia) return;
+    if (!/\s/.test(limpia) && window.Grabaciones && Grabaciones.reproducirYa(claveDePalabra(limpia))) return;
+    Voz.hablar(limpia, velocidad);
+  }
+
+  // Lectura por sílabas: se iluminan una a una mientras se oyen («ma… ri… po… sa»)
+  let silabeando = null;
+  function silabear(el, letras) {
+    const sils = Texto.silabas(letras);
+    if (sils.length < 2) { decir(letras); return; }
+    if (silabeando) silabeando();
+    const original = el.innerHTML;
+    const [antes, , despues] = Texto.partesDePalabra(el.textContent.trim());
+    el.innerHTML = esc(antes) + sils.map((s, i) => `<span class="sil-paso">${esc(s)}</span>${i < sils.length - 1 ? '<span class="sil-punto" aria-hidden="true">·</span>' : ''}`).join('') + esc(despues);
+    el.classList.add('silabeando');
+    const pasos = $$('.sil-paso', el);
+    const tiempos = [];
+    pasos.forEach((p, i) => tiempos.push(setTimeout(() => {
+      pasos.forEach((x) => x.classList.remove('ahora'));
+      p.classList.add('ahora');
+      Voz.hablar(sils[i], 0.6);
+    }, i * 750)));
+    const terminar = () => { tiempos.forEach(clearTimeout); el.innerHTML = original; el.classList.remove('silabeando'); silabeando = null; };
+    tiempos.push(setTimeout(() => { terminar(); decir(letras, 0.7); }, sils.length * 750 + 250));
+    silabeando = terminar;
+  }
+
+  // Tocar una palabra la lee; tocarla otra vez enseguida la lee por sílabas
+  let ultimoToque = { el: null, t: 0 };
   document.addEventListener('click', (ev) => {
     const p = ev.target.closest('.palabra');
-    if (!p) return;
-    const limpia = p.textContent.replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
-    if (limpia) Voz.hablar(limpia, 0.75);
+    if (!p || p.classList.contains('silabeando')) return;
+    const [, letras] = Texto.partesDePalabra(p.textContent.trim());
+    const repetido = ultimoToque.el === p && Date.now() - ultimoToque.t < 3500;
+    ultimoToque = { el: p, t: Date.now() };
+    if (repetido && letras) silabear(p, letras);
+    else decir(letras || p.textContent);
     p.classList.remove('sonando'); void p.offsetWidth; p.classList.add('sonando');
-    if (E.ajustes.resaltar) {
-      $$('.linea-activa').forEach((x) => x.classList.remove('linea-activa'));
-      const linea = p.closest('.linea');
-      linea && linea.classList.add('linea-activa');
-    }
+    activarLinea(p.closest('.linea'));
+  });
+  // Regla de lectura: tocar una línea la destaca y atenúa las demás
+  function activarLinea(linea) {
+    if (!linea || !(E.ajustes.resaltar || E.ajustes.regla)) return;
+    $$('.linea-activa').forEach((x) => x.classList.remove('linea-activa'));
+    linea.classList.add('linea-activa');
+  }
+  document.addEventListener('click', (ev) => {
+    if (!E.ajustes.regla || ev.target.closest('.palabra, button')) return;
+    const linea = ev.target.closest('.bloques > p.linea');
+    if (linea) activarLinea(linea);
   });
 
   // ───────── Variables de la partida ─────────
@@ -383,16 +462,21 @@
         <div class="fila-opcion"><span class="etiqueta-opcion">Piel</span><div class="muestras">${muestras('piel', APARIENCIA.piel, c.piel)}</div></div>
         <div class="fila-opcion"><span class="etiqueta-opcion">Pelo</span><div class="muestras">${muestras('pelo', pelos.map((p) => p[1]), c.pelo, pelos.map((p) => p[0]))}</div></div>
         <div class="fila-opcion"><span class="etiqueta-opcion">Ropa</span><div class="muestras">${muestras('vestido', APARIENCIA.vestido, c.vestido)}</div></div>
-        <div class="fila-opcion"><span class="etiqueta-opcion">Complemento</span><div class="chips">${Object.entries(APARIENCIA.accesorio).map(([k, nom]) =>
-          `<button class="chip${c.accesorio === k ? ' elegida' : ''}" data-campo="accesorio" data-valor="${k}" aria-pressed="${c.accesorio === k}">${palabras(nom)}</button>`).join('')}</div></div>`;
+        <div class="fila-opcion"><span class="etiqueta-opcion">Estampado</span><div class="chips">${chipsTienda('estampado', ESTAMPADO_LISO, c.estampado || 'liso')}</div></div>
+        <div class="fila-opcion"><span class="etiqueta-opcion">Complemento</span><div class="chips">${chipsTienda('accesorio', APARIENCIA.accesorio, c.accesorio)}</div></div>`;
     } else {
       const m = borrador.mascota;
       titulo = '¿Cómo es vuestra mascota?';
       const esp = CAT.mascotas[m.especie] || Object.values(CAT.mascotas)[0];
       vista = `<div class="vista-mascota"><span class="emoji-grande">${esp.emoji}</span><span class="nombre-mascota">${esc(m.nombre || '…')}</span></div>`;
       opciones = `
-        <div class="fila-opcion"><span class="etiqueta-opcion">Animal</span><div class="chips">${Object.entries(CAT.mascotas).map(([k, e]) =>
-          `<button class="chip chip-animal${m.especie === k ? ' elegida' : ''}" data-campo="especie" data-valor="${k}" aria-pressed="${m.especie === k}"><span class="emoji">${e.emoji}</span>${esc(m.genero === 'chica' ? e.chica : e.chico)}</button>`).join('')}</div></div>
+        <div class="fila-opcion"><span class="etiqueta-opcion">Animal</span><div class="chips">${Object.entries(CAT.mascotas).map(([k, e]) => {
+          const tiene = !e.precio || E.desbloqueado['mas-' + k];
+          const texto = `<span class="emoji">${e.emoji}</span>${esc(m.genero === 'chica' ? e.chica : e.chico)}`;
+          return tiene
+            ? `<button class="chip chip-animal${m.especie === k ? ' elegida' : ''}" data-campo="especie" data-valor="${k}" aria-pressed="${m.especie === k}">${texto}</button>`
+            : `<button class="chip chip-animal chip-bloqueada" data-bloqueado="${e.precio}">${texto}<span class="candado">🔒 ${e.precio}</span></button>`;
+        }).join('')}</div></div>
         <div class="fila-opcion"><span class="etiqueta-opcion">¿Chico o chica?</span><div class="chips">
           <button class="chip${m.genero === 'chico' ? ' elegida' : ''}" data-campo="genero" data-valor="chico">Chico</button>
           <button class="chip${m.genero === 'chica' ? ' elegida' : ''}" data-campo="genero" data-valor="chica">Chica</button></div></div>
@@ -415,6 +499,7 @@
         </div>
       </section>`;
 
+    $$('[data-bloqueado]').forEach((b) => b.addEventListener('click', () => aviso(`Se consigue en la 🛍️ tienda por ${b.dataset.bloqueado} ⭐.`)));
     $$('[data-campo]').forEach((b) => b.addEventListener('click', () => {
       const campo = b.dataset.campo, valor = b.dataset.valor;
       if (paso < 2) borrador[quien][campo] = valor; else borrador.mascota[campo] = valor;
@@ -440,6 +525,148 @@
     };
   }
 
+  // ───────── Meta diaria, racha y cofre de la semana ─────────
+  const METAS = { m5: { nombre: '5 minutos', min: 5 }, m10: { nombre: '10 minutos', min: 10 }, m15: { nombre: '15 minutos', min: 15 }, cap: { nombre: '1 capítulo' } };
+  const DIA_MS = 864e5;
+  const hoyCero = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return +d; };
+  const claveDia = (t) => { const d = new Date(t); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+  const lunesDe = (t) => { const d = new Date(t); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return +d; };
+
+  function progresoHoy() {
+    const ini = hoyCero();
+    const hoy = E.registro.filter((r) => r.fecha >= ini);
+    let seg = hoy.reduce((s, r) => s + (r.seg || 0), 0);
+    if (J && J.reg && !J.reg.guardado) seg += J.reg.seg + (J.tEscena ? Math.min(600, (Date.now() - J.tEscena) / 1000) : 0);
+    const caps = hoy.filter((r) => r.terminado).length;
+    const meta = METAS[E.ajustes.meta] || METAS.m10;
+    if (!meta.min) return { parte: Math.min(1, caps), texto: caps ? '¡Capítulo leído!' : 'Lee un capítulo', meta };
+    const min = Math.floor(seg / 60);
+    return { parte: Math.min(1, seg / 60 / meta.min), texto: `${Math.min(min, meta.min)} de ${meta.min} minutos`, meta };
+  }
+
+  /** Días seguidos cumpliendo la meta. Saltarse un solo día no rompe la racha. */
+  function racha() {
+    let n = 0, sinLeer = 0, d = hoyCero();
+    if (!E.metaDias[claveDia(d)]) d -= DIA_MS;
+    for (let i = 0; i < 400; i++, d -= DIA_MS) {
+      if (E.metaDias[claveDia(d)]) { n++; sinLeer = 0; } else if (++sinLeer > 1) break;
+    }
+    return n;
+  }
+
+  function htmlMeta() {
+    const p = progresoHoy(), hecha = !!E.metaDias[claveDia(hoyCero())], r = racha();
+    const lunes = lunesDe(Date.now()), letras = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+    const semana = letras.map((l, i) => {
+      const t = lunes + i * DIA_MS, k = claveDia(t);
+      return `<span class="dia${E.metaDias[k] ? ' hecho' : ''}${k === claveDia(Date.now()) ? ' hoy' : ''}" title="${l}">${E.metaDias[k] ? '★' : l}</span>`;
+    }).join('');
+    const enSemana = letras.filter((_, i) => E.metaDias[claveDia(lunes + i * DIA_MS)]).length;
+    const cofre = E.cofres[claveDia(lunes)] ? '<span class="cofre abierto" title="Cofre abierto">🎉</span>' : `<span class="cofre" title="Cumple la meta 5 días para abrir el cofre">🎁 <small>${enSemana}/5</small></span>`;
+    const C = 2 * Math.PI * 24;
+    return `<div class="meta-hoy${hecha ? ' cumplida' : ''}">
+      <svg class="anillo" viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="24" class="anillo-fondo"/><circle cx="30" cy="30" r="24" class="anillo-progreso" stroke-dasharray="${n2(C * (hecha ? 1 : p.parte))} ${n2(C)}" transform="rotate(-90 30 30)"/><text x="30" y="36" text-anchor="middle" class="anillo-texto">${hecha ? '✓' : Math.round(p.parte * 100) + '%'}</text></svg>
+      <div class="meta-texto"><b>${hecha ? '¡Meta de hoy cumplida!' : 'Meta de hoy'}</b><span>${hecha ? (r > 1 ? `🔥 ${r} días seguidos` : '¡Muy bien!') : esc(p.texto)}</span>
+        <div class="semana">${semana}${cofre}</div></div>
+    </div>`;
+  }
+  const n2 = (x) => Math.round(x * 10) / 10;
+
+  /** Se llama al avanzar: si se acaba de cumplir la meta, se celebra (y quizá se abre el cofre) */
+  function comprobarMeta() {
+    if (!E.perfil) return;
+    const k = claveDia(hoyCero());
+    if (E.metaDias[k] || progresoHoy().parte < 1) return;
+    E.metaDias[k] = true;
+    ganarEstrellas(3);
+    const lunes = lunesDe(Date.now());
+    const enSemana = [0, 1, 2, 3, 4, 5, 6].filter((i) => E.metaDias[claveDia(lunes + i * DIA_MS)]).length;
+    let cofre = false;
+    if (enSemana >= 5 && !E.cofres[claveDia(lunes)]) { E.cofres[claveDia(lunes)] = true; ganarEstrellas(15); cofre = true; }
+    guardar();
+    Sonido.tocar('fin'); confeti(cofre ? 120 : 60);
+    const r = racha();
+    if (cofre) abrirCapa(`<div class="cofre-capa"><div class="cofre-grande" aria-hidden="true">🎁</div>
+      <h2 class="titulo">¡Cofre de la semana!</h2><p class="linea texto">${palabras('Has cumplido la meta cinco días esta semana. ¡Dentro hay 15 estrellas!')}</p>
+      <button class="boton boton-principal" data-cerrar>¡Genial! ⭐</button></div>`);
+    else aviso(`🎯 ¡Meta de hoy cumplida! +3 ⭐${r > 1 ? ` · 🔥 ${r} días seguidos` : ''}`, 4500);
+  }
+
+  // ───────── Tienda ─────────
+  function articulosTienda() {
+    const mascotas = Object.entries(CAT.mascotas).filter(([, m]) => m.precio)
+      .map(([k, m]) => ({ id: 'mas-' + k, tipo: 'mascota', valor: k, nombre: m.chico.charAt(0).toUpperCase() + m.chico.slice(1), precio: m.precio, emoji: m.emoji }));
+    return TIENDA.concat(mascotas);
+  }
+
+  function pantallaTienda() {
+    J = null;
+    const grupos = [['accesorio', '👑 Complementos'], ['estampado', '👗 Vestidos'], ['mascota', '🐾 Mascotas']];
+    const vistaPrevia = (a) => {
+      if (a.tipo === 'mascota') return `<span class="emoji tienda-emoji">${a.emoji}</span>`;
+      const cfg = Object.assign({}, E.perfil.alaya, a.tipo === 'accesorio' ? { accesorio: a.valor } : { estampado: a.valor });
+      return Arte.nina(cfg, 'largo');
+    };
+    const tarjeta = (a) => {
+      const tiene = !!E.desbloqueado[a.id];
+      const falta = a.precio - saldo();
+      let pie;
+      if (tiene) pie = a.tipo === 'mascota'
+        ? `<button class="boton boton-suave boton-chico" data-poner="${a.id}" data-quien="mascota">Elegir como mascota</button>`
+        : `<div class="poner"><button class="boton boton-suave boton-chico" data-poner="${a.id}" data-quien="alaya">Para ${esc(CAT.protagonistas.lectora)}</button><button class="boton boton-suave boton-chico" data-poner="${a.id}" data-quien="lucia">Para ${esc(CAT.protagonistas.hermana)}</button></div>`;
+      else if (falta > 0) pie = `<button class="boton boton-chico boton-falta" disabled>Te faltan ${falta} ⭐</button>`;
+      else pie = `<button class="boton boton-principal boton-chico" data-comprar="${a.id}">Comprar · ${a.precio} ⭐</button>`;
+      return `<li class="articulo${tiene ? ' comprado' : ''}">
+        <div class="articulo-vista">${vistaPrevia(a)}</div>
+        <div class="articulo-texto"><b>${esc(a.nombre)}</b>${tiene ? '<span class="sello-tuyo">✓ ¡Es tuyo!</span>' : `<span class="precio">${a.precio} ⭐</span>`}</div>
+        ${pie}</li>`;
+    };
+    const arts = articulosTienda();
+    app.innerHTML = `
+      ${cabecera('<button class="boton boton-suave boton-chico" id="volver">← Volver</button>')}
+      <section class="tienda">
+        <div class="tienda-cabecera">
+          <h1 class="titulo-grande">La tienda</h1>
+          <p class="saldo-grande"><span aria-hidden="true">⭐</span> <b>${saldo()}</b> <span>estrellas para gastar</span></p>
+        </div>
+        <p class="pista-pequena">${palabras('Las estrellas se ganan leyendo en voz alta, acertando preguntas, abriendo cerraduras y cumpliendo la meta del día.')}</p>
+        ${grupos.map(([tipo, titulo]) => `<h2 class="titulo">${titulo}</h2><ul class="rejilla-tienda">${arts.filter((a) => a.tipo === tipo).map(tarjeta).join('')}</ul>`).join('')}
+      </section>`;
+    $('#volver').onclick = pantallaInicio;
+    $$('[data-comprar]').forEach((b) => {
+      let seguro = false, t = null;
+      b.onclick = () => {
+        const a = arts.find((x) => x.id === b.dataset.comprar);
+        if (!seguro) { seguro = true; b.textContent = '¿Seguro? Toca otra vez'; b.classList.add('seguro'); t = setTimeout(() => { seguro = false; b.textContent = `Comprar · ${a.precio} ⭐`; b.classList.remove('seguro'); }, 3000); return; }
+        clearTimeout(t);
+        if (saldo() < a.precio) return;
+        E.gastadas = (E.gastadas || 0) + a.precio;
+        E.desbloqueado[a.id] = true; guardar();
+        Sonido.tocar('tesoro'); confeti(70);
+        aviso(`🎉 ¡${a.nombre} ya es tuyo!`);
+        pantallaTienda();
+      };
+    });
+    $$('[data-poner]').forEach((b) => b.onclick = () => {
+      const a = arts.find((x) => x.id === b.dataset.poner), quien = b.dataset.quien;
+      if (a.tipo === 'mascota') E.perfil.mascota.especie = a.valor;
+      else E.perfil[quien][a.tipo === 'accesorio' ? 'accesorio' : 'estampado'] = a.valor;
+      guardar(); Sonido.tocar('bien');
+      aviso(a.tipo === 'mascota' ? `${a.emoji} ¡Ahora ${E.perfil.mascota.nombre} es ${a.nombre.toLowerCase()}!` : `✨ ¡Listo! Mira qué guapa.`);
+      pantallaTienda();
+    });
+  }
+
+  /** Botones de opciones: las gratis, las compradas y, con candado, las de la tienda */
+  function chipsTienda(tipo, gratis, actual) {
+    const libres = Object.entries(gratis).map(([k, nom]) =>
+      `<button class="chip${actual === k ? ' elegida' : ''}" data-campo="${tipo}" data-valor="${k}" aria-pressed="${actual === k}">${esc(nom)}</button>`);
+    const deTienda = TIENDA.filter((t) => t.tipo === tipo).map((t) => E.desbloqueado[t.id]
+      ? `<button class="chip${actual === t.valor ? ' elegida' : ''}" data-campo="${tipo}" data-valor="${t.valor}" aria-pressed="${actual === t.valor}">✨ ${esc(t.nombre.replace(/^Vestido de /, ''))}</button>`
+      : `<button class="chip chip-bloqueada" data-bloqueado="${t.precio}">${esc(t.nombre.replace(/^Vestido de /, ''))}<span class="candado">🔒 ${t.precio}</span></button>`);
+    return libres.concat(deTienda).join('');
+  }
+
   // ───────── Pantalla: inicio ─────────
   const capituloHecho = (libroId, capId) => !!(E.progreso[libroId] && E.progreso[libroId][capId] && Object.keys(E.progreso[libroId][capId]).length);
   const nivelActual = () => NIVELES.find((n) => n.id === E.nivel) || NIVELES[0];
@@ -448,7 +675,7 @@
     return `<header class="cabecera">
       <div class="cabecera-izq">${extraIzq || '<span class="marca">La biblioteca mágica</span>'}</div>
       <div class="cabecera-der">
-        <span class="contador-estrellas" aria-label="Estrellas"><span aria-hidden="true">⭐</span> <b id="total-estrellas">${E.estrellas}</b></span>
+        <span class="contador-estrellas" aria-label="Estrellas"><span aria-hidden="true">⭐</span> <b id="total-estrellas">${saldo()}</b></span>
       </div>
     </header>`;
   }
@@ -464,11 +691,13 @@
         <div class="hero-info">
           <h1 class="titulo-grande">${palabras(`${CAT.protagonistas.lectora}, ${CAT.protagonistas.hermana} y ${vm.mascota}`)}</h1>
           <p class="nivel-actual"><span class="insignia-nivel">${n.icono}</span> Nivel <b>${n.nombre}</b></p>
+          ${htmlMeta()}
           ${seguir ? `<button class="boton boton-principal boton-grande boton-seguir" id="seguir-leyendo">
             ▶ <span><span class="seguir-sub">Seguir leyendo</span>${esc(seguir.libro.meta.titulo || '')} · capítulo ${seguir.capIndex + 1}</span></button>` : ''}
           <div class="acciones-hero">
             <button class="boton boton-suave" id="album">📒 Álbum</button>
             <button class="boton boton-suave" id="vestir">🎨 Vestir</button>
+            <button class="boton boton-suave" id="tienda">🛍️ Tienda</button>
             <button class="boton boton-suave boton-mayores" id="mayores" aria-describedby="ayuda-mayores"><span class="carga" aria-hidden="true"></span>⚙️ Mayores</button>
           </div>
           <p class="pista-pequena" id="ayuda-mayores" hidden>Mantén pulsado el botón para entrar.</p>
@@ -481,6 +710,7 @@
 
     $('#album').onclick = pantallaAlbum;
     $('#vestir').onclick = () => { borrador = null; pantallaPersonalizar(0, false); };
+    $('#tienda').onclick = pantallaTienda;
     puertaMayores($('#mayores'), pantallaAjustes);
     if (seguir) $('#seguir-leyendo').onclick = () => empezarCapitulo(seguir.libro, seguir.capIndex);
     $$('[data-libro-abrir]').forEach((b) => b.addEventListener('click', () => pantallaLibro(CAT.libros.find((l) => l.id === b.dataset.libroAbrir))));
@@ -586,6 +816,7 @@
 
   function mostrarEscena() {
     cerrarEscenaRegistro();
+    comprobarMeta();
     const e = J.escenas[J.i];
     const plantilla = azar(versionesPara(e, E.nivel));
     const texto = Texto.rellenar(plantilla, J.vars);
@@ -614,7 +845,7 @@
     let confirmar = false;
     $('#salir').onclick = (ev) => {
       if (!confirmar) { confirmar = true; ev.currentTarget.innerHTML = '¿Salir? Toca otra vez'; setTimeout(() => { confirmar = false; const b = $('#salir'); if (b) b.innerHTML = '🏠 <span class="solo-ancho">Casa</span>'; }, 3000); return; }
-      Voz.parar(); guardarRegistro(false); pantallaInicio();
+      Voz.parar(); guardarRegistro(false); comprobarMeta(); pantallaInicio();
     };
     $('#cuaderno').onclick = verCuaderno;
     window.scrollTo({ top: 0 });
@@ -628,6 +859,7 @@
       const b = s.bloques[s.k];
       const el = pintarBloque(b);
       cont.appendChild(el);
+      if (b.tipo === 'texto' && E.ajustes.regla) activarLinea(el);
       if (s.k > 0) requestAnimationFrame(() => el.scrollIntoView({ behavior: movimientoReducido() ? 'auto' : 'smooth', block: 'nearest' }));
       for (const p of Texto.pistasDe(b.texto)) if (!J.cuaderno.includes(p)) { J.cuaderno.push(p); actualizarCuaderno(); }
       animarQuienHabla(b.texto);
@@ -701,7 +933,7 @@
       <div class="voz-controles"><button class="boton boton-suave boton-chico reto-oir">🔊 Escuchar la palabra</button></div>
       <p class="respuesta" role="status"></p>`;
     let fallos = 0;
-    $('.reto-oir', el).onclick = () => Voz.hablar(r.palabra, 0.7);
+    $('.reto-oir', el).onclick = () => decir(r.palabra, 0.7);
     $$('.reto-opcion', el).forEach((btn) => btn.addEventListener('click', () => {
       if (b.resuelto) return;
       const elegida = r.opciones[+btn.dataset.i];
@@ -711,7 +943,7 @@
         $$('.reto-opcion', el).forEach((x) => { x.disabled = true; });
         if (r.tipo === 'letra') { const h = $('.reto-hueco', el); h.textContent = r.correcta; h.classList.add('puesta'); }
         J.reg.retos++;
-        if (!fallos) { J.reg.retosPrimera++; J.estrellas++; E.estrellas++; $('#total-estrellas').textContent = E.estrellas; }
+        if (!fallos) { J.reg.retosPrimera++; ganarEstrellas(1); }
         guardar();
         $('.respuesta', el).textContent = `${fallos ? '¡Eso es!' : '⭐'} ¡La cerradura se abre! 🔓`;
         el.classList.add('abierta');
@@ -751,7 +983,7 @@
       const nrm = Voz.normalizar(t).join('');
       if (!nrm) return `<span class="signo">${esc(t)}</span>`;
       const k = b.objetivo.length; b.objetivo.push(nrm); b.claves.push(claveDePalabra(t));
-      return `<span class="palabra" data-k="${k}">${esc(t)}</span>`;
+      return `<span class="palabra" data-k="${k}">${htmlPalabra(t)}</span>`;
     }).join(' ');
     b.marcadas = b.objetivo.map(() => false);
     const sinMicro = E.ajustes.sinMicro || !Voz.disponible();
@@ -786,10 +1018,10 @@
       el.classList.add('superada');
       mic.hidden = true; ya.hidden = true; oir.disabled = false;
       estado.textContent = conAyuda ? '¡Lo has intentado muy bien! Seguimos.' : azar(ELOGIOS);
-      J.estrellas++; J.leidas++; E.estrellas++;
+      J.leidas++; ganarEstrellas(1);
       J.reg.frases++; J.reg.intentos += Math.max(1, b.intentos);
       if (b.intentos === 1 && !conAyuda) J.reg.frasesPrimera++;
-      guardar(); $('#total-estrellas').textContent = E.estrellas;
+      guardar();
       Sonido.tocar('bien'); confeti(16);
       setTimeout(revelar, 650);
     }
@@ -860,7 +1092,7 @@
     el.innerHTML = `
       <p class="pregunta linea">${palabras(b.texto)}</p>
       <div class="opciones">${opciones.map((o, i) => `
-        <button class="opcion" data-i="${i}">${o.icono ? `<span class="opcion-icono" aria-hidden="true">${o.icono}</span>` : ''}<span class="opcion-texto">${esc(o.texto)}</span></button>`).join('')}</div>
+        <button class="opcion" data-i="${i}">${o.icono ? `<span class="opcion-icono" aria-hidden="true">${o.icono}</span>` : ''}<span class="opcion-texto">${htmlTexto(o.texto)}</span></button>`).join('')}</div>
       <p class="respuesta" role="status"></p>`;
     $$('.opcion', el).forEach((btn) => btn.addEventListener('click', (ev) => {
       if (ev.target.closest('.palabra')) return;
@@ -873,7 +1105,7 @@
         const msg = $('.respuesta', el);
         J.reg.preguntas++;
         if (fallos === 0) J.reg.preguntasPrimera++;
-        if (fallos === 0) { J.estrellas++; E.estrellas++; guardar(); $('#total-estrellas').textContent = E.estrellas; msg.textContent = '⭐ ' + azar(ELOGIOS); }
+        if (fallos === 0) { ganarEstrellas(1); guardar(); msg.textContent = '⭐ ' + azar(ELOGIOS); }
         else msg.textContent = '¡Eso es! Lo has encontrado.';
         Sonido.tocar(fallos === 0 ? 'estrella' : 'bien'); confeti(26);
         setTimeout(revelar, 900);
@@ -917,6 +1149,7 @@
   // ───────── Fin del capítulo ─────────
   function terminarCapitulo() {
     guardarRegistro(true);
+    comprobarMeta();
     const { libro, cap } = J;
     const p = (E.progreso[libro.id] = E.progreso[libro.id] || {});
     const pc = (p[cap.id] = p[cap.id] || {});
@@ -1041,6 +1274,10 @@
     const iN = (id) => NIVELES.findIndex((n) => n.id === id);
     if (iN(o.nivel) > iN(E.nivel)) E.nivel = o.nivel;
     E.estrellas = max(E.estrellas, o.estrellas);
+    E.gastadas = max(E.gastadas, o.gastadas);
+    Object.assign(E.desbloqueado, o.desbloqueado || {});
+    Object.assign(E.metaDias, o.metaDias || {});
+    Object.assign(E.cofres, o.cofres || {});
     for (const [lib, caps] of Object.entries(o.progreso || {})) {
       const dl = (E.progreso[lib] = E.progreso[lib] || {});
       for (const [cap, niv] of Object.entries(caps)) {
@@ -1072,6 +1309,58 @@
       voces.map((v) => `<option value="${esc(v.name)}"${v.name === actual ? ' selected' : ''}>${esc(v.name)} · ${esc(v.lang)}</option>`).join('');
   }
 
+  // ───────── Grabar la voz de la familia ─────────
+  function htmlGrabaciones() {
+    const lista = Grabaciones.lista();
+    if (!lista.length) return '<p class="nota">Todavía no hay palabras grabadas.</p>';
+    return `<ul class="lista-grabadas">${lista.map((w) => `<li><span class="palabra-grabada">${esc(w)}</span>
+      <button class="boton boton-suave boton-chico" data-escuchar-grab="${esc(w)}" aria-label="Escuchar ${esc(w)}">▶</button>
+      <button class="boton boton-suave boton-chico" data-grabar="${esc(w)}" aria-label="Grabar otra vez ${esc(w)}">🎙️</button>
+      <button class="boton boton-suave boton-chico" data-borrar-grab="${esc(w)}" aria-label="Borrar ${esc(w)}">🗑️</button></li>`).join('')}</ul>`;
+  }
+  function htmlSugerenciasGrabar() {
+    const faltan = palabrasDificiles().map(([w]) => w).filter((w) => !Grabaciones.tiene(w)).slice(0, 8);
+    if (!faltan.length) return '';
+    return `<p class="etiqueta-opcion">Palabras que le cuestan, sin grabar</p><div class="chips">${faltan.map((w) => `<button class="chip chip-peque" data-grabar="${esc(w)}">🎙️ ${esc(w)}</button>`).join('')}</div>`;
+  }
+  async function grabarPalabra(palabra, boton, alTerminar) {
+    const clave = claveDePalabra(palabra);
+    if (!clave) { aviso('Escribe primero la palabra.'); return; }
+    const textoAntes = boton.innerHTML;
+    try {
+      Voz.parar();
+      const blob = await Grabaciones.grabar({
+        maxMs: 3000,
+        alEmpezar: (parar) => { boton.innerHTML = '⏺ Grabando… (toca para parar)'; boton.classList.add('grabando'); boton.onclick = parar; }
+      });
+      if (blob.size < 800) throw new Error('vacía');
+      await Grabaciones.guardar(clave, blob);
+      Grabaciones.reproducirYa(clave);
+      aviso(`🎙️ «${clave}» grabada. Ahora suena con tu voz.`);
+    } catch (e) {
+      console.warn(e);
+      aviso(e && e.name === 'NotAllowedError' ? 'El navegador no deja usar el micro. Dale permiso y prueba otra vez.' : 'No se ha podido grabar. Prueba otra vez.', 5000);
+    } finally {
+      boton.classList.remove('grabando'); boton.innerHTML = textoAntes;
+      if (alTerminar) alTerminar();
+    }
+  }
+  /** Conecta los botones de grabar, escuchar y borrar de la pantalla actual */
+  function activarGrabaciones(refrescar = pantallaAjustes) {
+    if (!window.Grabaciones) return;
+    const nueva = $('#grabar-nueva');
+    if (nueva) nueva.onclick = () => grabarPalabra($('#palabra-grabar').value, nueva, refrescar);
+    $$('[data-grabar]').forEach((b) => b.onclick = () => grabarPalabra(b.dataset.grabar, b, refrescar));
+    $$('[data-escuchar-grab]').forEach((b) => b.onclick = () => Grabaciones.reproducirYa(b.dataset.escucharGrab));
+    $$('[data-borrar-grab]').forEach((b) => {
+      let seguro = false;
+      b.onclick = async () => {
+        if (!seguro) { seguro = true; b.textContent = '¿Borrar?'; setTimeout(() => { seguro = false; b.textContent = '🗑️'; }, 3000); return; }
+        await Grabaciones.borrar(b.dataset.borrarGrab); refrescar();
+      };
+    });
+  }
+
   // ───────── Ajustes para mayores ─────────
   function pantallaAjustes() {
     const a = E.ajustes;
@@ -1096,6 +1385,9 @@
           <div class="chips">${grupo('tamano', { normal: 'Normal', grande: 'Grande', enorme: 'Muy grande' }, a.tamano)}</div>
           <p class="texto muestra-texto linea">${palabras('Así se verán los textos del cuento.')}</p>
           ${interruptor('resaltar', 'Resaltar la línea al tocar una palabra')}
+          ${interruptor('silabas', 'Sílabas de colores (ma·ri·po·sa)')}
+          ${interruptor('regla', 'Regla de lectura: atenuar las demás líneas')}
+          <p class="nota">Tocar una palabra la lee. Tocarla otra vez enseguida la lee <b>por sílabas</b>.</p>
         </div>
         <div class="ajuste-bloque">
           <h2 class="titulo">Micrófono</h2>
@@ -1104,6 +1396,23 @@
           <div class="chips">${grupo('tolerancia', Object.fromEntries(Object.entries(TOLERANCIAS).map(([k, t]) => [k, t.nombre])), a.tolerancia)}</div>
           ${interruptor('sinMicro', 'Jugar sin micrófono (botón «¡Ya lo he leído!»)')}
           ${interruptor('sonido', 'Sonidos del juego')}
+        </div>
+        <div class="ajuste-bloque">
+          <h2 class="titulo">Meta de cada día</h2>
+          <p class="nota">Al cumplirla gana 3 estrellas. Si la cumple 5 días en una semana, abre un cofre con 15 más. Saltarse un día no rompe la racha.</p>
+          <div class="chips">${grupo('meta', Object.fromEntries(Object.entries(METAS).map(([k, m]) => [k, m.nombre])), a.meta || 'm10')}</div>
+        </div>
+        <div class="ajuste-bloque">
+          <h2 class="titulo">Tu voz para las palabras difíciles</h2>
+          <p class="nota">Graba cómo dices una palabra y, cuando ${esc(CAT.protagonistas.lectora)} la toque, sonará con tu voz. Las grabaciones se quedan en este dispositivo.</p>
+          ${window.Grabaciones && Grabaciones.soportado() ? `
+          <div class="fila-voz">
+            <label class="etiqueta-opcion" for="palabra-grabar">Palabra</label>
+            <input id="palabra-grabar" class="selector" maxlength="20" autocomplete="off" placeholder="mariposa">
+            <button class="boton boton-principal boton-chico" id="grabar-nueva">🎙️ Grabar</button>
+          </div>
+          ${htmlSugerenciasGrabar()}
+          <div id="lista-grabaciones">${htmlGrabaciones()}</div>` : '<p class="nota">Este navegador no permite grabar. Prueba con Chrome, Edge o Safari actualizados.</p>'}
         </div>
         <div class="ajuste-bloque">
           <h2 class="titulo">Voz que lee las palabras</h2>
@@ -1137,6 +1446,7 @@
     $$('[data-nivel]').forEach((b) => b.onclick = () => { E.nivel = b.dataset.nivel; guardar(); pantallaAjustes(); });
     $$('[data-ajuste]').forEach((b) => b.onclick = () => { a[b.dataset.ajuste] = b.dataset.valor; guardar(); aplicarAjustes(); pantallaAjustes(); });
     $$('[data-interruptor]').forEach((i) => i.onchange = () => { a[i.dataset.interruptor] = i.checked; guardar(); aplicarAjustes(); });
+    activarGrabaciones();
     $('#aj-voz').onchange = (ev) => { a.voz = ev.target.value; guardar(); aplicarAjustes(); Voz.hablar('¡Hola! Así sueno yo.'); };
     $('#probar-voz').onclick = () => Voz.hablar(`${CAT.protagonistas.lectora} y ${CAT.protagonistas.hermana} buscan una mariposa azul.`);
     $('#copiar-codigo').onclick = async () => {
@@ -1268,7 +1578,8 @@
             ${dificiles.length ? `<ul class="lista-palabras">${dificiles.map(([w, p]) => `
               <li><button class="palabra-informe" data-oir="${esc(w)}" aria-label="Escuchar ${esc(w)}">🔊 ${esc(w)}</button>
               <span class="marcador">${'●'.repeat(Math.min(p.a, 8))}<span class="falta-marca">${'○'.repeat(Math.max(0, Math.min(8, p.f + 2 - p.a)))}</span></span>
-              <span class="nota">falla ${p.f} · acierta ${p.a}</span></li>`).join('')}</ul>`
+              <span class="nota">falla ${p.f} · acierta ${p.a}</span>
+              ${window.Grabaciones && Grabaciones.soportado() ? `<button class="boton boton-suave boton-chico" data-grabar="${esc(w)}">🎙️ ${Grabaciones.tiene(w) ? 'Regrabar tu voz' : 'Grabar tu voz'}</button>` : ''}</li>`).join('')}</ul>`
               : '<p class="nota">Aún no hay palabras difíciles. Necesita jugar con el micro para detectarlas.</p>'}
           </div>
           <div class="tarjeta-informe">
@@ -1293,7 +1604,8 @@
       </section>`;
 
     $('#volver').onclick = pantallaAjustes;
-    $$('[data-oir]').forEach((b) => b.onclick = () => Voz.hablar(b.dataset.oir, 0.75));
+    $$('[data-oir]').forEach((b) => b.onclick = () => decir(b.dataset.oir));
+    activarGrabaciones(pantallaInforme);
     if (rec.nivel) $('#aplicar-nivel').onclick = () => { E.nivel = rec.nivel.id; guardar(); aviso(`Nivel cambiado a ${rec.nivel.nombre}.`); pantallaInforme(); };
     const copiar = $('#copiar');
     copiar.onclick = () => {
@@ -1321,6 +1633,7 @@
   // ───────── Arranque ─────────
   async function iniciar() {
     aplicarAjustes();
+    if (window.Grabaciones) Grabaciones.iniciar();
     app.innerHTML = '<p class="cargando">Abriendo el libro…</p>';
     try {
       CAT = await Datos.cargarCatalogo();
