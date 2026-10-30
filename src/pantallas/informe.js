@@ -125,7 +125,8 @@ function pantallaInforme() {
   $$('[data-oir]').forEach((b) => { b.onclick = () => decir(b.dataset.oir); });
   activarGrabaciones(pantallaInforme);
   if (rec.nivel) $('#aplicar-nivel').onclick = () => { estado.nivel = rec.nivel.id; guardar(); aviso(`Nivel cambiado a ${rec.nivel.nombre}.`); pantallaInforme(); };
-  $('#copiar').onclick = () => copiarOMostrar(textoResumen(), {
+  const resumen = textoResumen();   // con las cifras de cuando se abrió la pantalla
+  $('#copiar').onclick = () => copiarOMostrar(resumen, {
     titulo: 'Resumen', idCaja: 'resumen-copia', exito: 'Resumen copiado. Puedes pegarlo en un mensaje.', filas: 9
   });
 }

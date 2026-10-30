@@ -146,9 +146,7 @@ function conectar() {
   $('#juntar').onclick = async () => {
     const txt = $('#pegar-codigo').value.trim();
     if (!txt) { aviso('Primero pega el código del otro dispositivo.'); return; }
-    let otro;
-    try { otro = await decodificarProgreso(txt); } catch (e) { console.error(e); aviso('Ese código no es válido. Cópialo entero otra vez.', 5000); return; }
-    juntarYAvisar(otro, '¡Progresos juntados!');
+    try { juntarYAvisar(await decodificarProgreso(txt), '¡Progresos juntados!'); } catch (e) { console.error(e); aviso('Ese código no es válido. Cópialo entero otra vez.', 5000); }
   };
 
   $('#descargar-copia').onclick = () => {
