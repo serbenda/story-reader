@@ -2,11 +2,11 @@
 # ─────────────────────────────────────────────────────────────
 #  LIBRO: El secreto del faro
 #  Vacaciones en una isla con playa. La luz del viejo faro se ha
-#  apagado y Alaia, Lucía y la mascota averiguan por qué.
+#  apagado y {lectora}, {hermana} y la mascota averiguan por qué.
 #  Los capítulos (cap-01.md, cap-02.md…) usan estas piezas al azar.
 # ─────────────────────────────────────────────────────────────
 titulo: "El secreto del faro"
-resumen: "De vacaciones en una isla, Alaia y Lucía descubren que la luz del viejo faro se ha apagado."
+resumen: "{{De vacaciones en una isla, {lectora} y {hermana} descubren que la luz del viejo faro se ha apagado.|De vacaciones en una isla, {lectora} descubre que la luz del viejo faro se ha apagado.}}"
 portada: faro
 
 # Las pistas se leen detrás de un nombre: «{buscado} olía a pescado».
@@ -109,7 +109,7 @@ ayudantes:
     descripcion: "un cangrejo que solo sabe andar de lado y siempre llega tarde"
     gracias:
       - "Tito quiere saludar, pero anda de lado y pasa de largo"
-      - "Tito se engancha una pinza en el cubo de Lucía y no se la puede sacar"
+      - "{{Tito se engancha una pinza en el cubo de {hermana} y no se la puede sacar|Tito se engancha una pinza en el cubo de {lectora} y no se la puede sacar}}"
       - "Tito intenta andar recto y acaba dando vueltas en círculo"
   pulpo:
     nombre: "Toño"
@@ -118,7 +118,7 @@ ayudantes:
     emoji: "🐙"
     descripcion: "un pulpo cariñoso que da abrazos con sus ocho brazos a la vez"
     gracias:
-      - "Toño abraza a todos a la vez y a Lucía le dan muchas cosquillas"
+      - "{{Toño abraza a todos a la vez y a {hermana} le dan muchas cosquillas|Toño abraza a todos a la vez y a {lectora} le dan muchas cosquillas}}"
       - "Toño se pone tan contento que cambia de color, como un semáforo"
       - "Toño intenta peinarse con los ocho brazos y se hace un nudo"
   delfin:
@@ -130,7 +130,7 @@ ayudantes:
     gracias:
       - "Lino cuenta un chiste de sardinas y se ríe tanto que salpica a todos"
       - "Lino da un salto enorme y cae de tripa con un plaf tremendo"
-      - "Lino estornuda por el agujerito de la cabeza y moja a Alaia"
+      - "Lino estornuda por el agujerito de la cabeza y moja a {lectora}"
   foca:
     nombre: "Bola"
     especie: "foca"
@@ -150,22 +150,22 @@ ayudantes:
     gracias:
       - "Tina se queda dormida a mitad de una palabra y ronca como un barco"
       - "Tina se esconde dentro del caparazón porque le da vergüenza saludar"
-      - "Tina tarda tanto en sonreír que a Lucía le da tiempo a hacer un castillo de arena"
+      - "{{Tina tarda tanto en sonreír que a {hermana} le da tiempo a hacer un castillo de arena|Tina tarda tanto en sonreír que a {lectora} le da tiempo a hacer un castillo de arena}}"
 
 # Cuando se elige un camino equivocado. Variables: {elegido}, {al_elegido}, {en_elegido}, {buscado}
 equivocado:
-  - "Alaia y Lucía van {al_elegido}. Allí solo hay una almeja dormida que dice: «Aquí no ha venido nadie»."
-  - "En {elegido} solo encuentran un cubo olvidado lleno de agua. Ni rastro de {buscado}."
-  - "Llegan {al_elegido} y buscan por todas partes. Solo encuentran una chancla perdida que no es de nadie."
-  - "Lucía busca {en_elegido} debajo de cada piedra. Solo encuentra un mejillón que no tiene ganas de hablar."
+  - "{{{lectora} y {hermana} van {al_elegido}. Allí solo hay una almeja dormida que dice: «Aquí no ha venido nadie».|{lectora} va {al_elegido}. Allí solo hay una almeja dormida que dice: «Aquí no ha venido nadie».}}"
+  - "{{En {elegido} solo encuentran un cubo olvidado lleno de agua. Ni rastro de {buscado}.|En {elegido} solo encuentra un cubo olvidado lleno de agua. Ni rastro de {buscado}.}}"
+  - "{{Llegan {al_elegido} y buscan por todas partes. Solo encuentran una chancla perdida que no es de nadie.|{lectora} llega {al_elegido} y busca por todas partes. Solo encuentra una chancla perdida que no es de nadie.}}"
+  - "{{{hermana} busca {en_elegido} debajo de cada piedra. Solo encuentra un mejillón que no tiene ganas de hablar.|{lectora} busca {en_elegido} debajo de cada piedra. Solo encuentra un mejillón que no tiene ganas de hablar.}}"
 
 # Cuando se falla una pregunta de comprensión.
 equivocado_pregunta:
   - "¡Casi! Vuelve a leer el texto despacito. La respuesta está escondida ahí."
-  - "Esa no es. Lucía dice que ella tampoco lo sabía. ¡Prueba otra vez!"
+  - "{{Esa no es. {hermana} dice que ella tampoco lo sabía. ¡Prueba otra vez!|Esa no es, pero no pasa nada. ¡Prueba otra vez!}}"
   - "¡Inténtalo de nuevo! Las buenas detectives siempre leen dos veces."
 
-# Tesoros que Lucía puede encontrar escondidos en los dibujos.
+# Tesoros que {hermana} puede encontrar escondidos en los dibujos.
 tesoros:
   - { emoji: "🐚", nombre: "una caracola" }
   - { emoji: "🐡", nombre: "un pez globo" }
@@ -179,4 +179,4 @@ tesoros:
 ---
 
 En esta isla las olas cuentan secretos y los animales del mar hablan con quien sabe escuchar.
-Alaia y Lucía tienen que descubrir por qué se ha apagado la luz del viejo faro.
+{{{lectora} y {hermana} tienen que descubrir por qué se ha apagado la luz del viejo faro.|{lectora} tiene que descubrir por qué se ha apagado la luz del viejo faro.}}

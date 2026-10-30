@@ -99,6 +99,9 @@
   }
   const sonDos = () => !(E.perfil && E.perfil.ninas === 1);
 
+  /** Título del capítulo, con nombres y alternativas para una o dos niñas */
+  const tituloCap = (cap) => Texto.rellenar(cap.meta.titulo || cap.id, varsMascota());
+
   const saldo = () => Math.max(0, (E.estrellas || 0) - (E.gastadas || 0));
   function ganarEstrellas(n) {
     E.estrellas = (E.estrellas || 0) + n;
@@ -852,7 +855,7 @@
       return `<li>
         <button class="capitulo${abierto ? '' : ' cerrado'}" ${abierto ? '' : 'disabled'} data-libro="${esc(libro.id)}" data-capitulo="${i}">
           <span class="num">${abierto ? i + 1 : '🔒'}</span>
-          <span class="cap-texto"><span class="cap-titulo">${esc(cap.meta.titulo || cap.id)}</span>
+          <span class="cap-texto"><span class="cap-titulo">${esc(tituloCap(cap))}</span>
           <span class="cap-resumen">${esc(abierto ? resumen : 'Termina el capítulo anterior para abrirlo.')}</span></span>
           <span class="sellos">${sellos || (cap.meta.pegatina && E.album.pegatinas[`${libro.id}/${cap.id}`] ? cap.meta.pegatina : '')}</span>
         </button></li>`;
@@ -898,7 +901,7 @@
       libro, cap, capIndex, escenas, i: 0, ...datos, semilla: Math.floor(Math.random() * 1e6), estrellas: 0, leidas: 0, cuaderno: [],
       tEscena: null,
       reg: {
-        fecha: Date.now(), libro: libro.id, cap: cap.id, titulo: cap.meta.titulo || cap.id, nivel: E.nivel,
+        fecha: Date.now(), libro: libro.id, cap: cap.id, titulo: tituloCap(cap), nivel: E.nivel,
         micro: !(E.ajustes.sinMicro || !Voz.disponible()),
         frases: 0, frasesPrimera: 0, intentos: 0, preguntas: 0, preguntasPrimera: 0, retos: 0, retosPrimera: 0,
         repaso: repaso ? repaso.palabras : [], escenas: [], seg: 0
@@ -924,7 +927,7 @@
     const puntos = J.escenas.map((_, i) => `<span class="${i < J.i ? 'hecho' : i === J.i ? 'activo' : ''}"></span>`).join('');
     app.innerHTML = `
       ${cabecera(`<button class="boton boton-suave boton-chico" id="salir">🏠 <span class="solo-ancho">Casa</span></button>
-        <div class="titulo-cap"><span class="sobretitulo">Capítulo ${J.capIndex + 1}</span><span class="nombre-cap">${esc(J.cap.meta.titulo || '')}</span></div>`)}
+        <div class="titulo-cap"><span class="sobretitulo">Capítulo ${J.capIndex + 1}</span><span class="nombre-cap">${esc(tituloCap(J.cap))}</span></div>`)}
       <div class="progreso-escenas" aria-label="Escena ${J.i + 1} de ${J.escenas.length}">${puntos}
         <button class="boton boton-suave boton-chico boton-cuaderno" id="cuaderno" ${J.cuaderno.length || E.nivel === 'superlectora' ? '' : 'hidden'}>📓 Cuaderno <b id="num-pistas">${J.cuaderno.length}</b></button>
       </div>
@@ -1316,7 +1319,7 @@
       }
       libro.capitulos.forEach((c, i) => {
         const p = E.album.pegatinas[`${libro.id}/${c.id}`];
-        pegatinas.push(`<li class="pegatina${p ? '' : ' oculta'}"><span class="emoji">${p || '❔'}</span><span class="ficha-nombre">${p ? esc(c.meta.titulo || '') : `Capítulo ${i + 1}`}</span></li>`);
+        pegatinas.push(`<li class="pegatina${p ? '' : ' oculta'}"><span class="emoji">${p || '❔'}</span><span class="ficha-nombre">${p ? esc(tituloCap(c)) : `Capítulo ${i + 1}`}</span></li>`);
       });
     }
     const m = E.perfil.mascota, esp = CAT.mascotas[m.especie] || {};

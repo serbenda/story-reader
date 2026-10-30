@@ -5,7 +5,7 @@
 #  mágico con una reina despistada y un dragón que estornuda flores.
 # ─────────────────────────────────────────────────────────────
 titulo: "El castillo de las nubes"
-resumen: "Una escalera de nubes lleva a Alaia y a Lucía hasta un castillo mágico, donde vive una reina muy despistada y un dragón que estornuda flores."
+resumen: "Una escalera de nubes lleva a {{{lectora} y a {hermana}|{lectora}}} hasta un castillo mágico, donde vive una reina muy despistada y un dragón que estornuda flores."
 portada: castillo
 
 lugares:
@@ -158,7 +158,7 @@ ayudantes:
     gracias:
       - "Lino dice «buenos díaaaaas» tan despacio que ya casi es de noche"
       - "Lino se mete en su concha para pensar y se queda dormido"
-      - "Lino saca una carta del año pasado y se la da a Lucía muy serio"
+      - "{{Lino saca una carta del año pasado y se la da a {hermana} muy serio|Lino saca una carta del año pasado y se la da a {lectora} muy serio}}"
   oveja:
     nombre: "Bea"
     especie: "oveja"
@@ -172,10 +172,10 @@ ayudantes:
 
 # Variables: {elegido}, {al_elegido}, {en_elegido}, {buscado}
 equivocado:
-  - "Alaia y Lucía van {al_elegido}. Allí solo hay una nube dormida que ronca muy bajito."
-  - "En {elegido} solo encuentran una estrella fugaz con mucha prisa. {Buscado} no está allí."
-  - "Llegan {al_elegido} y buscan por todas partes. Solo encuentran una zapatilla de la reina, que siempre las pierde."
-  - "Lucía busca {en_elegido} detrás de cada nube. Solo encuentra un pájaro que le canta una canción."
+  - "{{{lectora} y {hermana} van|{lectora} va}} {al_elegido}. Allí solo hay una nube dormida que ronca muy bajito."
+  - "En {elegido} solo {{encuentran|encuentra}} una estrella fugaz con mucha prisa. {Buscado} no está allí."
+  - "{{Llegan {al_elegido} y buscan|{lectora} llega {al_elegido} y busca}} por todas partes. Solo {{encuentran|encuentra}} una zapatilla de la reina, que siempre las pierde."
+  - "{{{hermana}|{lectora}}} busca {en_elegido} detrás de cada nube. Solo encuentra un pájaro que le canta una canción."
 
 equivocado_pregunta:
   - "¡Casi! Vuelve a leer el texto despacito. La respuesta está escondida ahí."

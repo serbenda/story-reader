@@ -52,6 +52,8 @@
         if (kl in vars && vars[kl] != null) return capitalizar(String(vars[kl]));
         return m;
       });
+      // Las piezas que vienen de libro.md (gracias, pistas…) también pueden llevar alternativas
+      s = alternativas(s, vars.__dos !== false);
       if (s === antes) break;
     }
     const sobra = s.match(/\{[\p{L}\d_]+\}/gu);

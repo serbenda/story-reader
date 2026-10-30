@@ -2,11 +2,11 @@
 # ─────────────────────────────────────────────────────────────
 #  LIBRO: El bosque de los susurros
 #  Aquí se define el "mundo" que comparten todos los capítulos:
-#  lugares, animales que ayudan, tesoros de Lucía y frases de humor.
+#  lugares, animales que ayudan, tesoros de {hermana} y frases de humor.
 #  Los capítulos (cap-01.md, cap-02.md…) usan estas piezas al azar.
 # ─────────────────────────────────────────────────────────────
 titulo: "El bosque de los susurros"
-resumen: "Alaia y Lucía se convierten en detectives en un bosque donde los animales hablan."
+resumen: "{{{lectora} y {hermana} se convierten en detectives en un bosque donde los animales hablan.|{lectora} se convierte en detective en un bosque donde los animales hablan.}}"
 portada: bosque
 
 # Cada lugar necesita:
@@ -97,7 +97,7 @@ ayudantes:
     descripcion: "un búho muy despistado que lleva las gafas al revés"
     gracias:
       - "a Bruno se le caen las gafas dentro de un nido vacío"
-      - "Bruno confunde a Lucía con una lechuza y le da las buenas noches, aunque es de día"
+      - "{{Bruno confunde a {hermana} con una lechuza y le da las buenas noches, aunque es de día|Bruno confunde a {lectora} con una lechuza y le da las buenas noches, aunque es de día}}"
       - "Bruno se pone a contar estrellas, aunque todavía no ha salido ninguna"
   sapo:
     nombre: "Paco"
@@ -118,7 +118,7 @@ ayudantes:
     gracias:
       - "a Rita se le escapan tres nueces de la boca, una detrás de otra"
       - "Rita habla tan deprisa que se le hace un nudo en la lengua"
-      - "Rita intenta guardar una nuez en el bolsillo de Alaia"
+      - "Rita intenta guardar una nuez en el bolsillo de {lectora}"
   erizo:
     nombre: "Pincho"
     especie: "erizo"
@@ -126,7 +126,7 @@ ayudantes:
     emoji: "🦔"
     descripcion: "un erizo que se hace una bola cada vez que alguien estornuda"
     gracias:
-      - "Lucía estornuda y Pincho se hace una bola y rueda cuesta abajo"
+      - "{{{hermana} estornuda y Pincho se hace una bola y rueda cuesta abajo|{lectora} estornuda y Pincho se hace una bola y rueda cuesta abajo}}"
       - "a Pincho se le queda una manzana pinchada en la espalda"
       - "Pincho intenta peinarse los pinchos con una piña"
   tortuga:
@@ -136,24 +136,24 @@ ayudantes:
     emoji: "🐢"
     descripcion: "una tortuga lentísima que tarda un minuto entero en decir hola"
     gracias:
-      - "Tula dice «hoooooolaaaaa» tan despacio que a Lucía le da tiempo a comerse una galleta"
+      - "{{Tula dice «hoooooolaaaaa» tan despacio que a {hermana} le da tiempo a comerse una galleta|Tula dice «hoooooolaaaaa» tan despacio que a {lectora} le da tiempo a comerse una galleta}}"
       - "Tula se queda dormida a mitad de una frase"
       - "Tula estornuda y se esconde dentro de su caparazón del susto"
 
 # Cuando se elige un camino equivocado. Variables: {elegido}, {al_elegido}, {en_elegido}, {buscado}
 equivocado:
-  - "Alaia y Lucía van {al_elegido}. Allí solo hay una rana que dice: «Croac, aquí no ha venido nadie»."
-  - "En {elegido} solo encuentran un caracol dormido. Ronca muy fuerte, pero no ha visto a {buscado}."
-  - "Llegan {al_elegido} y buscan por todas partes. Solo encuentran un calcetín perdido que no es de nadie."
-  - "Lucía busca {en_elegido} debajo de cada piedra. Solo encuentra un escarabajo que le saca la lengua."
+  - "{{{lectora} y {hermana} van {al_elegido}.|{lectora} va {al_elegido}.}} Allí solo hay una rana que dice: «Croac, aquí no ha venido nadie»."
+  - "{{En {elegido} solo encuentran un caracol dormido.|En {elegido}, {lectora} solo encuentra un caracol dormido.}} Ronca muy fuerte, pero no ha visto a {buscado}."
+  - "{{Llegan {al_elegido} y buscan por todas partes. Solo encuentran|{lectora} llega {al_elegido} y busca por todas partes. Solo encuentra}} un calcetín perdido que no es de nadie."
+  - "{{{hermana}|{lectora}}} busca {en_elegido} debajo de cada piedra. Solo encuentra un escarabajo que le saca la lengua."
 
 # Cuando se falla una pregunta de comprensión.
 equivocado_pregunta:
   - "¡Casi! Vuelve a leer el texto despacito. La respuesta está escondida ahí."
-  - "Esa no es. Lucía dice que ella tampoco lo sabía. ¡Prueba otra vez!"
+  - "Esa no es. {{{hermana} dice que ella tampoco lo sabía.|Pero no pasa nada: equivocarse también es aprender.}} ¡Prueba otra vez!"
   - "¡Inténtalo de nuevo! Las buenas detectives siempre leen dos veces."
 
-# Tesoros que Lucía puede encontrar escondidos en los dibujos.
+# Tesoros que {hermana} puede encontrar escondidos en los dibujos.
 tesoros:
   - { emoji: "🌰", nombre: "una bellota" }
   - { emoji: "🍄", nombre: "una seta roja" }
@@ -168,4 +168,4 @@ tesoros:
 ---
 
 En este bosque los animales hablan bajito, como si contaran secretos.
-Alaia y Lucía descubren que son unas detectives estupendas.
+{{{lectora} y {hermana} descubren que son unas detectives estupendas.|{lectora} descubre que es una detective estupenda.}}

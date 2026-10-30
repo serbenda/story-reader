@@ -103,7 +103,7 @@ ayudantes:
     emoji: "🐄"
     descripcion: "una vaca muy presumida que lleva un lazo rosa en el cuerno"
     gracias:
-      - "Lola muge tan fuerte que a Lucía se le vuela el gorro"
+      - "{{Lola muge tan fuerte que a {hermana} se le vuela el gorro|Lola muge tan fuerte que a {lectora} se le vuela el gorro}}"
       - "Lola intenta hacer una reverencia y el lazo se le cae encima de un ojo"
       - "Lola se tira un pedo tan largo que las moscas salen huyendo"
   cerdo:
@@ -125,7 +125,7 @@ ayudantes:
     gracias:
       - "Cata cuenta sus huevos y le salen siete, luego tres y luego cien"
       - "Cata se asusta de su propia sombra y sale corriendo en círculos"
-      - "Cata pone un huevo del susto, ¡plof!, justo al lado de Lucía"
+      - "{{Cata pone un huevo del susto, ¡plof!, justo al lado de {hermana}|Cata pone un huevo del susto, ¡plof!, justo al lado de {lectora}}}"
   oveja:
     nombre: "Nube"
     especie: "oveja"
@@ -163,24 +163,24 @@ ayudantes:
     emoji: "🐐"
     descripcion: "una cabra que se lo come todo, hasta los calcetines"
     gracias:
-      - "Fina se come el cordón de la zapatilla de Alaia"
+      - "Fina se come el cordón de la zapatilla de {lectora}"
       - "Fina mastica un periódico viejo y pone cara de estar leyéndolo"
-      - "Fina intenta comerse la coleta de Lucía, que no para de reírse"
+      - "{{Fina intenta comerse la coleta de {hermana}, que no para de reírse|Fina intenta comerse la coleta de {lectora}, que no para de reírse}}"
 
 # Cuando se elige un camino equivocado. Variables: {elegido}, {al_elegido}, {en_elegido}, {buscado}
 equivocado:
-  - "Alaia y Lucía van {al_elegido}. Allí solo hay un ratón que dice: «Aquí no ha venido nadie»."
-  - "En {elegido} solo encuentran un gato dormido. Ronca muy fuerte y no ha visto pasar a nadie."
-  - "Llegan {al_elegido} y buscan por todas partes. Solo encuentran la bota perdida del abuelo."
-  - "Lucía busca {en_elegido} debajo de cada piedra. Solo encuentra un caracol que la saluda con los cuernos."
+  - "{{{lectora} y {hermana} van|{lectora} va}} {al_elegido}. Allí solo hay un ratón que dice: «Aquí no ha venido nadie»."
+  - "En {elegido} solo {{encuentran|encuentra}} un gato dormido. Ronca muy fuerte y no ha visto pasar a nadie."
+  - "{{Llegan {al_elegido} y buscan por todas partes. Solo encuentran|Llega {al_elegido} y busca por todas partes. Solo encuentra}} la bota perdida del abuelo."
+  - "{{{hermana}|{lectora}}} busca {en_elegido} debajo de cada piedra. Solo encuentra un caracol que la saluda con los cuernos."
 
 # Cuando se falla una pregunta de comprensión.
 equivocado_pregunta:
   - "¡Casi! Vuelve a leer el texto despacito. La respuesta está escondida ahí."
-  - "Esa no es. Lucía dice que ella tampoco lo sabía. ¡Prueba otra vez!"
+  - "{{Esa no es. {hermana} dice que ella tampoco lo sabía. ¡Prueba otra vez!|Esa no es. ¡Hasta las mejores detectives se equivocan! Prueba otra vez.}}"
   - "¡Inténtalo de nuevo! Las buenas detectives siempre leen dos veces."
 
-# Tesoros que Lucía puede encontrar escondidos en los dibujos.
+# Tesoros que {hermana} puede encontrar escondidos en los dibujos.
 tesoros:
   - { emoji: "🥚", nombre: "un huevo" }
   - { emoji: "🥕", nombre: "una zanahoria" }
@@ -195,4 +195,4 @@ tesoros:
 ---
 
 En la granja de los abuelos hay gallinas, vacas, un huerto enorme y un granero rojo.
-Alaia y Lucía pasan allí el fin de semana… y tienen mucho trabajo de detectives.
+{{{lectora} y {hermana} pasan allí el fin de semana… y tienen|{lectora} pasa allí el fin de semana… y tiene}} mucho trabajo de detectives.

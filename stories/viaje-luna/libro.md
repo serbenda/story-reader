@@ -6,7 +6,7 @@
 #  Los capítulos (cap-01.md, cap-02.md…) usan estas piezas al azar.
 # ─────────────────────────────────────────────────────────────
 titulo: "Viaje a la luna"
-resumen: "Una noche aterriza un cohete en el jardín y Alaia y Lucía viajan por el espacio como detectives."
+resumen: "{{Una noche aterriza un cohete en el jardín y {lectora} y {hermana} viajan por el espacio como detectives.|Una noche aterriza un cohete en el jardín y {lectora} viaja por el espacio como detective.}}"
 portada: luna
 
 # Lugares. Varios comparten fondo:
@@ -178,7 +178,7 @@ ayudantes:
     descripcion: "una lucecita que se enciende y se apaga cuando habla"
     gracias:
       - "Brilli se pone tan nerviosa que se apaga del todo"
-      - "Brilli brilla tanto que Lucía tiene que taparse los ojos"
+      - "{{Brilli brilla tanto que {hermana} tiene que taparse los ojos|Brilli brilla tanto que {lectora} tiene que taparse los ojos}}"
       - "Brilli tiene hipo y suelta una chispa con cada hipo"
   coco:
     nombre: "Coco"
@@ -226,7 +226,7 @@ equivocado:
   - "Van {al_elegido}, pero allí solo hay una roca con forma de calcetín. {Buscado} no está."
   - "En {elegido} solo encuentran un bichito de luz dormido. Ronca muy bajito y dice que por allí no ha pasado nadie."
   - "Llegan {al_elegido} y buscan por todas partes. Solo encuentran un calcetín de astronauta perdido."
-  - "Lucía busca {en_elegido} por todos los rincones. Solo encuentra una piedra que parece una galleta, pero no se come."
+  - "{{{hermana} busca {en_elegido} por todos los rincones. Solo encuentra una piedra que parece una galleta, pero no se come.|{lectora} busca {en_elegido} por todos los rincones. Solo encuentra una piedra que parece una galleta, pero no se come.}}"
 
 # Cuando se falla una pregunta de comprensión.
 equivocado_pregunta:
@@ -234,7 +234,7 @@ equivocado_pregunta:
   - "Esa no es. Glup se pone de color amarillo, que es el color de «prueba otra vez»."
   - "¡Inténtalo de nuevo! Las buenas detectives siempre leen dos veces."
 
-# Tesoros que Lucía puede encontrar escondidos en los dibujos.
+# Tesoros que {hermana} puede encontrar escondidos en los dibujos.
 tesoros:
   - { emoji: "🚀", nombre: "un cohete de juguete" }
   - { emoji: "⭐", nombre: "una estrella" }
@@ -249,4 +249,4 @@ tesoros:
 ---
 
 Un robot, un extraterrestre y un cohete muy pequeño.
-Alaia y Lucía resuelven casos por la Luna, un planeta rojo y el espacio, y vuelven a casa antes de que salga el sol.
+{{{lectora} y {hermana} resuelven casos por la Luna, un planeta rojo y el espacio, y vuelven a casa antes de que salga el sol.|{lectora} resuelve casos por la Luna, un planeta rojo y el espacio, y vuelve a casa antes de que salga el sol.}}

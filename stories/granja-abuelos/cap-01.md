@@ -1,6 +1,6 @@
 ---
-titulo: "¡Bienvenidas a la granja!"
-resumen: "Alaia y Lucía llegan a la granja de los abuelos y {mascota} desaparece nada más bajar del coche."
+titulo: "{{¡Bienvenidas a la granja!|¡Bienvenida a la granja!}}"
+resumen: "{{{lectora} y {hermana} llegan|{lectora} llega}} a la granja de los abuelos y {mascota} desaparece nada más bajar del coche."
 buscamos: mascota
 lugares: [pajar, gallinero, prado, estanque]
 pegatina: "🚜"
@@ -12,13 +12,13 @@ pegatina: "🚜"
 
 ### aprendiz
 Es viernes por la tarde.
-Alaia y Lucía llegan a la granja de los abuelos.
-> La abuela les da un abrazo enorme.
+{{{lectora} y {hermana} llegan a la granja de los abuelos.|{lectora} llega a la granja de los abuelos.}}
+{{> La abuela les da un abrazo enorme.|> La abuela le da un abrazo enorme.}}
 {mascota} baja del coche de un salto.
 ¡Y se va corriendo!
 ---
 ¡Ya están en la granja!
-El abuelo les dice hola con su sombrero.
+{{El abuelo les dice hola con su sombrero.|El abuelo le dice hola con su sombrero.}}
 > Hay vacas, gallinas y un granero rojo.
 {mascota} mira a todas partes.
 ¡Uy! ¡{mascota} se ha ido!
@@ -27,97 +27,97 @@ El abuelo les dice hola con su sombrero.
 Es viernes por la tarde y el coche para delante del granero rojo.
 La abuela sale corriendo a saludar, con las manos llenas de harina.
 > El domingo es la fiesta del pueblo y la abuela está haciendo pruebas de tartas.
-Lucía quiere probarlas todas, pero todas, todas.
+{{{hermana} quiere probarlas todas, pero todas, todas.|{lectora} quiere probarlas todas, pero todas, todas.}}
 Mientras tanto, {mascota} baja del coche, mira a su alrededor y sale disparad{mo}.
 ---
 Por fin llegan a la granja de los abuelos. Huele a hierba y a pan recién hecho.
-El abuelo las espera con su sombrero de paja y una sonrisa de oreja a oreja.
+El abuelo {{las|la}} espera con su sombrero de paja y una sonrisa de oreja a oreja.
 > Este fin de semana hay mucho trabajo, porque el domingo es la gran fiesta del pueblo.
-Lucía abraza a una gallina que pasaba por allí. La gallina no parece muy contenta.
-Cuando Alaia se da la vuelta, {mascota} ya no está.
+{{{hermana}|{lectora}}} abraza a una gallina que pasaba por allí. La gallina no parece muy contenta.
+Cuando {{{lectora} |}}se da la vuelta, {mascota} ya no está.
 
 ### lectora
 Es viernes por la tarde y el coche avanza despacito por un camino lleno de baches.
 Al final del camino aparecen un granero rojo, una valla de madera y dos figuras que saludan con la mano: ¡son los abuelos!
 La abuela lleva el delantal manchado de harina, porque está preparando una tarta para el concurso de la fiesta del pueblo.
 —Este año voy a ganar —dice muy segura—. Pero necesito ayudantes que la prueben.
-> Lucía levanta la mano tan deprisa que casi se da un golpe en la nariz.
+{{> {hermana} levanta la mano tan deprisa que casi se da un golpe en la nariz.|> {lectora} levanta la mano tan deprisa que casi se da un golpe en la nariz.}}
 Mientras todos se ríen, {mascota} baja del coche, mira las gallinas, mira las vacas… y sale corriendo como un rayo.
-—¡{mascota}, vuelve! —grita Alaia.
+—¡{mascota}, vuelve! —grita {lectora}.
 Pero {el_animal} ya ha desaparecido detrás del granero.
 ---
 La granja de los abuelos está igual que siempre: el granero rojo, el tractor viejo y un montón de gallinas que corren de un lado a otro.
-El abuelo baja las maletas del coche y la abuela llena a las niñas de besos con olor a canela.
-—Llegáis justo a tiempo —dice la abuela—. El domingo es la fiesta del pueblo y hay concurso de tartas.
-> Lucía pregunta si puede ser jurado, porque ella sabe mucho de comer tartas.
+El abuelo baja las maletas del coche y la abuela llena {{a las niñas|a {lectora}}} de besos con olor a canela.
+—{{Llegáis|Llegas}} justo a tiempo —dice la abuela—. El domingo es la fiesta del pueblo y hay concurso de tartas.
+{{> {hermana} pregunta si puede ser jurado, porque ella sabe mucho de comer tartas.|> {lectora} pregunta si puede ser jurado, porque ella sabe mucho de comer tartas.}}
 {mascota}, mientras tanto, lo huele todo: la rueda del tractor, la bota del abuelo, una pluma que vuela…
 De repente, levanta la cabeza, como si hubiera oído algo muy interesante, y sale corriendo.
-Cuando las niñas miran, {mascota} ya no está por ninguna parte.
+{{Cuando las niñas miran|Cuando {lectora} mira}}, {mascota} ya no está por ninguna parte.
 
 ### superlectora
 El viernes por la tarde, el coche aparca delante del granero rojo de la granja de los abuelos.
 El abuelo arregla una valla con un martillo, y la abuela saca del horno su tercera tarta de prueba del día.
 —El domingo es la fiesta del pueblo —explica—, y en el concurso de tartas siempre gana la señora del molino. ¡Este año no!
-> Lucía se ofrece a probar todas las tartas, porque dice que una buena ayudante tiene que trabajar mucho.
-Alaia sonríe, pero de pronto se da cuenta de algo: el asiento de {mascota} en el coche está vacío.
+{{> {hermana} se ofrece a probar todas las tartas, porque dice que una buena ayudante tiene que trabajar mucho.|> {lectora} se ofrece a probar todas las tartas, porque dice que una buena ayudante tiene que trabajar mucho.}}
+{{{lectora} sonríe, pero de pronto se da cuenta de algo|La abuela se ríe, pero de pronto {lectora} se da cuenta de algo}}: el asiento de {mascota} en el coche está vacío.
 Se oye un cacareo, luego un mugido, y luego… nada.
-—Lucía —dice Alaia muy seria, sacando su cuaderno—, tenemos nuestro primer caso en la granja.
-Lucía se pone su gorro de detective. En realidad es un cubo de plástico, pero le queda estupendamente.
+{{—{hermana} —dice {lectora} muy seria, sacando su cuaderno—, tenemos nuestro primer caso en la granja.|—Abuelos —dice {lectora} muy seria, sacando su cuaderno—, tengo mi primer caso en la granja.}}
+{{{hermana} se pone|Luego se pone}} su gorro de detective. En realidad es un cubo de plástico, pero le queda estupendamente.
 
 ## pista
 @fondo: granja
 @con: ayudante
 
 ### aprendiz
-Alaia y Lucía buscan por la granja.
+{{{lectora} y {hermana} buscan por la granja.|{lectora} busca por la granja.}}
 Allí está {ayudante}.
 Es {ayudante_desc}.
 > {ayudante_nombre} dice que {mascota} fue {hacia_lugar}.
 ? ¿A dónde fue {mascota}?
 ---
 Junto a la valla está {ayudante}.
-Mira a las niñas y sonríe.
+Mira {{a las niñas|a {lectora}}} y sonríe.
 > «{mascota} fue {hacia_lugar}», dice {ayudante_nombre}.
-? ¿A dónde tienen que ir Alaia y Lucía?
+{{? ¿A dónde tienen que ir {lectora} y {hermana}?|? ¿A dónde tiene que ir {lectora}?}}
 
 ### novatilla
 Detrás del granero aparece {ayudante}, {ayudante_desc}.
-Nada más ver a las niñas, {gracia}.
-Lucía se ríe tanto que tiene que sentarse en un cubo.
+Nada más {{ver a las niñas|verla}}, {gracia}.
+{{{hermana}|{lectora}}} se ríe tanto que tiene que sentarse en un cubo.
 > «Vi a {mascota}», dice {ayudante_nombre}. «Primero fue {hacia_falso}, pero luego se fue {hacia_lugar}.»
 ? ¿Dónde está {mascota} ahora?
 ---
-Las niñas siguen el camino de tierra y se encuentran con {ayudante}, {ayudante_desc}.
-—¿Buscáis a {mascota}? —pregunta. Y justo entonces, {gracia}.
+{{Las niñas siguen el camino de tierra y se encuentran|{lectora} sigue el camino de tierra y se encuentra}} con {ayudante}, {ayudante_desc}.
+—¿{{Buscáis|Buscas}} a {mascota}? —pregunta. Y justo entonces, {gracia}.
 > «No fue {al_falso} ni {al_otro}», explica {ayudante_nombre}. «Se fue {hacia_lugar}.»
 ? ¿A dónde se fue {mascota}?
 
 ### lectora
-Las niñas dan la vuelta al granero hasta que oyen una voz: «¡Eh, vosotras, las de la ciudad!».
+{{Las niñas dan la vuelta al granero hasta que oyen una voz: «¡Eh, vosotras, las de la ciudad!».|{lectora} da la vuelta al granero hasta que oye una voz: «¡Eh, tú, la de la ciudad!».}}
 Es {ayudante}, {ayudante_desc}.
-—¿Habéis perdido algo? —pregunta. Y justo en ese momento, {gracia}.
-Cuando por fin dejan de reírse, Alaia le cuenta lo que ha pasado.
+—¿{{Habéis|Has}} perdido algo? —pregunta. Y justo en ese momento, {gracia}.
+Cuando por fin dejan de reírse, {lectora} le cuenta lo que ha pasado.
 > «Sí, {mascota} pasó por aquí corriendo», recuerda {ayudante_nombre}.
 —No vi hacia dónde iba, pero me fijé en una cosa: {mascota} {pista1}.
-Alaia piensa con mucha atención. Lucía también piensa, aunque sobre todo piensa en tartas.
+{{{lectora} piensa con mucha atención. {hermana} también piensa, aunque sobre todo piensa en tartas.|{lectora} piensa con mucha atención, aunque de vez en cuando se le escapa algún pensamiento sobre tartas.}}
 ? ¿Dónde crees que está {mascota}?
 ---
 En la granja hay tanto ruido que cuesta pensar: cacareos, mugidos y el tractor del vecino.
 De repente, alguien carraspea junto al abrevadero. Es {ayudante}, {ayudante_desc}.
 —Buenas tardes —saluda muy educadamente. Y nada más decirlo, {gracia}.
-> Alaia le pregunta si ha visto pasar a {mascota}.
+> {lectora} le pregunta si ha visto pasar a {mascota}.
 —Pasó por aquí hace un rato —contesta {ayudante_nombre}—. Iba muy deprisa, pero me di cuenta de que {mascota} {pista1}.
 ? ¿A qué sitio de la granja fue {mascota}?
 
 ### superlectora
-Las detectives siguen unas huellas por el camino de tierra hasta el abrevadero.
+{{Las detectives siguen unas huellas por el camino de tierra hasta el abrevadero.|La detective sigue unas huellas por el camino de tierra hasta el abrevadero.}}
 Allí está {ayudante}, {ayudante_desc}.
-—Buenas tardes, señoras detectives —saluda. Y nada más decirlo, {gracia}.
-> Alaia saca su cuaderno y pregunta: «¿Ha visto pasar a {mascota} por aquí?».
+—Buenas tardes, {{señoras detectives|señora detective}} —saluda. Y nada más decirlo, {gracia}.
+> {lectora} saca su cuaderno y pregunta: «¿Ha visto pasar a {mascota} por aquí?».
 —Pues sí, pero iba tan deprisa que no sé a dónde iba. Eso sí, de dos cosas me acuerdo muy bien.
 —La primera: [[{mascota} no fue {al_falso}]]. Vi cómo daba la vuelta en la valla.
 —La segunda: [[{mascota} {pista1}]].
-Alaia lo apunta todo en su cuaderno. Lucía también apunta, aunque ella solo dibuja una tarta.
+{lectora} lo apunta todo en su cuaderno.{{ {hermana} también apunta, aunque ella solo dibuja una tarta.|}}
 
 ## pista2
 @fondo: granja
@@ -125,10 +125,10 @@ Alaia lo apunta todo en su cuaderno. Lucía también apunta, aunque ella solo di
 
 ### superlectora
 Un poco más adelante, junto al tractor viejo, está {ayudante2}, {ayudante2_desc}.
-—¿Buscáis a {mascota}? —pregunta antes de que Alaia pueda abrir la boca—. Lo sé todo. Bueno, casi todo.
-Entonces {gracia2}, y las niñas tienen que esperar un ratito.
+—¿{{Buscáis|Buscas}} a {mascota}? —pregunta antes de que {lectora} pueda abrir la boca—. Lo sé todo. Bueno, casi todo.
+Entonces {gracia2}, y {{las niñas tienen|{lectora} tiene}} que esperar un ratito.
 > Por fin, {ayudante2_nombre} dice: «Cuando volvió a pasar por aquí, [[{mascota} {pista2}]]».
-Alaia repasa su cuaderno. Ya tiene tres pistas: ha llegado el momento de juntarlas.
+{lectora} repasa su cuaderno. Ya tiene tres pistas: ha llegado el momento de juntarlas.
 ? Lee tu cuaderno de detective. ¿Dónde está {mascota}?
 
 ## encuentro
@@ -136,28 +136,28 @@ Alaia repasa su cuaderno. Ya tiene tres pistas: ha llegado el momento de juntarl
 @con: mascota
 
 ### aprendiz
-Alaia y Lucía van {al_lugar}.
+{{{lectora} y {hermana} van {al_lugar}.|{lectora} va {al_lugar}.}}
 > ¡Allí está {mascota}!
-Lucía le da un abrazo muy fuerte.
+{{{hermana}|{lectora}}} le da un abrazo muy fuerte.
 {mascota} está muy content{mo}.
 ¡Le gusta mucho la granja!
 ---
-Las niñas corren {hacia_lugar}.
+{{Las niñas corren {hacia_lugar}.|{lectora} corre {hacia_lugar}.}}
 > Detrás de una valla está {mascota}.
 ¡Qué alegría!
-Alaia le da un beso en la cabeza.
+{lectora} le da un beso en la cabeza.
 
 ### novatilla
-Las niñas corren {hacia_lugar} todo lo deprisa que pueden.
+{{Las niñas corren {hacia_lugar} todo lo deprisa que pueden.|{lectora} corre {hacia_lugar} todo lo deprisa que puede.}}
 Y allí está {mascota}, sentad{mo} tan tranquil{mo}, como si no hubiera pasado nada.
-> Lucía le da un abrazo tan fuerte que a {mascota} se le escapa un ruidito muy raro.
-—No te vayas sin avisar —le dice Alaia—. ¡La granja es muy grande!
+{{> {hermana} le da un abrazo tan fuerte que a {mascota} se le escapa un ruidito muy raro.|> {lectora} le da un abrazo tan fuerte que a {mascota} se le escapa un ruidito muy raro.}}
+—No te vayas sin avisar —le dice {lectora}—. ¡La granja es muy grande!
 {mascota} pone cara de no haber roto nunca un plato.
 
 ### lectora
-Cuando llegan {al_lugar}, al principio no ven a nadie.
-Pero entonces oyen un ruidito detrás de un montón de cosas… ¡Es {mascota}!
-> Lucía le da tantos besos que {mascota} acaba con la cara llena de babas.
+{{Cuando llegan {al_lugar}, al principio no ven a nadie.|Cuando llega {al_lugar}, al principio no ve a nadie.}}
+Pero entonces {{oyen|oye}} un ruidito detrás de un montón de cosas… ¡Es {mascota}!
+{{> {hermana} le da tantos besos que {mascota} acaba con la cara llena de babas.|> {lectora} le da tantos besos y achuchones que {mascota} acaba con la cara toda despeinada.}}
 ? ¿Por qué {mascota} {pista1}?
 * Porque había estado {en_lugar}.
 - Porque había estado {en_falso}.
@@ -166,15 +166,15 @@ Pero entonces oyen un ruidito detrás de un montón de cosas… ¡Es {mascota}!
 {mascota} da saltitos, content{mo}. Está claro que la granja le encanta.
 
 ### superlectora
-Las detectives llegan {al_lugar} y se esconden detrás de una carretilla para observar.
+{{Las detectives llegan {al_lugar} y se esconden|La detective llega {al_lugar} y se esconde}} detrás de una carretilla para observar.
 Allí, muy concentrad{mo}, está {mascota}, investigando cada rincón como si también fuera detective.
-> —¡Caso resuelto! —susurra Alaia, y Lucía aplaude tan fuerte que {mascota} da un brinco.
-? ¿Qué pistas os han traído hasta aquí?
+{{> —¡Caso resuelto! —susurra {lectora}, y {hermana} aplaude tan fuerte que {mascota} da un brinco.|> —¡Caso resuelto! —susurra {lectora}, y aplaude tan fuerte que {mascota} da un brinco.}}
+{{? ¿Qué pistas os han traído hasta aquí?|? ¿Qué pistas te han traído hasta aquí?}}
 * Que no fue {al_falso} y que {pista1}.
 - Que {pista_falsa}.
 - Que tenía muchas ganas de comer helado.
-Alaia apunta en el cuaderno: [[caso número uno resuelto]].
-Lucía dibuja una tarta al lado, para celebrarlo.
+{lectora} apunta en el cuaderno: [[caso número uno resuelto]].
+{{{hermana} dibuja|Y dibuja}} una tarta al lado, para celebrarlo.
 
 ## final
 @final
@@ -182,7 +182,7 @@ Lucía dibuja una tarta al lado, para celebrarlo.
 @con: mascota
 
 ### aprendiz
-Alaia, Lucía y {mascota} vuelven a la casa.
+{{{lectora}, {hermana} y {mascota} vuelven a la casa.|{lectora} y {mascota} vuelven a la casa.}}
 La abuela les da tarta.
 Pero el abuelo llega corriendo.
 ¡El cerdito Bombón se ha escapado!
@@ -195,15 +195,15 @@ De pronto, el abuelo entra con el sombrero torcido.
 
 ### lectora
 Al volver a la casa, la abuela ha puesto la mesa con mantel de cuadros y una tarta de prueba en el centro.
-Lucía se come dos trozos y dice que necesita un tercero para estar segura.
+{{{hermana}|{lectora}}} se come dos trozos y dice que necesita un tercero para estar segura.
 Entonces se abre la puerta de golpe. Es el abuelo, con el sombrero torcido y una cuerda en la mano.
 —¡Bombón se ha escapado otra vez! —dice—. Ese cerdito es el mayor escapista de toda la granja.
-Alaia y Lucía se miran. Parece que mañana va a haber otro caso…
+{{{lectora} y {hermana}|{lectora} y {mascota}}} se miran. Parece que mañana va a haber otro caso…
 
 ### superlectora
-Esa noche, en la cocina de los abuelos, todos prueban la tarta número tres. Lucía le da un diez. Y luego otro diez, por si acaso.
+Esa noche, en la cocina de los abuelos, todos prueban la tarta número tres. {{{hermana}|{lectora}}} le da un diez. Y luego otro diez, por si acaso.
 Justo cuando la abuela va a apuntar la receta, el abuelo entra con el sombrero torcido y la cara llena de barro.
 —Bombón ha abierto la puerta de la cuadra con el hocico —anuncia—. ¡Otra vez!
-—¿Quién es Bombón? —pregunta Alaia.
+—¿Quién es Bombón? —pregunta {lectora}.
 —El cerdito más escapista del mundo. Y el domingo tiene que ir a la fiesta, porque es la estrella del desfile.
-Alaia abre su cuaderno por una página nueva y escribe con letras grandes: «Caso número dos: el cerdito escapista».
+{lectora} abre su cuaderno por una página nueva y escribe con letras grandes: «Caso número dos: el cerdito escapista».
