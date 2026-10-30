@@ -1,0 +1,22 @@
+/* Tienda (src/pantallas/tienda.js). */
+
+/* ───── Tienda ───── */
+.tienda { display: flex; flex-direction: column; gap: 14px; }
+.tienda-cabecera { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.saldo-grande { margin: 0; display: flex; align-items: baseline; gap: 8px; padding: 8px 16px; border-radius: 999px; background: var(--sol-claro); border: 3px solid var(--sol); }
+.saldo-grande b { font-family: var(--fuente-titulo); font-size: 2rem; font-variant-numeric: tabular-nums; }
+.rejilla-tienda { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.articulo { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 3px solid var(--tinta); border-radius: 18px; background: #FFFFFF; }
+.articulo.comprado { background: var(--bien-fondo); border-color: var(--bien); }
+.articulo-vista { height: 150px; display: grid; place-items: center; background: var(--hoja); border-radius: 12px; overflow: hidden; }
+.articulo-vista svg { height: 140px; width: auto; }
+.tienda-emoji { font-size: 5.5rem; line-height: 1; }
+.articulo-texto { display: flex; flex-direction: column; gap: 2px; }
+.articulo-texto b { font-family: var(--fuente-titulo); font-size: 1.15rem; }
+.precio { font-weight: 600; color: #8A5A00; }
+.sello-tuyo { font-weight: 600; color: var(--bien); }
+.boton-falta { background: var(--papel-2); box-shadow: none; border-style: dashed; }
+.boton.seguro { background: var(--sol); color: var(--tinta); }
+.poner { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip-bloqueada { background: var(--papel-2); border-style: dashed; color: var(--tinta-suave); }
+.candado { margin-left: .4em; font-size: .85rem; font-weight: 600; }

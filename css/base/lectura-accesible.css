@@ -1,0 +1,15 @@
+/* Ayudas de lectura que se activan desde «Para mayores» con clases en <body>
+   (src/ui/ajustes-visuales.js): sílabas de colores, lectura por sílabas y regla. */
+
+/* ───── Sílabas de colores y lectura por sílabas ───── */
+/* Solo en los textos que se leen (no en títulos ni botones de la portada) */
+.con-silabas :is(.lectura, .capa .texto, .ficha-desc) .sil.s1 { color: var(--sil-2); }
+.con-silabas .frase-voz .palabra.ok .sil { color: inherit; }
+.palabra.silabeando { background: var(--sol-claro); box-shadow: 0 0 0 4px var(--sol-claro); }
+.sil-paso { border-radius: 5px; transition: background .15s, color .15s; }
+.sil-paso.ahora { background: var(--sol); color: var(--tinta); }
+.sil-punto { color: var(--tinta-suave); margin: 0 .08em; }
+
+/* Regla de lectura: la línea activa destaca y el resto se atenúa */
+.con-regla .bloques > p.linea { opacity: .3; transition: opacity .2s; cursor: pointer; }
+.con-regla .bloques > p.linea.linea-activa { opacity: 1; background: var(--sol-claro); box-shadow: 0 0 0 6px var(--sol-claro); }

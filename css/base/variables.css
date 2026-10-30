@@ -1,0 +1,29 @@
+/* Variables de diseño: colores, fuentes, tamaños y radios.
+   Una sola apariencia a propósito: el fondo crema ayuda a leer con dislexia.
+   Cambiar un color aquí lo cambia en todo el juego. */
+
+:root {
+  --papel: #FBF3DF;
+  --hoja: #FFF9EC;
+  --papel-2: #F3E5C3;
+  --borde: #E2CFA4;
+  --tinta: #2E2A3B;
+  --tinta-suave: #5F586C;
+  --musgo: #3F7D4E;
+  --musgo-osc: #2C5E39;
+  --musgo-claro: #E3F0DA;
+  --baya: #C9476B;
+  --baya-osc: #9B2F4E;
+  --sol: #F2B33D;
+  --sol-claro: #FFEBB3;
+  --cielo: #4F93BD;
+  --bien: #23744A;
+  --bien-fondo: #D3EEDC;
+  --sil-2: #B3366A;   /* segundo color de las sílabas alternas */
+
+  --fuente-titulo: "Grandstander", "Chalkboard SE", "Comic Sans MS", system-ui, sans-serif;
+  --fuente-texto: "Lexend", "Atkinson Hyperlegible", Verdana, system-ui, sans-serif;
+  --tam-lectura: 1.5rem;
+  --radio: 20px;
+  color-scheme: light;
+}

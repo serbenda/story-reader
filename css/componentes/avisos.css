@@ -1,0 +1,25 @@
+/* Avisos, confeti y mensaje de error de carga (src/ui/avisos.js, src/main.js). */
+
+/* ───── Avisos y confeti ───── */
+#aviso {
+  position: fixed;
+  left: 50%;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 60;
+  max-width: calc(100% - 32px);
+  padding: .7em 1.2em;
+  border-radius: 18px;
+  background: var(--tinta);
+  color: #FFF9EC;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow: 0 6px 0 rgba(46, 42, 59, .25);
+}
+#aviso.sale { animation: aviso-entra .35s ease; }
+@keyframes aviso-entra { from { transform: translate(-50%, 20px); opacity: 0; } }
+#confeti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 70; }
+#confeti i { position: absolute; top: -20px; width: 10px; height: 14px; border-radius: 3px; animation: caer 2.4s ease-in forwards; }
+@keyframes caer { to { transform: translate(var(--dx), 110vh) rotate(var(--giro)); } }
+
+.error { max-width: 640px; margin: 15vh auto; padding: 20px; border: 3px solid var(--baya); border-radius: var(--radio); background: var(--hoja); }

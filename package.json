@@ -1,0 +1,15 @@
+{
+  "name": "story-reader",
+  "version": "2.0.0",
+  "description": "La biblioteca mágica: cuentos para practicar la lectura en voz alta, pensados para niñas y niños con dislexia.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "servir": "python3 -m http.server 8000",
+    "preparar": "node herramientas/recursos-sin-conexion.js",
+    "comprobar": "node herramientas/arquitectura.js && node herramientas/recursos-sin-conexion.js --comprobar && node --test \"tests/unidad/*.test.js\"",
+    "validar": "python3 herramientas/validar.py todos",
+    "partidas": "python3 tests/partidas.py"
+  },
+  "engines": { "node": ">=20" }
+}

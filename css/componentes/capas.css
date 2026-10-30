@@ -1,0 +1,28 @@
+/* Capas encima de la pantalla: camino equivocado, cuaderno, cofre (src/ui/avisos.js). */
+
+/* ───── Capas (camino equivocado, cuaderno) ───── */
+.capa {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background: rgba(46, 42, 59, .45);
+  animation: aparecer .25s ease;
+}
+.capa-caja {
+  width: min(640px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  background: var(--hoja);
+  border: 4px solid var(--tinta);
+  border-radius: 24px;
+  padding: 18px;
+  box-shadow: 0 8px 0 var(--tinta);
+}
+.equivocado, .cuaderno { display: flex; flex-direction: column; gap: 14px; }
+.mini-escena .escenario { aspect-ratio: 16 / 8; }
+.consejo { font-weight: 600; color: var(--musgo-osc); }
+.lista-pistas { margin: 0; padding-left: 1.4em; }
+.lista-pistas li::marker { content: "🔎 "; }

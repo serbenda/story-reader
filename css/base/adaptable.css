@@ -1,0 +1,12 @@
+/* Ajustes para pantallas estrechas y para quien pide menos movimiento.
+   Va el ÚLTIMO para poder corregir a todos los demás. */
+
+@media (max-width: 520px) {
+  .solo-ancho { display: none; }
+  .libro-portada { width: 84px; }
+  .lectura { padding: 16px; }
+  .marca { font-size: 1.05rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

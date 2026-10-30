@@ -1,0 +1,32 @@
+/* Elegir y vestir a las protagonistas (src/pantallas/personalizar.js). */
+
+/* ───── Personalizar ───── */
+.personalizar { max-width: 1000px; margin: 0 auto; padding-top: 8px; }
+.pasos { display: flex; gap: 8px; margin-bottom: 14px; }
+.pasos span { width: 36px; height: 8px; border-radius: 4px; background: var(--papel-2); }
+.pasos .activo { background: var(--musgo); }
+.pasos .hecho { background: var(--sol); }
+.personalizar-cuerpo { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; margin-top: 16px; }
+@media (min-width: 760px) { .personalizar-cuerpo { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); align-items: start; } }
+.personalizar-vista {
+  display: grid;
+  place-items: center;
+  background: var(--hoja);
+  border: 3px solid var(--tinta);
+  border-radius: var(--radio);
+  padding: 16px;
+  min-height: 260px;
+}
+.vista-nina svg { height: 280px; width: auto; max-width: 100%; }
+.vista-mascota { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.emoji-grande { font-size: 8rem; line-height: 1; }
+.nombre-mascota { font-family: var(--fuente-titulo); font-size: 2rem; font-weight: 800; }
+.personalizar-opciones { display: flex; flex-direction: column; gap: 18px; }
+
+/* ───── Elegir protagonistas ───── */
+.vista-quien { display: flex; align-items: flex-end; justify-content: center; gap: 14px; }
+.vista-quien .mini-nina { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.vista-quien .mini-nina svg { height: 220px; width: auto; }
+.vista-quien .mini-nina.peque svg { height: 165px; }
+.vista-quien .nombre-mascota { font-size: 1.4rem; }
+.chip-grande { min-height: 56px; font-size: 1.15rem; padding-inline: 1.2em; }

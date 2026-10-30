@@ -180,16 +180,17 @@ La primera vez el navegador pide permiso para usar el micro.
 - `main`: producción, lo que se publica en GitHub Pages. **Nada se sube directamente**: los cambios
   llegan solo por **pull request de `development` a `main`**, que se revisa antes de fusionar.
 
-Antes de abrir el PR, comprueba los cuentos y juega las partidas de prueba:
+Antes de abrir el PR, pasa las comprobaciones (solo hace falta Node y Python, nada que instalar con npm):
 
 ```bash
-python herramientas/validar.py todos   # cuentos: cientos de partidas al azar, con una y con dos niñas
-python tests/partidas.py               # juego: partidas completas con micro simulado, tienda, meta, sílabas, copias…
+npm run comprobar      # arquitectura, documentación, lista sin conexión y pruebas unitarias (segundos)
+npm run validar        # cuentos: cientos de partidas al azar, con una y con dos niñas
+npm run partidas       # juego: partidas completas con micro simulado, tienda, meta, sílabas, copias…
 ```
 
-Además, la GitHub Action **Comprobar cuentos** (`.github/workflows/validar-cuentos.yml`) hace las dos cosas sola en cada
-PR a `main` y en cada subida a `development`. Para que un PR con cuentos rotos no se pueda fusionar:
-*Settings → Branches → Add rule* para `main` → *Require status checks to pass* → **Validar los cuentos**.
+La GitHub Action **Comprobar cuentos** (`.github/workflows/validar-cuentos.yml`) hace todo eso sola en cada
+PR a `main` o `development` y en cada subida a `development`. `main` está protegida: solo admite PR con el
+trabajo **Validar los cuentos** en verde.
 
 **GitHub Pages:** *Settings → Pages → Deploy from a branch*, rama `main`, carpeta `/ (root)`. El archivo
 `.nojekyll` es imprescindible: sin él, GitHub convierte los `.md` en páginas y el juego no encuentra los cuentos.
@@ -201,7 +202,11 @@ python3 -m http.server 8000
 # y abre http://localhost:8000
 ```
 
-Si cambias archivos del juego, sube `VERSION` en `sw.js` para que las tablets instaladas descarguen la versión nueva.
+Si cambias o añades archivos del juego, ejecuta `npm run preparar`: actualiza la lista de archivos sin conexión de
+`sw.js` y su versión, para que las tablets instaladas descarguen lo nuevo. La CI avisa si se te olvida.
+
+Cómo está organizado el código, sus reglas y cómo ampliarlo: **[docs/ARQUITECTURA.md](docs/ARQUITECTURA.md)** y
+**[CONTRIBUTING.md](CONTRIBUTING.md)**.
 </details>
 
 <details>
@@ -303,44 +308,44 @@ Una variable con mayúscula (`{Ayudante}`) se escribe con mayúscula. Las frases
 <details>
 <summary><b>🎨 Paisajes disponibles</b></summary>
 
-Se dibujan con código (`js/arte.js`), cambian un poco en cada partida y todos tienen versión de noche:
+Se dibujan con código (`src/arte/paisajes/`), cambian un poco en cada partida y todos tienen versión de noche:
 
 `casa` · `bosque` · `rio` · `cueva` · `puente` · `prado` · `arbol` · `playa` · `faro` · `barco` · `granja` ·
 `huerto` · `castillo` · `torre` · `luna` · `planeta` · `nave` · `espacio` · `nieve` · `lago` · `iglu` · `cabana`
 
-Para un paisaje nuevo, añade una función en `PAISAJES` dentro de `js/arte.js`. También se puede poner la ruta de una imagen (`fondo: imagenes/mi-dibujo.png`).
+Para un paisaje nuevo, escribe su función en el archivo de su mundo en `src/arte/paisajes/` y regístrala en `src/arte/paisajes/index.js` ([receta](CONTRIBUTING.md#un-paisaje-nuevo)). También se puede poner la ruta de una imagen (`fondo: imagenes/mi-dibujo.png`).
 </details>
 
 <details>
 <summary><b>🗂️ Estructura del proyecto</b></summary>
 
 ```
-index.html               página del juego
+index.html               página del juego (carga src/main.js como módulo)
 manifest.webmanifest     datos para instalarlo como app
-sw.js                    modo sin internet
-icono.svg, icono-*.png   iconos
-css/estilos.css
-js/
-  datos.js               carga los libros de stories/
-  texto.js               rellena las plantillas, separa los bloques y las sílabas
-  voz.js                 reconocimiento de voz y lectura en voz alta
-  grabaciones.js         la voz de la familia para las palabras difíciles
-  arte.js                paisajes y personajes dibujados con código
-  juego/                 el juego, en orden de carga:
-    01-base.js           estado, registro, sonidos, palabras, variables y escenario
-    02-portada.js        bienvenida, protagonistas, meta del día, tienda y estantería
-    03-partida.js        escenas, cerraduras, lectura en voz alta, preguntas y final
-    04-mayores.js        álbum, progreso, tu voz, ajustes e informe
-    05-arranque.js       carga los libros y abre la primera pantalla
-.github/workflows/       comprobación automática de los cuentos
+sw.js                    modo sin internet (su lista de archivos se genera sola)
+package.json             atajos: npm run comprobar · validar · partidas · preparar · servir
+src/                     el juego, en módulos ES por capas (ver docs/ARQUITECTURA.md)
+  main.js                arranque
+  depuracion.js          window.Juego, para las pruebas y la consola
+  config/                datos: niveles, premios, tienda, apariencia, mensajes
+  util/                  ayudas genéricas: DOM, azar, fechas, eventos, base64
+  contenido/             cuentos: carga, escenas, plantillas, bloques y sílabas
+  servicios/             navegador: voz, grabaciones, sonido, contador, plataforma
+  arte/                  dibujos con código: paisajes por mundos y personajes
+  estado/                el progreso guardado y la sesión
+  dominio/               reglas del juego, sin pantalla: partida, meta, tienda, informe…
+  ui/                    piezas de interfaz: navegación, avisos, escenario, componentes
+  pantallas/             una por pantalla; la partida, con sus tarjetas
+css/estilos.css          índice de estilos → base/, componentes/, pantallas/
 stories/
   index.json             libros, mascotas y nombres de las protagonistas
   GUIA-ESCRITURA.md      cómo escribir un cuento
   <libro>/libro.md       el mundo de cada libro
   <libro>/cap-XX.md      los capítulos
-herramientas/validar.py  comprobador de cuentos
-tests/partidas.py        pruebas: partidas completas con micro simulado y funciones
-docs/                    imágenes del README
+herramientas/            arquitectura.js · recursos-sin-conexion.js · validar.py
+tests/                   unidad/ (Node) y partidas.py (navegador con micro simulado)
+docs/                    arquitectura, decisiones e imágenes del README
+.github/workflows/       comprobación automática en cada PR
 ```
 </details>
 
