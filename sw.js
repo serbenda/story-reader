@@ -1,6 +1,6 @@
 /* Service worker: guarda el juego y los cuentos para poder jugar sin internet
    (el micrófono sí necesita conexión). Al cambiar algo, sube VERSION. */
-const VERSION = 'biblioteca-v7';
+const VERSION = 'biblioteca-v8';
 const BASE = ['./', 'index.html', 'css/estilos.css', 'js/datos.js', 'js/texto.js', 'js/voz.js', 'js/grabaciones.js', 'js/arte.js',
   'js/juego/01-base.js', 'js/juego/02-portada.js', 'js/juego/03-partida.js', 'js/juego/04-mayores.js', 'js/juego/05-arranque.js',
   'manifest.webmanifest', 'icono.svg', 'icono-192.png', 'icono-512.png', 'stories/index.json',
