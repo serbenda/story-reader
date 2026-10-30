@@ -71,3 +71,9 @@ Pon una frase `>` en casi todas las escenas (es la lectura en voz alta) y escrib
 
 El comprobador sortea cientos de partidas y avisa de variables sin rellenar, escenas sin pregunta
 o sin frase de voz, opciones mal marcadas, fondos que no existen y frases de voz demasiado largas.
+
+## Mascotas nuevas
+
+Las mascotas están en `stories/index.json`. Cada una necesita `chico`, `chica` y `emoji`; si lleva
+`precio`, se compra en la tienda con estrellas. Elige animales con masculino y femenino claros
+(pingüinito / pingüinita), porque los cuentos dicen «la gatita» o «el perrito».

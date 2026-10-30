@@ -16,6 +16,7 @@ pensados para niñas y niños con dislexia
 ![Sin internet](https://img.shields.io/badge/funciona-sin%20internet-5F8FA8?style=flat-square)
 ![Sin anuncios](https://img.shields.io/badge/sin-cuentas%20ni%20anuncios-2E2A3B?style=flat-square)
 [![Publicación](https://github.com/serbenda/story-reader/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/serbenda/story-reader/actions/workflows/pages/pages-build-deployment)
+[![Cuentos comprobados](https://github.com/serbenda/story-reader/actions/workflows/validar-cuentos.yml/badge.svg)](https://github.com/serbenda/story-reader/actions/workflows/validar-cuentos.yml)
 
 <img src="docs/banner.png" alt="Alaia, Lucía y su mascota delante de los seis mundos de los cuentos: bosque, mar, granja, castillo, espacio y nieve">
 
@@ -42,6 +43,8 @@ jugar de memoria**: hay que leer de verdad.
 | 🔒 **Abre la cerradura** | Retos cortos con las letras que se confunden (b/d, p/q, m/n/u) y con sílabas invertidas. |
 | 🧭 **Elige el camino** | Las pistas dicen dónde está lo que se busca. Si te equivocas, pasa algo gracioso y vuelves a leer. |
 | ✨ **Palabras mágicas** | Al empezar cada capítulo hay que leer tres palabras que costaron otras veces, hasta «conquistarlas». |
+| 🎯 **Meta del día** | Un ratito de lectura cada día (5, 10 o 15 minutos, o un capítulo). Racha de días 🔥 y un cofre 🎁 si se cumple 5 días en la semana. |
+| 🛍️ **Tienda** | Las estrellas ganadas se gastan en complementos, vestidos y mascotas nuevas. |
 | 💎 **Tesoros de Lucía** | Hay cosas escondidas en los dibujos. Al tocarlas, Lucía las guarda en el álbum. |
 | 🎨 **A tu manera** | Se puede vestir a las protagonistas y elegir la mascota y su nombre. La mascota sale en todos los cuentos. |
 
@@ -78,6 +81,10 @@ Al terminar un libro, el juego propone subir de nivel. El informe para mayores t
 - 🔤 Letra **Lexend** grande (tres tamaños), con letras y palabras espaciadas e interlineado amplio.
 - 🟨 Fondo **crema** en vez de blanco y texto alineado a la izquierda.
 - ✏️ **Una idea por línea**, con opción de **resaltar la línea** que se está leyendo.
+- 🌈 **Sílabas de colores** (opcional): *ma·ri·po·sa* en dos colores alternos, con un separador de sílabas para el español.
+- 🔊 **Escuchar por sílabas**: tocar una palabra la lee; tocarla otra vez la lee sílaba a sílaba mientras se iluminan.
+- 📏 **Regla de lectura** (opcional): la línea que se lee destaca y las demás se atenúan.
+- 👨‍👧 **Tu voz**: las palabras que le cuestan pueden sonar con la voz de papá o mamá en vez de la del robot.
 - 🤝 **Ayuda sin castigo**: oír cualquier palabra, escuchar la frase después de intentarla, seguir tras tres intentos.
 - 👂 **Reconocimiento tolerante**: acepta pequeñas diferencias, con tres niveles de exigencia.
 - 🎯 **Práctica dirigida**: palabras mágicas con lo que cuesta y cerraduras con las confusiones típicas.
@@ -103,6 +110,9 @@ En la pantalla de inicio, **mantén pulsado «⚙️ Mayores» dos segundos**.
 
 **⚙️ Ajustes**
 - Nivel, tamaño de letra, exigencia del micro o jugar sin micro
+- Sílabas de colores y regla de lectura
+- **Meta de cada día** (5, 10 o 15 minutos, o un capítulo)
+- **🎙️ Grabar tu voz** para las palabras difíciles (también desde el informe, junto a cada palabra). Se guardan solo en ese dispositivo
 - **Voz** que lee las palabras y su **velocidad**
 - **Pasar el progreso** entre tablet y portátil con un código (se juntan, no se borra nada)
 
@@ -150,6 +160,7 @@ La primera vez el navegador pide permiso para usar el micro.
 - No hay cuentas, servidores ni publicidad. Todo el progreso se guarda **solo en el navegador** del dispositivo.
 - El reconocimiento de voz lo hace el propio navegador (en Chrome, a través de los servicios de Google).
 - Los códigos para pasar el progreso solo contienen datos del juego.
+- Las grabaciones de voz se guardan solo en el dispositivo donde se graban y no viajan en el código de progreso.
 </details>
 
 <details>
@@ -162,6 +173,9 @@ La primera vez el navegador pide permiso para usar el micro.
   llegan solo por **pull request de `development` a `main`**, que se revisa antes de fusionar.
 
 Antes de abrir el PR, comprueba los cuentos con `python herramientas/validar.py todos`.
+Además, la GitHub Action **Comprobar cuentos** (`.github/workflows/validar-cuentos.yml`) lo hace sola en cada
+PR a `main` y en cada subida a `development`. Para que un PR con cuentos rotos no se pueda fusionar:
+*Settings → Branches → Add rule* para `main` → *Require status checks to pass* → **Validar los cuentos**.
 
 **GitHub Pages:** *Settings → Pages → Deploy from a branch*, rama `main`, carpeta `/ (root)`. El archivo
 `.nojekyll` es imprescindible: sin él, GitHub convierte los `.md` en páginas y el juego no encuentra los cuentos.
@@ -292,10 +306,12 @@ icono.svg, icono-*.png   iconos
 css/estilos.css
 js/
   datos.js               carga los libros de stories/
-  texto.js               rellena las plantillas y separa los bloques
+  texto.js               rellena las plantillas, separa los bloques y las sílabas
   voz.js                 reconocimiento de voz y lectura en voz alta
+  grabaciones.js         la voz de la familia para las palabras difíciles
   arte.js                paisajes y personajes dibujados con código
-  juego.js               pantallas, partida, niveles, minijuegos, álbum, informe y ajustes
+  juego.js               pantallas, partida, niveles, minijuegos, tienda, meta, álbum, informe y ajustes
+.github/workflows/       comprobación automática de los cuentos
 stories/
   index.json             libros, mascotas y nombres de las protagonistas
   GUIA-ESCRITURA.md      cómo escribir un cuento
