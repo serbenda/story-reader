@@ -885,6 +885,7 @@
 
   // ───────── Partida ─────────
   function empezarCapitulo(libro, capIndex) {
+    try { globalThis.goatcounter?.count?.({ path: 'partida/story-reader', title: 'Partida empezada', event: true }); } catch { /* sin contador de visitas */ }
     const cap = libro.capitulos[capIndex];
     const datos = prepararPartida(libro, cap);
     const escenas = cap.escenas.filter((e) => versionesPara(e, E.nivel));
