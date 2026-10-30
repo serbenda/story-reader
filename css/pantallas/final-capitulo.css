@@ -1,0 +1,24 @@
+/* Final del capítulo (src/pantallas/partida/fin-capitulo.js). */
+
+/* ───── Final de capítulo ───── */
+.final-capitulo { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; padding-top: 2vh; }
+.final-capitulo .texto { text-align: center; }
+.pegatina-grande {
+  font-size: 7rem;
+  width: 180px; height: 180px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--hoja);
+  border: 5px dashed var(--sol);
+  line-height: 1;
+}
+.pegatina-grande.nueva { animation: pegar .8s cubic-bezier(.3, 1.6, .5, 1) both; }
+@keyframes pegar { from { transform: scale(.2) rotate(-30deg); opacity: 0; } }
+.resumen-final { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.resumen-final div {
+  display: flex; flex-direction: column; align-items: center;
+  min-width: 140px; padding: 12px 18px;
+  border: 3px solid var(--tinta); border-radius: 18px; background: #FFFFFF;
+}
+.resumen-final b { font-family: var(--fuente-titulo); font-size: 2.4rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.subir-nivel { width: 100%; padding: 16px; border: 3px solid var(--sol); border-radius: 20px; background: #FFF4D6; }

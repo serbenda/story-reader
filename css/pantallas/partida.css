@@ -1,0 +1,29 @@
+/* Pantalla de partida: progreso de escenas, escenario y zona de lectura
+   (src/pantallas/partida/index.js). */
+
+/* ───── Partida ───── */
+.progreso-escenas { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; min-height: 44px; }
+.progreso-escenas > span { width: 28px; height: 8px; border-radius: 4px; background: var(--papel-2); }
+.progreso-escenas > .activo { background: var(--musgo); }
+.progreso-escenas > .hecho { background: var(--sol); }
+.boton-cuaderno { margin-left: auto; }
+.boton-cuaderno.salta { animation: saltar .5s ease; }
+@keyframes saltar { 40% { transform: translateY(-8px) scale(1.08); } }
+
+.juego { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+@media (min-width: 900px) and (orientation: landscape) {
+  .juego { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .escenario-sitio { position: sticky; top: 12px; }
+}
+@media (min-width: 1200px) { .juego { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); } }
+.lectura {
+  min-width: 0;
+  background: var(--hoja);
+  border: 3px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 20px 22px;
+}
+.bloques { max-width: 32em; }
+.aparece { animation: aparecer .45s ease both; }
+@keyframes aparecer { from { opacity: .2; transform: translateY(8px); } }
+.pie-escena { display: flex; justify-content: flex-end; margin-top: 10px; }

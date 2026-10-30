@@ -1,0 +1,23 @@
+/* Álbum (src/pantallas/album.js). */
+
+/* ───── Álbum ───── */
+.album { display: flex; flex-direction: column; gap: 14px; }
+.album-equipo { display: flex; align-items: flex-end; gap: 10px; padding: 14px; background: var(--hoja); border: 3px solid var(--tinta); border-radius: var(--radio); width: fit-content; max-width: 100%; }
+.mini-nina svg { height: 130px; width: auto; }
+.mini-nina.peque svg { height: 100px; }
+.mini-mascota { display: flex; flex-direction: column; align-items: center; }
+.mini-mascota .emoji { font-size: 3.6rem; line-height: 1; }
+.rejilla { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.rejilla-amigos { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.rejilla-pegatinas { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.rejilla-tesoros { grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); }
+.ficha, .pegatina, .tesoro-album {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;
+  padding: 12px; border: 3px solid var(--tinta); border-radius: 18px; background: #FFFFFF; position: relative;
+}
+.ficha .emoji, .pegatina .emoji { font-size: 3rem; line-height: 1.1; }
+.tesoro-album .emoji { font-size: 2.2rem; }
+.ficha-nombre { font-family: var(--fuente-titulo); font-weight: 800; font-size: 1.15rem; }
+.ficha-desc { font-size: 1rem; line-height: 1.5; letter-spacing: .03em; }
+.oculta { background: var(--papel-2); border-style: dashed; color: var(--tinta-suave); }
+.cuenta { position: absolute; top: 4px; right: 8px; font-weight: 600; font-size: .85rem; }

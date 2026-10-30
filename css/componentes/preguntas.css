@@ -1,0 +1,37 @@
+/* Preguntas y sus opciones (src/pantallas/partida/tarjeta-pregunta.js). */
+
+/* Preguntas */
+.tarjeta-pregunta {
+  margin: .6em 0 1em;
+  padding: 14px 16px;
+  border: 3px solid var(--sol);
+  border-radius: 18px;
+  background: #FFF4D6;
+}
+.pregunta { font-weight: 600; margin-bottom: .5em; }
+.opciones { display: grid; gap: 10px; }
+@media (min-width: 560px) { .opciones { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); } }
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: .5em;
+  min-height: 60px;
+  padding: .5em .9em;
+  text-align: left;
+  border: 3px solid var(--tinta);
+  border-radius: 16px;
+  background: #FFFFFF;
+  box-shadow: 0 4px 0 var(--tinta);
+  font-size: calc(var(--tam-lectura) * .82);
+  letter-spacing: .04em;
+  word-spacing: .15em;
+  line-height: 1.4;
+  touch-action: manipulation;
+}
+.opcion:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--tinta); }
+.opcion-icono { font-size: 1.4em; }
+.opcion.correcta { background: var(--bien-fondo); border-color: var(--bien); box-shadow: 0 4px 0 var(--bien); opacity: 1; }
+.opcion.mal { opacity: .45; animation: temblor .4s ease; box-shadow: none; }
+.opcion:disabled:not(.correcta):not(.mal) { opacity: .7; }
+@keyframes temblor { 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-3px); } }
+.respuesta { margin: .6em 0 0; font-size: 1.1rem; font-weight: 600; color: var(--musgo-osc); min-height: 1.4em; }

@@ -30,6 +30,7 @@ for i in ids:
 
 COMPROBAR = r"""
 (muestras) => {
+  const { texto: Texto, voz: Voz, arte: Arte } = Juego.modulos;
   const CAT = Juego.catalogo, fallos = [], avisos = [], ejemplos = [];
   const niveles = ['aprendiz','novatilla','lectora','superlectora'];
   const libro = CAT.libros[0];

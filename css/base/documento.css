@@ -1,0 +1,68 @@
+/* Estilos del documento, tipografía y texto de lectura. */
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fuente-texto);
+  font-size: 18px;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+#app {
+  min-height: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px 40px;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+button:disabled { cursor: default; }
+:focus-visible { outline: 4px solid var(--cielo); outline-offset: 3px; border-radius: 10px; }
+.cargando { font-family: var(--fuente-titulo); font-size: 1.6rem; text-align: center; padding: 30vh 0; }
+
+/* ───── Tipografía ───── */
+.titulo, .titulo-grande, .marca {
+  font-family: var(--fuente-titulo);
+  font-weight: 800;
+  text-wrap: balance;
+  line-height: 1.15;
+  margin: 0;
+}
+.titulo { font-size: 1.6rem; }
+.titulo-grande { font-size: clamp(1.9rem, 4.5vw, 3rem); }
+.sobretitulo {
+  margin: 0;
+  font-size: .8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--tinta-suave);
+}
+.pista-pequena, .nota { color: var(--tinta-suave); font-size: .95rem; margin: .4rem 0; }
+
+/* Texto de lectura: grande, espaciado, alineado a la izquierda */
+.texto {
+  font-size: var(--tam-lectura);
+  line-height: 1.85;
+  letter-spacing: .05em;
+  word-spacing: .2em;
+  text-align: left;
+}
+.linea { margin: 0 0 .55em; border-radius: 12px; transition: background .2s; }
+.dialogo { padding-left: .2em; }
+.con-resaltado .linea-activa { background: var(--sol-claro); box-shadow: 0 0 0 6px var(--sol-claro); }
+.palabra { border-radius: 6px; cursor: pointer; }
+.palabra.sonando { animation: sonar .6s ease; }
+@keyframes sonar { 0% { background: var(--sol); } 100% { background: transparent; } }
+mark.pista {
+  background: none;
+  color: inherit;
+  text-decoration: underline 3px var(--sol);
+  text-underline-offset: 6px;
+}
+mark.pista .lupa { font-size: .7em; margin-right: .15em; }
