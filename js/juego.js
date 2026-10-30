@@ -139,17 +139,54 @@
     guardar();
   }
   // Escena extra al empezar: leer en voz alta tres palabras que le cuestan
-  function escenaRepaso() {
-    const lista = palabrasDificiles().slice(0, 6);
+  // Calentamiento al empezar un capítulo con las palabras que le cuestan, adaptado al nivel:
+  //   Aprendiz: 2-3 palabras sueltas · Novatilla: 3 palabras · Lectora: una frase de los cuentos
+  //   que las contiene · Superlectora: dos frases.
+  function frasesConPalabra(palabra, vars, maxPalabras) {
+    const encontradas = [];
+    for (const libro of CAT.libros) for (const cap of libro.capitulos) for (const e of cap.escenas) for (const versiones of Object.values(e.niveles)) for (const v of versiones) {
+      if (!v.toLowerCase().includes(palabra)) continue;
+      const texto = Texto.limpiarPistas(Texto.rellenar(v, vars));
+      for (const linea of texto.split('\n')) {
+        if (/^\s*[?*-]/.test(linea) || /\{/.test(linea)) continue;
+        const limpia = linea.replace(/^>\s?/, '').replace(/^—\s?/, '').trim();
+        for (const frase of limpia.match(/[^.!?…]+[.!?…]+[»"”]?|[^.!?…]+$/g) || []) {
+          const f = frase.trim().replace(/^[»"”]\s*/, '');
+          const n = f.split(/\s+/).length;
+          if (n < 4 || n > maxPalabras || /[«»—]/.test(f)) continue;
+          if (f.split(/\s+/).some((w) => claveDePalabra(w) === palabra)) encontradas.push(Texto.capitalizar(f));
+        }
+      }
+    }
+    return [...new Set(encontradas)];
+  }
+
+  function escenaRepaso(vars) {
+    const lista = palabrasDificiles().slice(0, 8);
     if (lista.length < 2) return null;
-    const elegidas = barajar(lista).slice(0, 3).map(([k]) => k);
-    const texto = [
-      '{ayudante} ha escrito unas palabras mágicas en una hoja.',
-      'Para abrir el capítulo, hay que leerlas en voz alta.',
-      '> ' + elegidas.join('  ·  '),
-      '¡El libro empieza a brillar!'
-    ].join('\n');
-    return { id: 'repaso', repaso: true, palabras: elegidas, props: { fondo: 'bosque', con: ['ayudante'] }, niveles: { todos: [texto] } };
+    const nivel = E.nivel;
+    const intro = '{ayudante} ha escrito unas palabras mágicas en una hoja.';
+    let lineas, palabrasUsadas;
+    if (nivel === 'lectora' || nivel === 'superlectora') {
+      const cuantas = nivel === 'superlectora' ? 2 : 1;
+      const frases = [];
+      palabrasUsadas = [];
+      for (const [w] of barajar(lista)) {
+        const opciones = frasesConPalabra(w, vars, nivel === 'superlectora' ? 20 : 14).filter((f) => !frases.includes(f));
+        if (!opciones.length) continue;
+        frases.push(azar(opciones)); palabrasUsadas.push(w);
+        if (frases.length === cuantas) break;
+      }
+      if (frases.length) {
+        lineas = [intro, cuantas > 1 && frases.length > 1 ? 'Para abrir el capítulo, hay que leer estas frases en voz alta.' : 'Para abrir el capítulo, hay que leer esta frase en voz alta.',
+          ...frases.map((f) => '> ' + f), '¡El libro empieza a brillar!'];
+      }
+    }
+    if (!lineas) {
+      palabrasUsadas = barajar(lista).slice(0, nivel === 'aprendiz' ? 3 : Math.min(4, lista.length)).map(([k]) => k);
+      lineas = [intro, 'Para abrir el capítulo, hay que leerlas en voz alta.', '> ' + palabrasUsadas.join('  ·  '), '¡El libro empieza a brillar!'];
+    }
+    return { id: 'repaso', repaso: true, palabras: palabrasUsadas, props: { fondo: 'bosque', con: ['ayudante'] }, niveles: { todos: [lineas.join('\n')] } };
   }
 
   // ───────── Sonidos (sin sonidos de error) ─────────
@@ -792,7 +829,7 @@
     const datos = prepararPartida(libro, cap);
     const escenas = cap.escenas.filter((e) => versionesPara(e, E.nivel));
     if (!escenas.length) { aviso('Este capítulo todavía no tiene textos para este nivel.'); return; }
-    const repaso = escenaRepaso();
+    const repaso = escenaRepaso(datos.vars);
     if (repaso) escenas.unshift(repaso);
     E.ultimoLibro = libro.id;
     // Cerraduras mágicas: al final de la primera escena del cuento y, desde Novatilla, también en la penúltima
@@ -1361,6 +1398,15 @@
     });
   }
 
+  let almacenPersistente = null;
+  function estadoGuardado() {
+    const instalada = window.matchMedia && matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+    const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (ios && !instalada) return 'En iPad, Safari puede borrarlo si pasan unas semanas sin abrir la web: instálala en la pantalla de inicio (Compartir → «Añadir a pantalla de inicio») para que no ocurra.';
+    if (almacenPersistente) return 'Este navegador ha prometido no borrarlo.';
+    return 'No se borra salvo que se limpien los datos del navegador.';
+  }
+
   // ───────── Ajustes para mayores ─────────
   function pantallaAjustes() {
     const a = E.ajustes;
@@ -1436,6 +1482,16 @@
           <div><button class="boton boton-principal" id="juntar">Juntar progresos</button></div>
         </div>
         <div class="ajuste-bloque">
+          <h2 class="titulo">Copia de seguridad</h2>
+          <p class="nota">El progreso se guarda solo en este navegador. ${estadoGuardado()} Guarda de vez en cuando una copia en un archivo (en Drive, iCloud o el ordenador) por si se borra.</p>
+          <p class="nota"><b>Última copia:</b> ${E.ultimaCopia ? new Date(E.ultimaCopia).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : 'nunca'}</p>
+          <div class="barra-botones" style="justify-content:flex-start;margin-top:0">
+            <button class="boton boton-principal" id="descargar-copia">💾 Guardar copia en un archivo</button>
+            <label class="boton boton-suave" for="cargar-copia">📂 Recuperar desde un archivo</label>
+            <input type="file" id="cargar-copia" accept=".json,application/json" hidden>
+          </div>
+        </div>
+        <div class="ajuste-bloque">
           <h2 class="titulo">Progreso</h2>
           <p class="nota">${E.estrellas} estrellas · ${Object.keys(E.album.pegatinas).length} pegatinas · ${Object.values(E.album.tesoros).reduce((x, y) => x + y, 0)} tesoros encontrados.</p>
           <button class="boton boton-peligro" id="borrar">Borrar todo el progreso</button>
@@ -1457,6 +1513,28 @@
         const t = $('#codigo-copia'); t.focus(); t.select();
       };
       try { navigator.clipboard.writeText(codigo).then(() => aviso('Código copiado. Pégalo en el otro dispositivo.'), respaldo); } catch (e) { respaldo(); }
+    };
+    $('#descargar-copia').onclick = () => {
+      const { ajustes, ...datos } = E;
+      const copia = { app: 'biblioteca-magica', version: 1, fecha: new Date().toISOString(), datos };
+      const url = URL.createObjectURL(new Blob([JSON.stringify(copia)], { type: 'application/json' }));
+      const a = document.createElement('a');
+      a.href = url; a.download = `biblioteca-${claveDePalabra(CAT.protagonistas.lectora)}-${claveDia(Date.now())}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      E.ultimaCopia = Date.now(); guardar();
+      aviso('💾 Copia guardada. Búscala en Descargas.'); pantallaAjustes();
+    };
+    $('#cargar-copia').onchange = async (ev) => {
+      const archivo = ev.target.files && ev.target.files[0];
+      if (!archivo) return;
+      try {
+        const copia = JSON.parse(await archivo.text());
+        if (!copia || copia.app !== 'biblioteca-magica' || !copia.datos) throw new Error('formato');
+        fusionarProgreso(copia.datos); guardar(); aplicarAjustes();
+        aviso('📂 Copia recuperada. Se ha juntado con el progreso de este dispositivo.', 5000);
+        pantallaAjustes();
+      } catch (e) { console.error(e); aviso('Ese archivo no es una copia de La biblioteca mágica.', 5000); }
     };
     $('#juntar').onclick = async () => {
       const txt = $('#pegar-codigo').value.trim();
@@ -1634,6 +1712,8 @@
   async function iniciar() {
     aplicarAjustes();
     if (window.Grabaciones) Grabaciones.iniciar();
+    // Pide al navegador que no borre el progreso aunque falte espacio o pase tiempo sin abrir la web
+    try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().then((ok) => { almacenPersistente = ok; }); } catch (e) { /* no disponible */ }
     app.innerHTML = '<p class="cargando">Abriendo el libro…</p>';
     try {
       CAT = await Datos.cargarCatalogo();
