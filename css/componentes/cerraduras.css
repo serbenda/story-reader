@@ -1,0 +1,14 @@
+/* Cerraduras mágicas (src/pantallas/partida/tarjeta-reto.js). */
+
+/* ───── Cerraduras mágicas ───── */
+.tarjeta-reto { margin: .6em 0 1em; padding: 14px 16px; border: 3px solid var(--cielo); border-radius: 18px; background: #E6F2F9; }
+.tarjeta-reto .voz-cabecera { color: #1F5F86; }
+.tarjeta-reto.abierta { border-color: var(--bien); background: var(--bien-fondo); }
+.reto-palabra { margin: .2em 0 .5em; font-size: calc(var(--tam-lectura) * 1.6); font-weight: 500; letter-spacing: .14em; }
+.reto-hueco { display: inline-block; min-width: 1.1em; text-align: center; border-bottom: 4px solid var(--tinta); color: var(--tinta-suave); }
+.reto-hueco.puesta { color: var(--bien); border-color: var(--bien); animation: pegar .5s ease; }
+.reto-opciones { display: grid; gap: 10px; margin-bottom: 10px; }
+.reto-letra { grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); max-width: 420px; }
+.reto-letra .reto-opcion { justify-content: center; font-size: calc(var(--tam-lectura) * 1.4); min-height: 72px; }
+.reto-escrita { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.reto-escrita .reto-opcion { justify-content: center; font-size: calc(var(--tam-lectura) * 1.05); letter-spacing: .08em; }

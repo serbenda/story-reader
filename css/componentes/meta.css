@@ -1,0 +1,23 @@
+/* Meta del día: anillo, semana y cofre (src/ui/componentes/meta.js). */
+
+/* ───── Meta de hoy ───── */
+.meta-hoy { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 3px solid var(--borde); border-radius: 18px; background: var(--hoja); max-width: 460px; }
+.meta-hoy.cumplida { border-color: var(--bien); background: var(--bien-fondo); }
+.anillo { width: 62px; height: 62px; flex: none; }
+.anillo-fondo { fill: none; stroke: var(--papel-2); stroke-width: 7; }
+.anillo-progreso { fill: none; stroke: var(--musgo); stroke-width: 7; stroke-linecap: round; transition: stroke-dasharray .6s ease; }
+.cumplida .anillo-progreso { stroke: var(--bien); }
+.anillo-texto { font-family: var(--fuente-texto); font-size: 15px; font-weight: 600; fill: var(--tinta); }
+.meta-texto { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.meta-texto b { font-family: var(--fuente-titulo); font-size: 1.15rem; }
+.meta-texto > span { color: var(--tinta-suave); font-size: .95rem; }
+.semana { display: flex; align-items: center; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+.semana .dia { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; font-size: .75rem; font-weight: 600; background: var(--papel-2); color: var(--tinta-suave); }
+.semana .dia.hecho { background: var(--sol); color: var(--tinta); }
+.semana .dia.hoy { box-shadow: 0 0 0 2px var(--tinta); }
+.cofre { margin-left: 6px; font-size: 1.2rem; display: inline-flex; align-items: center; gap: 3px; }
+.cofre small { font-size: .75rem; font-weight: 600; color: var(--tinta-suave); }
+.cofre-capa { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; }
+.cofre-grande { font-size: 6rem; animation: pegar .8s cubic-bezier(.3, 1.6, .5, 1) both; }
+.contador-estrellas.brilla { animation: brillar .6s ease; }
+@keyframes brillar { 40% { transform: scale(1.18); background: var(--sol); } }

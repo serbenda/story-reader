@@ -1,8 +1,14 @@
 name: Comprobar cuentos
 
 # Se ejecuta en cada pull request hacia main o development y en cada subida a development.
-# Juega cientos de partidas al azar de cada libro y falla si algún cuento tiene errores.
-# Después juega partidas completas con un micrófono simulado y prueba la tienda, la meta, las sílabas, etc.
+# Por orden, de lo más rápido a lo más lento:
+#   1. Sintaxis de todo el JavaScript.
+#   2. Arquitectura: importaciones, capas, ciclos y documentación (herramientas/arquitectura.js).
+#   3. Lista de archivos sin conexión al día (herramientas/recursos-sin-conexion.js).
+#   4. Pruebas unitarias de la lógica pura (tests/unidad/).
+#   5. Cientos de partidas al azar de cada libro buscando errores en los cuentos.
+#   6. Partidas completas con un micrófono simulado: tienda, meta, sílabas, copias…
+# El trabajo se llama «Validar los cuentos» porque main exige ese nombre para fusionar.
 on:
   pull_request:
     branches: [main, development]
@@ -37,8 +43,22 @@ jobs:
           pip install playwright==1.48.0
           python -m playwright install --with-deps chromium
 
-      - name: Comprobar el JavaScript
-        run: for f in js/*.js js/juego/*.js sw.js; do node --check "$f"; done
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Comprobar la sintaxis del JavaScript
+        run: for f in $(find src herramientas tests -name '*.js') sw.js; do node --check "$f"; done
+
+      - name: Comprobar la arquitectura y la documentación
+        run: node herramientas/arquitectura.js
+
+      - name: Comprobar la lista de archivos sin conexión
+        run: node herramientas/recursos-sin-conexion.js --comprobar
+
+      - name: Pruebas unitarias
+        run: node --test "tests/unidad/*.test.js"
 
       - name: Comprobar todos los cuentos
         run: python herramientas/validar.py todos

@@ -1,0 +1,54 @@
+/* Controles de elección: filas de opción, muestras de color, chips, campos,
+   selectores, interruptores y cajas de texto para copiar.
+   El HTML lo generan src/ui/componentes/opciones.js y las pantallas. */
+
+.fila-opcion { display: flex; flex-direction: column; gap: 8px; }
+.etiqueta-opcion { font-weight: 600; font-size: 1.05rem; }
+.muestras, .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.muestra {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: 3px solid var(--tinta);
+  background: var(--c);
+  box-shadow: 0 3px 0 var(--tinta);
+}
+.muestra.elegida { outline: 4px solid var(--sol); outline-offset: 3px; }
+.chip {
+  min-height: 48px;
+  padding: .35em 1em;
+  border: 3px solid var(--tinta);
+  border-radius: 14px;
+  background: var(--hoja);
+  font-weight: 500;
+  font-size: 1.05rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .4em;
+}
+.chip.elegida { background: var(--musgo); color: #FFFFFF; }
+.chip-animal .emoji { font-size: 1.6rem; }
+.chip-peque { min-height: 40px; font-size: .95rem; padding: .2em .8em; }
+.campo-nombre {
+  font: inherit;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  padding: .4em .7em;
+  border: 3px solid var(--tinta);
+  border-radius: 14px;
+  background: #FFFFFF;
+  color: var(--tinta);
+  max-width: 320px;
+  width: 100%;
+}
+
+.selector { font: inherit; font-size: 1rem; min-height: 44px; max-width: 100%; padding: .3em .6em; border: 3px solid var(--tinta); border-radius: 12px; background: #FFFFFF; color: var(--tinta); }
+.interruptor { display: flex; align-items: center; gap: 12px; font-weight: 500; cursor: pointer; min-height: 44px; }
+.interruptor input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pista-int { flex: none; width: 54px; height: 32px; border-radius: 999px; background: var(--borde); border: 3px solid var(--tinta); position: relative; transition: background .2s; }
+.pista-int::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; border: 2px solid var(--tinta); transition: transform .2s; }
+.interruptor input:checked + .pista-int { background: var(--musgo); }
+.interruptor input:checked + .pista-int::after { transform: translateX(22px); }
+.interruptor input:focus-visible + .pista-int { outline: 4px solid var(--cielo); outline-offset: 3px; }
+
+.resumen-copia { width: 100%; font: inherit; font-size: .95rem; padding: 10px; border: 2px solid var(--tinta); border-radius: 12px; background: #FFFFFF; color: var(--tinta); }

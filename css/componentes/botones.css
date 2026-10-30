@@ -1,0 +1,32 @@
+/* Botones (principal, suave, peligro, grande, chico). */
+
+/* ───── Botones ───── */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45em;
+  min-height: 52px;
+  padding: .55em 1.2em;
+  border: 3px solid var(--tinta);
+  border-radius: 999px;
+  background: var(--hoja);
+  font-weight: 600;
+  font-size: 1.05rem;
+  box-shadow: 0 4px 0 var(--tinta);
+  transition: transform .1s, box-shadow .1s, background .15s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.boton:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--tinta); }
+.boton:disabled { opacity: .45; }
+.boton-principal { background: var(--musgo); color: #FFFFFF; }
+.boton-principal:hover:not(:disabled) { background: var(--musgo-osc); }
+.boton-suave { background: var(--hoja); }
+.boton-suave:hover:not(:disabled) { background: var(--papel-2); }
+.boton-grande { font-size: 1.35rem; min-height: 64px; padding-inline: 1.6em; }
+.boton-chico { min-height: 44px; font-size: .95rem; padding: .35em .9em; }
+.boton-peligro { background: #FBE3E9; color: var(--baya-osc); border-color: var(--baya-osc); box-shadow: 0 4px 0 var(--baya-osc); }
+.barra-botones { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; margin-top: 20px; }
+.barra-botones.centrada { justify-content: center; }

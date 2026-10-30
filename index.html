@@ -22,17 +22,10 @@
   <div id="confeti" aria-hidden="true"></div>
   <div id="aviso" role="status" hidden></div>
 
+  <!-- js-yaml lee la cabecera de los cuentos (window.jsyaml). Clásico y antes del juego. -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
-  <script src="js/datos.js"></script>
-  <script src="js/texto.js"></script>
-  <script src="js/voz.js"></script>
-  <script src="js/grabaciones.js"></script>
-  <script src="js/arte.js"></script>
-  <script src="js/juego/01-base.js"></script>
-  <script src="js/juego/02-portada.js"></script>
-  <script src="js/juego/03-partida.js"></script>
-  <script src="js/juego/04-mayores.js"></script>
-  <script src="js/juego/05-arranque.js"></script>
+  <!-- El juego: módulos ES desde src/main.js (ver docs/ARQUITECTURA.md). -->
+  <script type="module" src="src/main.js"></script>
   <!-- Visitas y partidas, contadas por GoatCounter sin cookies (las ve serbenda.github.io/serbenda) -->
   <script>window.goatcounter = { path: '/story-reader/' };</script>
   <script data-goatcounter="https://serbenda.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>

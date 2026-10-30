@@ -1,0 +1,26 @@
+/* Cabecera con la marca y el contador de estrellas (src/ui/cabecera.js). */
+
+/* ───── Cabecera ───── */
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 6px 12px;
+}
+.cabecera-izq { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.marca { font-size: 1.25rem; color: var(--musgo-osc); }
+.contador-estrellas {
+  display: inline-flex;
+  gap: .3em;
+  align-items: center;
+  padding: .3em .9em;
+  border-radius: 999px;
+  background: var(--sol-claro);
+  border: 2px solid var(--sol);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.titulo-cap { display: flex; flex-direction: column; min-width: 0; }
+.nombre-cap { font-family: var(--fuente-titulo); font-weight: 800; font-size: 1.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

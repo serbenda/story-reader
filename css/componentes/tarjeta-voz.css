@@ -1,0 +1,41 @@
+/* Tarjeta «Lee en voz alta» y su variante de «palabras mágicas»
+   (src/pantallas/partida/tarjeta-voz.js). */
+
+/* Tarjeta para leer en voz alta */
+.tarjeta-voz {
+  margin: .4em 0 .9em;
+  padding: 14px 16px 12px;
+  border: 3px solid var(--musgo);
+  border-radius: 18px;
+  background: var(--musgo-claro);
+  font-size: var(--tam-lectura);
+}
+.voz-cabecera {
+  font-size: .95rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--musgo-osc);
+  margin-bottom: .2em;
+}
+.frase-voz { margin: 0 0 .4em; }
+.frase-voz .palabra { padding: 0 .06em; }
+.frase-voz .palabra.ok { color: var(--bien); background: var(--bien-fondo); }
+.frase-voz .palabra.oyendo { background: #FFFFFF; }
+.frase-voz .palabra.falta { text-decoration: underline wavy var(--baya) 3px; text-underline-offset: 7px; }
+.tarjeta-voz.superada { border-color: var(--bien); }
+.voz-controles { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.voz-controles .boton { font-size: 1.05rem; }
+.boton-mic { position: relative; background: var(--baya); color: #FFFFFF; min-width: 150px; }
+.boton-mic:hover { background: var(--baya-osc); }
+.boton-mic .anillos { position: absolute; inset: -3px; border-radius: inherit; pointer-events: none; }
+.escuchando .boton-mic .anillos { animation: ondas 1.2s ease-out infinite; }
+@keyframes ondas { from { box-shadow: 0 0 0 0 rgba(201, 71, 107, .55); } to { box-shadow: 0 0 0 18px rgba(201, 71, 107, 0); } }
+.estado-voz { margin: .5em 0 0; font-size: 1rem; font-weight: 500; letter-spacing: .02em; color: var(--tinta-suave); }
+.superada .estado-voz { color: var(--bien); font-weight: 600; }
+
+
+/* ───── Palabras mágicas (repaso) ───── */
+.tarjeta-repaso { border-color: var(--sol); background: #FFF4D6; }
+.tarjeta-repaso .voz-cabecera { color: #8A5A00; }
+.tarjeta-repaso .frase-voz { font-size: 1.2em; font-weight: 500; }

@@ -1,0 +1,94 @@
+/* Casa y estantería (src/pantallas/inicio.js) y pantalla de libro (src/pantallas/libro.js). */
+
+/* ───── Inicio ───── */
+.inicio-hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: center; margin-bottom: 28px; }
+@media (min-width: 820px) { .inicio-hero { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); } }
+.hero-info { display: flex; flex-direction: column; gap: 14px; }
+.hero-info .titulo-grande { color: var(--musgo-osc); }
+.nivel-actual { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: .5em; }
+.insignia-nivel {
+  display: inline-grid;
+  place-items: center;
+  width: 2.2em; height: 2.2em;
+  border-radius: 50%;
+  background: var(--sol-claro);
+  border: 2px solid var(--sol);
+}
+.acciones-hero { display: flex; flex-wrap: wrap; gap: 10px; }
+.boton-mayores { position: relative; overflow: hidden; }
+.boton-mayores .carga { position: absolute; inset: 0; background: var(--sol-claro); transform: scaleX(0); transform-origin: left; z-index: -1; }
+.boton-mayores { isolation: isolate; }
+.boton-mayores.cargando .carga { transform: scaleX(1); transition: transform 1.8s linear; }
+
+/* Estantería de la portada */
+.estanteria-sitio { display: flex; flex-direction: column; gap: 12px; }
+.estanteria { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.libro-tapa {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  padding: 0; text-align: left;
+  border: 3px solid var(--tinta);
+  border-left: 14px solid var(--tapa);
+  border-radius: 10px 18px 18px 10px;
+  background: #FFFFFF;
+  box-shadow: 0 5px 0 var(--tinta);
+  overflow: hidden;
+  touch-action: manipulation;
+}
+.libro-tapa:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--tinta); }
+.tapa-dibujo { display: block; aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 3px solid var(--tinta); }
+.tapa-dibujo svg { width: 100%; height: 100%; display: block; }
+.tapa-texto { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px 14px; flex: 1; }
+.tapa-titulo { font-family: var(--fuente-titulo); font-weight: 800; font-size: 1.35rem; line-height: 1.15; }
+.tapa-resumen { color: var(--tinta-suave); font-size: .95rem; line-height: 1.4; }
+.tapa-progreso { display: flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 8px; }
+.tapa-progreso .emoji { font-size: 1.3rem; }
+.tapa-progreso .hueco { width: 22px; height: 22px; border-radius: 50%; border: 2px dashed var(--borde); }
+.tapa-cuenta { margin-left: auto; font-weight: 600; font-size: .9rem; color: var(--musgo-osc); }
+.boton-seguir { align-self: flex-start; text-align: left; }
+.boton-seguir > span { display: flex; flex-direction: column; line-height: 1.2; }
+.seguir-sub { font-size: .8rem; font-weight: 500; opacity: .85; text-transform: uppercase; letter-spacing: .08em; }
+
+.libro {
+  background: var(--hoja);
+  border: 3px solid var(--tinta);
+  border-radius: var(--radio);
+  padding: 18px;
+  margin-bottom: 24px;
+}
+.libro-cabecera { display: flex; gap: 16px; align-items: center; margin-bottom: 14px; }
+.libro-portada { width: 120px; flex: none; border-radius: 14px; overflow: hidden; border: 3px solid var(--tinta); aspect-ratio: 4 / 3; }
+.libro-portada svg { width: 100%; height: 100%; display: block; }
+.libro-resumen { margin: .3em 0 0; color: var(--tinta-suave); }
+.capitulos { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.capitulo {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  padding: 12px 16px;
+  border: 3px solid var(--tinta);
+  border-radius: 16px;
+  background: #FFFFFF;
+  box-shadow: 0 4px 0 var(--tinta);
+  touch-action: manipulation;
+}
+.capitulo:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--tinta); }
+.capitulo.cerrado { background: var(--papel-2); box-shadow: none; border-style: dashed; }
+.capitulo .num {
+  flex: none;
+  width: 48px; height: 48px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--musgo);
+  color: #FFFFFF;
+  font-family: var(--fuente-titulo);
+  font-weight: 800;
+  font-size: 1.4rem;
+}
+.capitulo.cerrado .num { background: var(--borde); }
+.cap-texto { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.cap-titulo { font-family: var(--fuente-titulo); font-weight: 800; font-size: 1.35rem; }
+.cap-resumen { color: var(--tinta-suave); font-size: 1rem; }
+.sellos { font-size: 1.3rem; letter-spacing: .1em; white-space: nowrap; }

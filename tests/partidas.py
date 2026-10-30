@@ -180,8 +180,8 @@ async def pruebas_funciones(nav, url):
     await pg.evaluate("""async () => { const n = 4000, b = new ArrayBuffer(44 + n * 2), v = new DataView(b), w = (o, s) => [...s].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
       w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVEfmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
       v.setUint32(24, 8000, true); v.setUint32(28, 16000, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
-      await Grabaciones.guardar('mariposa', new Blob([b], { type: 'audio/wav' })); }""")
-    ok(await pg.evaluate("Grabaciones.reproducirYa('mariposa')"), 'una palabra grabada suena con tu voz')
+      await Juego.modulos.grabaciones.guardar('mariposa', new Blob([b], { type: 'audio/wav' })); }""")
+    ok(await pg.evaluate("Juego.modulos.grabaciones.reproducirYa('mariposa')"), 'una palabra grabada suena con tu voz')
 
     # Copia de seguridad en archivo y recuperarla en otro navegador
     await abrir_mayores(pg)
