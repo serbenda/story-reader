@@ -734,3 +734,11 @@ mark.pista .lupa { font-size: .7em; margin-right: .15em; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* ───── Elegir protagonistas ───── */
+.vista-quien { display: flex; align-items: flex-end; justify-content: center; gap: 14px; }
+.vista-quien .mini-nina { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.vista-quien .mini-nina svg { height: 220px; width: auto; }
+.vista-quien .mini-nina.peque svg { height: 165px; }
+.vista-quien .nombre-mascota { font-size: 1.4rem; }
+.chip-grande { min-height: 56px; font-size: 1.15rem; padding-inline: 1.2em; }

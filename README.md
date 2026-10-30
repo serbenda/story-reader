@@ -46,7 +46,7 @@ jugar de memoria**: hay que leer de verdad.
 | 🎯 **Meta del día** | Un ratito de lectura cada día (5, 10 o 15 minutos, o un capítulo). Racha de días 🔥 y un cofre 🎁 si se cumple 5 días en la semana. |
 | 🛍️ **Tienda** | Las estrellas ganadas se gastan en complementos, vestidos y mascotas nuevas. |
 | 💎 **Tesoros de Lucía** | Hay cosas escondidas en los dibujos. Al tocarlas, Lucía las guarda en el álbum. |
-| 🎨 **A tu manera** | Se puede vestir a las protagonistas y elegir la mascota y su nombre. La mascota sale en todos los cuentos. |
+| 🎨 **A tu manera** | Se eligen **los nombres** y si los cuentos son con **una niña o con dos hermanas** (por defecto, Alaia y Lucía). También su ropa y la mascota, que sale en todos los cuentos. |
 
 ## 📚 Los libros
 
@@ -275,6 +275,8 @@ Una escena sin texto para un nivel se salta en ese nivel.
 
 | Variable | Ejemplo |
 |---|---|
+| `{lectora}` `{hermana}` · `{las_ninas}` | Alaia · Lucía · «Alaia y Lucía» o solo «Alaia» (los nombres se eligen al vestir) |
+| `{{con dos niñas|con una}}` | Texto distinto si se juega con una sola niña. Ver la [guía](stories/GUIA-ESCRITURA.md) |
 | `{mascota}` `{animal}` `{el_animal}` `{un_animal}` · `{mo}` | Luna · gatita · la gatita · una gatita · o/a |
 | `{buscado}` · `{o}` | Quién se busca en el capítulo · o/a |
 | `{lugar}` `{al_lugar}` `{del_lugar}` `{en_lugar}` `{hacia_lugar}` | El sitio correcto |

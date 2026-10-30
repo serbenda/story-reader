@@ -92,6 +92,13 @@
   let CAT = null;   // catálogo de libros
   let J = null;     // partida en curso
 
+  /** Nombres de las protagonistas (los elegidos al vestir, o los del índice) y si son dos */
+  function P() {
+    const n = (E.perfil && E.perfil.nombres) || {};
+    return { lectora: n.lectora || CAT.protagonistas.lectora, hermana: n.hermana || CAT.protagonistas.hermana };
+  }
+  const sonDos = () => !(E.perfil && E.perfil.ninas === 1);
+
   const saldo = () => Math.max(0, (E.estrellas || 0) - (E.gastadas || 0));
   function ganarEstrellas(n) {
     E.estrellas = (E.estrellas || 0) + n;
@@ -104,7 +111,7 @@
   const claveDePalabra = (t) => String(t).toLowerCase().replace(/[^\p{L}]/gu, '');
   // Los nombres propios no se cuentan: el reconocedor de voz se equivoca mucho con ellos
   function nombresPropios() {
-    const s = new Set([CAT.protagonistas.lectora, CAT.protagonistas.hermana, E.perfil.mascota.nombre].map(claveDePalabra));
+    const s = new Set([P().lectora, P().hermana, E.perfil.mascota.nombre].map(claveDePalabra));
     for (const l of CAT.libros) for (const a of Object.values(l.meta.ayudantes || {})) s.add(claveDePalabra(a.nombre));
     return s;
   }
@@ -353,7 +360,9 @@
   function varsMascota() {
     const m = E.perfil.mascota, esp = CAT.mascotas[m.especie] || Object.values(CAT.mascotas)[0];
     const chica = m.genero === 'chica', animal = chica ? esp.chica : esp.chico;
-    return { mascota: m.nombre, animal, el_animal: (chica ? 'la ' : 'el ') + animal, un_animal: (chica ? 'una ' : 'un ') + animal, mo: chica ? 'a' : 'o' };
+    const nom = P(), dos = sonDos();
+    return { lectora: nom.lectora, hermana: nom.hermana, __dos: dos, las_ninas: dos ? `${nom.lectora} y ${nom.hermana}` : nom.lectora,
+      mascota: m.nombre, animal, el_animal: (chica ? 'la ' : 'el ') + animal, un_animal: (chica ? 'una ' : 'un ') + animal, mo: chica ? 'a' : 'o' };
   }
 
   function prepararPartida(libro, cap) {
@@ -399,8 +408,8 @@
 
     const pj = [];
     if (props.sin !== 'niñas' && props.sin !== 'ninas') {
-      pj.push(`<div class="pj pj-alaya" data-nombre="${esc(CAT.protagonistas.lectora)}" data-saludo="¡Hola! Soy ${esc(CAT.protagonistas.lectora)}, la detective.">${Arte.nina(E.perfil.alaya, 'largo')}<span class="etiqueta">${esc(CAT.protagonistas.lectora)}</span></div>`);
-      pj.push(`<div class="pj pj-lucia" data-nombre="${esc(CAT.protagonistas.hermana)}" data-saludo="¡Hola! Soy ${esc(CAT.protagonistas.hermana)}. ¿Tienes galletas?">${Arte.nina(E.perfil.lucia, 'coletas')}<span class="etiqueta">${esc(CAT.protagonistas.hermana)}</span></div>`);
+      pj.push(`<div class="pj pj-alaya" data-nombre="${esc(P().lectora)}" data-saludo="¡Hola! Soy ${esc(P().lectora)}, la detective.">${Arte.nina(E.perfil.alaya, 'largo')}<span class="etiqueta">${esc(P().lectora)}</span></div>`);
+      if (sonDos()) pj.push(`<div class="pj pj-lucia" data-nombre="${esc(P().hermana)}" data-saludo="¡Hola! Soy ${esc(P().hermana)}. ¿Tienes galletas?">${Arte.nina(E.perfil.lucia, 'coletas')}<span class="etiqueta">${esc(P().hermana)}</span></div>`);
     }
     const emojiPj = (emoji, clase, nombre) => `<div class="pj pj-emoji ${clase}" data-nombre="${esc(nombre || '')}" data-saludo="${esc(nombre ? `¡Hola! Soy ${nombre}.` : '¡Hola!')}"><span class="emoji">${emoji}</span>${nombre ? `<span class="etiqueta">${esc(nombre)}</span>` : ''}</div>`;
     for (const c of props.con || []) {
@@ -450,21 +459,20 @@
     t.classList.add('encontrado');
     setTimeout(() => t.remove(), 600);
     Sonido.tocar('tesoro'); confeti(18);
-    const frase = `¡${CAT.protagonistas.hermana} ha encontrado ${nombre}!`;
+    const frase = `¡${sonDos() ? P().hermana : P().lectora} ha encontrado ${nombre}!`;
     aviso(`${emoji} ${frase}`);
     Voz.hablar(frase, 0.95);
   });
 
   // ───────── Pantalla: bienvenida ─────────
   function pantallaBienvenida() {
-    const P = CAT.protagonistas;
     app.innerHTML = `
       <section class="portada">
         <p class="sobretitulo">Un juego para leer</p>
         <h1 class="titulo-grande">La biblioteca mágica</h1>
         <div class="texto texto-portada">
-          <p class="linea">${palabras(`¡Hola, ${P.lectora}! Hoy empieza una aventura muy especial.`)}</p>
-          <p class="linea">${palabras(`Primero vamos a preparar a las protagonistas: tú, ${P.hermana} y vuestra mascota.`)}</p>
+          <p class="linea">${palabras('¡Hola! Hoy empieza una aventura muy especial.')}</p>
+          <p class="linea">${palabras('Primero vamos a elegir a las protagonistas y a su mascota.')}</p>
         </div>
         <button class="boton boton-principal boton-grande" id="empezar">¡Vamos!</button>
         <p class="pista-pequena">Toca cualquier palabra para oírla.</p>
@@ -474,26 +482,54 @@
 
   // ───────── Pantalla: personalizar ─────────
   const perfilPorDefecto = () => ({
+    ninas: 2,
+    nombres: { lectora: CAT.protagonistas.lectora, hermana: CAT.protagonistas.hermana },
     alaya: { piel: APARIENCIA.piel[0], pelo: APARIENCIA.pelo['castaño'], vestido: '#C9476B', accesorio: 'sombrero' },
     lucia: { piel: APARIENCIA.piel[0], pelo: APARIENCIA.pelo['castaño'], vestido: '#F2B33D', accesorio: 'lazo' },
     mascota: { especie: 'perro', genero: 'chico', nombre: 'Toby' }
   });
   let borrador = null;
+  const limpiarNombre = (t) => String(t || '').replace(/[^\p{L}\s'-]/gu, '').replace(/\s+/g, ' ').trimStart().slice(0, 14);
+  const conMayuscula = (t) => { t = String(t || '').trim(); return t ? t.charAt(0).toUpperCase() + t.slice(1) : t; };
 
   function pantallaPersonalizar(paso, primeraVez) {
     // El borrador se crea al entrar; los cambios de cada paso se guardan en él hasta pulsar «¡Listo!»
-    if (!borrador) borrador = JSON.parse(JSON.stringify(E.perfil || perfilPorDefecto()));
-    const P = CAT.protagonistas;
-    const quien = paso === 0 ? 'alaya' : 'lucia';
+    if (!borrador) {
+      borrador = JSON.parse(JSON.stringify(E.perfil || perfilPorDefecto()));
+      const def = perfilPorDefecto();
+      borrador.ninas = borrador.ninas === 1 ? 1 : 2;
+      borrador.nombres = Object.assign({}, def.nombres, borrador.nombres || {});
+    }
+    const dos = borrador.ninas !== 1;
+    const pasos = dos ? ['quien', 'lectora', 'hermana', 'mascota'] : ['quien', 'lectora', 'mascota'];
+    paso = Math.max(0, Math.min(paso, pasos.length - 1));
+    const tipo = pasos[paso], ultimo = paso === pasos.length - 1;
+    const nom = borrador.nombres;
     let opciones = '', vista = '', titulo = '';
 
     const muestras = (campo, valores, actual, nombres) => valores.map((v, i) =>
       `<button class="muestra${v === actual ? ' elegida' : ''}" data-campo="${campo}" data-valor="${esc(v)}" style="--c:${esc(v)}" aria-label="${esc(nombres ? nombres[i] : v)}" aria-pressed="${v === actual}"></button>`).join('');
 
-    if (paso < 2) {
+    if (tipo === 'quien') {
+      titulo = '¿Quién protagoniza los cuentos?';
+      vista = `<div class="vista-quien">
+        <div class="mini-nina">${Arte.nina(borrador.alaya, 'largo')}<span class="nombre-mascota" id="vista-lectora">${esc(nom.lectora || '…')}</span></div>
+        ${dos ? `<div class="mini-nina peque">${Arte.nina(borrador.lucia, 'coletas')}<span class="nombre-mascota" id="vista-hermana">${esc(nom.hermana || '…')}</span></div>` : ''}
+      </div>`;
+      opciones = `
+        <div class="fila-opcion"><span class="etiqueta-opcion">¿Cuántas niñas?</span><div class="chips">
+          <button class="chip chip-grande${!dos ? ' elegida' : ''}" data-ninas="1" aria-pressed="${!dos}">👧 Una</button>
+          <button class="chip chip-grande${dos ? ' elegida' : ''}" data-ninas="2" aria-pressed="${dos}">👧👧 Dos hermanas</button></div></div>
+        <div class="fila-opcion"><label class="etiqueta-opcion" for="nombre-lectora">${dos ? 'La que lee (la mayor)' : 'Se llama'}</label>
+          <input id="nombre-lectora" class="campo-nombre" maxlength="14" autocomplete="off" value="${esc(nom.lectora)}"></div>
+        ${dos ? `<div class="fila-opcion"><label class="etiqueta-opcion" for="nombre-hermana">Su hermana pequeña</label>
+          <input id="nombre-hermana" class="campo-nombre" maxlength="14" autocomplete="off" value="${esc(nom.hermana)}"></div>` : ''}
+        <p class="nota">Los cuentos usarán estos nombres. ${dos ? '' : 'Con una sola niña, los cuentos se cuentan solo con ella.'}</p>`;
+    } else if (tipo === 'lectora' || tipo === 'hermana') {
+      const quien = tipo === 'lectora' ? 'alaya' : 'lucia';
       const c = borrador[quien];
-      titulo = paso === 0 ? `¿Cómo es ${P.lectora}?` : `¿Cómo es ${P.hermana}?`;
-      vista = `<div class="vista-nina">${Arte.nina(c, paso === 0 ? 'largo' : 'coletas')}</div>`;
+      titulo = `¿Cómo es ${tipo === 'lectora' ? nom.lectora : nom.hermana}?`;
+      vista = `<div class="vista-nina">${Arte.nina(c, quien === 'alaya' ? 'largo' : 'coletas')}</div>`;
       const pelos = Object.entries(APARIENCIA.pelo);
       opciones = `
         <div class="fila-opcion"><span class="etiqueta-opcion">Piel</span><div class="muestras">${muestras('piel', APARIENCIA.piel, c.piel)}</div></div>
@@ -503,7 +539,7 @@
         <div class="fila-opcion"><span class="etiqueta-opcion">Complemento</span><div class="chips">${chipsTienda('accesorio', APARIENCIA.accesorio, c.accesorio)}</div></div>`;
     } else {
       const m = borrador.mascota;
-      titulo = '¿Cómo es vuestra mascota?';
+      titulo = dos ? '¿Cómo es vuestra mascota?' : '¿Cómo es tu mascota?';
       const esp = CAT.mascotas[m.especie] || Object.values(CAT.mascotas)[0];
       vista = `<div class="vista-mascota"><span class="emoji-grande">${esp.emoji}</span><span class="nombre-mascota">${esc(m.nombre || '…')}</span></div>`;
       opciones = `
@@ -524,7 +560,7 @@
 
     app.innerHTML = `
       <section class="personalizar">
-        <div class="pasos" aria-label="Paso ${paso + 1} de 3">${[0, 1, 2].map((i) => `<span class="${i === paso ? 'activo' : i < paso ? 'hecho' : ''}"></span>`).join('')}</div>
+        <div class="pasos" aria-label="Paso ${paso + 1} de ${pasos.length}">${pasos.map((_, i) => `<span class="${i === paso ? 'activo' : i < paso ? 'hecho' : ''}"></span>`).join('')}</div>
         <h1 class="titulo">${palabras(titulo)}</h1>
         <div class="personalizar-cuerpo">
           <div class="personalizar-vista">${vista}</div>
@@ -532,18 +568,32 @@
         </div>
         <div class="barra-botones">
           ${paso > 0 ? '<button class="boton boton-suave" id="atras">← Atrás</button>' : (!primeraVez ? '<button class="boton boton-suave" id="cancelar">Cancelar</button>' : '<span></span>')}
-          <button class="boton boton-principal" id="siguiente">${paso < 2 ? 'Siguiente →' : '¡Listo!'}</button>
+          <button class="boton boton-principal" id="siguiente">${ultimo ? '¡Listo!' : 'Siguiente →'}</button>
         </div>
       </section>`;
 
     $$('[data-bloqueado]').forEach((b) => b.addEventListener('click', () => aviso(`Se consigue en la 🛍️ tienda por ${b.dataset.bloqueado} ⭐.`)));
+    $$('[data-ninas]').forEach((b) => b.addEventListener('click', () => {
+      borrador.ninas = +b.dataset.ninas; Sonido.tocar('pagina'); pantallaPersonalizar(0, primeraVez);
+    }));
     $$('[data-campo]').forEach((b) => b.addEventListener('click', () => {
       const campo = b.dataset.campo, valor = b.dataset.valor;
-      if (paso < 2) borrador[quien][campo] = valor; else borrador.mascota[campo] = valor;
+      if (tipo === 'lectora') borrador.alaya[campo] = valor;
+      else if (tipo === 'hermana') borrador.lucia[campo] = valor;
+      else borrador.mascota[campo] = valor;
       Sonido.tocar('pagina');
       pantallaPersonalizar(paso, primeraVez);
       if (campo === 'nombre') $('#nombre-mascota')?.focus();
     }));
+    for (const [id, clave, vistaId] of [['#nombre-lectora', 'lectora', '#vista-lectora'], ['#nombre-hermana', 'hermana', '#vista-hermana']]) {
+      const campo = $(id);
+      if (campo) campo.addEventListener('input', () => {
+        const limpio = limpiarNombre(campo.value);
+        if (limpio !== campo.value) campo.value = limpio;
+        borrador.nombres[clave] = limpio;
+        const v = $(vistaId); if (v) v.textContent = limpio || '…';
+      });
+    }
     const campoNombre = $('#nombre-mascota');
     if (campoNombre) campoNombre.addEventListener('input', () => {
       borrador.mascota.nombre = campoNombre.value.replace(/[^\p{L}\s-]/gu, '').slice(0, 12);
@@ -552,10 +602,17 @@
     $('#atras') && ($('#atras').onclick = () => pantallaPersonalizar(paso - 1, primeraVez));
     $('#cancelar') && ($('#cancelar').onclick = () => { borrador = null; pantallaInicio(); });
     $('#siguiente').onclick = () => {
-      if (paso < 2) return pantallaPersonalizar(paso + 1, primeraVez);
+      if (tipo === 'quien') {
+        const l = conMayuscula(borrador.nombres.lectora), h = conMayuscula(borrador.nombres.hermana);
+        if (!l) { aviso('Escribe el nombre de la niña que lee.'); $('#nombre-lectora').focus(); return; }
+        if (dos && !h) { aviso('Escribe el nombre de su hermana.'); $('#nombre-hermana').focus(); return; }
+        if (dos && l.toLowerCase() === h.toLowerCase()) { aviso('Las dos niñas necesitan nombres distintos.'); return; }
+        borrador.nombres.lectora = l; if (h) borrador.nombres.hermana = h;
+      }
+      if (!ultimo) return pantallaPersonalizar(paso + 1, primeraVez);
       const nombre = (borrador.mascota.nombre || '').trim();
       if (!nombre) { aviso('Escribe un nombre para la mascota.'); campoNombre && campoNombre.focus(); return; }
-      borrador.mascota.nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1);
+      borrador.mascota.nombre = conMayuscula(nombre);
       E.perfil = borrador; borrador = null; guardar();
       Sonido.tocar('bien'); confeti(30);
       pantallaInicio();
@@ -650,7 +707,7 @@
       let pie;
       if (tiene) pie = a.tipo === 'mascota'
         ? `<button class="boton boton-suave boton-chico" data-poner="${a.id}" data-quien="mascota">Elegir como mascota</button>`
-        : `<div class="poner"><button class="boton boton-suave boton-chico" data-poner="${a.id}" data-quien="alaya">Para ${esc(CAT.protagonistas.lectora)}</button><button class="boton boton-suave boton-chico" data-poner="${a.id}" data-quien="lucia">Para ${esc(CAT.protagonistas.hermana)}</button></div>`;
+        : `<div class="poner"><button class="boton boton-suave boton-chico" data-poner="${a.id}" data-quien="alaya">Para ${esc(P().lectora)}</button>${sonDos() ? `<button class="boton boton-suave boton-chico" data-poner="${a.id}" data-quien="lucia">Para ${esc(P().hermana)}</button>` : ''}</div>`;
       else if (falta > 0) pie = `<button class="boton boton-chico boton-falta" disabled>Te faltan ${falta} ⭐</button>`;
       else pie = `<button class="boton boton-principal boton-chico" data-comprar="${a.id}">Comprar · ${a.precio} ⭐</button>`;
       return `<li class="articulo${tiene ? ' comprado' : ''}">
@@ -726,7 +783,7 @@
       <section class="inicio-hero">
         <div class="hero-escena">${escenario({ fondo: 'casa', con: ['mascota'] })}</div>
         <div class="hero-info">
-          <h1 class="titulo-grande">${palabras(`${CAT.protagonistas.lectora}, ${CAT.protagonistas.hermana} y ${vm.mascota}`)}</h1>
+          <h1 class="titulo-grande">${palabras(sonDos() ? `${P().lectora}, ${P().hermana} y ${vm.mascota}` : `${P().lectora} y ${vm.mascota}`)}</h1>
           <p class="nivel-actual"><span class="insignia-nivel">${n.icono}</span> Nivel <b>${n.nombre}</b></p>
           ${htmlMeta()}
           ${seguir ? `<button class="boton boton-principal boton-grande boton-seguir" id="seguir-leyendo">
@@ -770,7 +827,7 @@
       <span class="tapa-dibujo">${Arte.paisaje(libro.meta.portada || 'bosque', { semilla: 3 + i })}</span>
       <span class="tapa-texto">
         <span class="tapa-titulo">${esc(libro.meta.titulo || libro.id)}</span>
-        <span class="tapa-resumen">${esc(libro.meta.resumen || '')}</span>
+        <span class="tapa-resumen">${esc(Texto.rellenar(libro.meta.resumen || '', varsMascota()))}</span>
         <span class="tapa-progreso">${pegatinas}<span class="tapa-cuenta">${hechos === total ? '¡Terminado!' : hechos ? `${hechos} de ${total}` : 'Nuevo'}</span></span>
       </span></button></li>`;
   }
@@ -804,7 +861,7 @@
       <div class="libro-cabecera">
         <div class="libro-portada">${Arte.paisaje(libro.meta.portada || 'bosque', { semilla: 3 })}</div>
         <div><p class="sobretitulo">Libro</p><h2 class="titulo">${esc(libro.meta.titulo || libro.id)}</h2>
-        <p class="libro-resumen">${esc(libro.meta.resumen || '')}</p></div>
+        <p class="libro-resumen">${esc(Texto.rellenar(libro.meta.resumen || '', vm))}</p></div>
       </div>
       <ol class="capitulos">${caps}</ol>
     </section>`;
@@ -1250,7 +1307,7 @@
         const conocido = E.album.amigos[k];
         amigos.push(`<li class="ficha${conocido ? '' : ' oculta'}"><span class="emoji">${conocido ? A.emoji : '❔'}</span>
           <span class="ficha-nombre">${conocido ? esc(A.nombre) : '???'}</span>
-          ${conocido ? `<span class="ficha-desc">${palabras(Texto.capitalizar(A.descripcion))}</span>` : ''}</li>`);
+          ${conocido ? `<span class="ficha-desc">${palabras(Texto.capitalizar(Texto.rellenar(A.descripcion, varsMascota())))}</span>` : ''}</li>`);
       }
       for (const t of libro.meta.tesoros || []) {
         if (vistos.has(t.emoji)) continue; vistos.add(t.emoji);
@@ -1274,8 +1331,8 @@
         </div>
         <h2 class="titulo">Pegatinas</h2><ul class="rejilla rejilla-pegatinas">${pegatinas.join('')}</ul>
         <h2 class="titulo">Amigos de los cuentos</h2><ul class="rejilla rejilla-amigos">${amigos.join('')}</ul>
-        <h2 class="titulo">Tesoros de ${esc(CAT.protagonistas.hermana)}</h2>
-        <p class="pista-pequena">${esc(CAT.protagonistas.hermana)} encuentra cosas escondidas en los dibujos. ¡Hay que tocarlas!</p>
+        <h2 class="titulo">${sonDos() ? `Tesoros de ${esc(P().hermana)}` : 'Tesoros escondidos'}</h2>
+        <p class="pista-pequena">${esc(sonDos() ? P().hermana : P().lectora)} encuentra cosas escondidas en los dibujos. ¡Hay que tocarlas!</p>
         <ul class="rejilla rejilla-tesoros">${tesoros.join('')}</ul>
       </section>`;
     $('#volver').onclick = pantallaInicio;
@@ -1450,7 +1507,7 @@
         </div>
         <div class="ajuste-bloque">
           <h2 class="titulo">Tu voz para las palabras difíciles</h2>
-          <p class="nota">Graba cómo dices una palabra y, cuando ${esc(CAT.protagonistas.lectora)} la toque, sonará con tu voz. Las grabaciones se quedan en este dispositivo.</p>
+          <p class="nota">Graba cómo dices una palabra y, cuando ${esc(P().lectora)} la toque, sonará con tu voz. Las grabaciones se quedan en este dispositivo.</p>
           ${window.Grabaciones && Grabaciones.soportado() ? `
           <div class="fila-voz">
             <label class="etiqueta-opcion" for="palabra-grabar">Palabra</label>
@@ -1504,7 +1561,7 @@
     $$('[data-interruptor]').forEach((i) => i.onchange = () => { a[i.dataset.interruptor] = i.checked; guardar(); aplicarAjustes(); });
     activarGrabaciones();
     $('#aj-voz').onchange = (ev) => { a.voz = ev.target.value; guardar(); aplicarAjustes(); Voz.hablar('¡Hola! Así sueno yo.'); };
-    $('#probar-voz').onclick = () => Voz.hablar(`${CAT.protagonistas.lectora} y ${CAT.protagonistas.hermana} buscan una mariposa azul.`);
+    $('#probar-voz').onclick = () => Voz.hablar(`${P().lectora} busca una mariposa azul.`);
     $('#copiar-codigo').onclick = async () => {
       const codigo = await codificarProgreso();
       const respaldo = () => {
@@ -1519,7 +1576,7 @@
       const copia = { app: 'biblioteca-magica', version: 1, fecha: new Date().toISOString(), datos };
       const url = URL.createObjectURL(new Blob([JSON.stringify(copia)], { type: 'application/json' }));
       const a = document.createElement('a');
-      a.href = url; a.download = `biblioteca-${claveDePalabra(CAT.protagonistas.lectora)}-${claveDia(Date.now())}.json`;
+      a.href = url; a.download = `biblioteca-${claveDePalabra(P().lectora)}-${claveDia(Date.now())}.json`;
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 5000);
       E.ultimaCopia = Date.now(); guardar();
@@ -1597,7 +1654,7 @@
   }
 
   function pantallaInforme() {
-    const P = CAT.protagonistas, R = E.registro, hoy = inicioDeHoy();
+    const N = P(), R = E.registro, hoy = inicioDeHoy();
     const semana = R.filter((r) => r.fecha >= hoy - 6 * DIA);
     const anterior = R.filter((r) => r.fecha >= hoy - 13 * DIA && r.fecha < hoy - 6 * DIA);
     const pctPrimera = (arr) => { const m = conMicro(arr); return porcentaje(suma(m, (r) => r.frasesPrimera), suma(m, (r) => r.frases)); };
@@ -1628,10 +1685,10 @@
       ${cabecera('<button class="boton boton-suave boton-chico" id="volver">← Volver</button>')}
       <section class="informe">
         <div class="informe-titulo">
-          <div><p class="sobretitulo">Últimos 7 días</p><h1 class="titulo-grande">Así lee ${esc(P.lectora)}</h1></div>
+          <div><p class="sobretitulo">Últimos 7 días</p><h1 class="titulo-grande">Así lee ${esc(N.lectora)}</h1></div>
           <button class="boton boton-suave" id="copiar" ${vacio ? 'disabled' : ''}>📋 Copiar resumen</button>
         </div>
-        ${vacio ? `<div class="vacio-informe"><p>${esc(`Todavía no hay partidas. Cuando ${P.lectora} juegue, aquí verás cuántas frases lee, cuáles le salen a la primera y qué palabras le cuestan.`)}</p></div>` : ''}
+        ${vacio ? `<div class="vacio-informe"><p>${esc(`Todavía no hay partidas. Cuando ${N.lectora} juegue, aquí verás cuántas frases lee, cuáles le salen a la primera y qué palabras le cuestan.`)}</p></div>` : ''}
         <div class="cifras">
           <div class="cifra"><b>${s.frases}</b><span>frases leídas en voz alta</span></div>
           <div class="cifra"><b>${fmt(s.primera, ' %')}</b><span>frases a la primera ${tendencia}</span></div>
@@ -1688,7 +1745,7 @@
     const copiar = $('#copiar');
     copiar.onclick = () => {
       const texto = [
-        `Informe de lectura de ${P.lectora} · ${fechaCorta(hoy - 6 * DIA)} – ${fechaCorta(hoy)}`,
+        `Informe de lectura de ${N.lectora} · ${fechaCorta(hoy - 6 * DIA)} – ${fechaCorta(hoy)}`,
         `Nivel: ${nivelDe(E.nivel).nombre}`,
         `Capítulos terminados: ${s.capitulos} · Frases leídas: ${s.frases} · Minutos: ${s.minutos}`,
         `Frases a la primera: ${fmt(s.primera, ' %')}${s.primeraAnt != null ? ` (semana anterior: ${s.primeraAnt} %)` : ''}`,

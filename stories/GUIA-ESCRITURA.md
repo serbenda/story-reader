@@ -7,12 +7,31 @@ Usa `stories/bosque-susurros/` como modelo: copia su estructura y cambia el mund
 
 ## Las protagonistas
 
-- **Alaia** (7 años): la lectora y detective. Lista, valiente, piensa antes de actuar.
-- **Lucía** (3 años): su hermana pequeña. Graciosa, impulsiva, piensa mucho en comida, todavía no sabe
+- **{lectora}** (Alaia por defecto, 7 años): la lectora y detective. Lista, valiente, piensa antes de actuar.
+- **{hermana}** (Lucía por defecto, 3 años): su hermana pequeña. Graciosa, impulsiva, piensa mucho en comida, todavía no sabe
   leer (dibuja galletas en vez de apuntar pistas). Nunca la ridiculices: es entrañable.
 - **{mascota}**: la mascota que eligió la niña (perro, gato, conejo, hámster, pato o zorro).
   No uses sonidos de una especie concreta (ladrar, maullar) ni partes que no tengan todas
   (bigotes, pico). Para su masculino/femenino usa `{mo}`: `content{mo}` → contento / contenta.
+
+## Nombres y una o dos protagonistas
+
+Las familias pueden cambiar los nombres y elegir **una o dos niñas**. Por eso:
+
+- **Nunca escribas los nombres**: usa `{lectora}` (Alaia por defecto) y `{hermana}` (Lucía por defecto).
+  Con mayúscula al principio de frase se escriben solos; si hace falta, `{Lectora}` / `{Hermana}`.
+- `{las_ninas}` da «Alaia y Lucía» o solo «Alaia».
+- Todo lo que cambia con una sola niña va en una **alternativa**: `{{texto con dos|texto con una}}`.
+  - Concordancia: `{{{lectora} y {hermana} corren|{lectora} corre}} hacia el río.`
+  - Plurales: `{{Las niñas|{Lectora}}} buscan…` no vale (el verbo también cambia): pon la frase entera dentro.
+  - Lo que solo hace o dice la hermana: `{{—¡Yo también! —grita {hermana}.|}}` (con una niña, la línea desaparece).
+  - Si la línea es una frase de voz o una pregunta, el `>` o el `?` van **dentro** de las dos partes:
+    `{{> {hermana} encuentra una pluma.|> {lectora} encuentra una pluma.}}`
+  - Dentro de una alternativa no puede haber otra alternativa.
+- Con una sola niña no puede aparecer la hermana ni «las niñas», «las detectives», «ellas», «ambas»,
+  «vosotras», «vuestra»… El comprobador lo revisa en cada texto.
+- Lo mismo en `libro.md`: si una gracia de un ayudante nombra a la hermana, escríbela con alternativa
+  (`"{{{hermana} estornuda y Pincho se hace una bola|{lectora} estornuda y Pincho se hace una bola}}"`).
 
 ## La mecánica de cada capítulo
 
