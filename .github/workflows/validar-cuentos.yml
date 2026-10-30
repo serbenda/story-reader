@@ -1,11 +1,11 @@
 name: Comprobar cuentos
 
-# Se ejecuta en cada pull request hacia main y en cada subida a development.
+# Se ejecuta en cada pull request hacia main o development y en cada subida a development.
 # Juega cientos de partidas al azar de cada libro y falla si algún cuento tiene errores.
 # Después juega partidas completas con un micrófono simulado y prueba la tienda, la meta, las sílabas, etc.
 on:
   pull_request:
-    branches: [main]
+    branches: [main, development]
   push:
     branches: [development]
   workflow_dispatch:
