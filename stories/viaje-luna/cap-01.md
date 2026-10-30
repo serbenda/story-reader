@@ -62,7 +62,7 @@ Dentro hay un robot llamado Tuerca y un extraterrestre llamado Glup, que saludan
 > De repente, una lucecita cruza el cielo, se hace cada vez más grande y aterriza junto al columpio.
 Es un cohete pequeño, rojo y blanco, con una ventana redonda.
 Se abre la puerta y salen un robot con ruedas, que se llama Tuerca, y un extraterrestre verde y bajito, que se llama Glup.
-—Necesitamos ayuda —dice Tuerca—. Hemos perdido a Chispa, nuestro dragoncito espacial.
+—Necesitamos ayuda —dice Tuerca—. Hemos perdido a Lucero, nuestro dragoncito espacial.
 {lectora} saca su cuaderno de detective. Esto es un caso.
 ---
 Esta noche hay tantas estrellas que {lectora} no consigue contarlas todas.
@@ -70,7 +70,7 @@ Esta noche hay tantas estrellas que {lectora} no consigue contarlas todas.
 > Justo entonces, algo baja del cielo haciendo «fiuuuu» y aterriza en el jardín con un «plof» muy suave.
 Es un cohete del tamaño de una lavadora, con luces de colores y una ventana redonda.
 De dentro salen un robot llamado Tuerca y un extraterrestre llamado Glup, que se pone de color azul de la vergüenza.
-{{—Perdonad —dice Glup—. Estamos buscando a Chispa, nuestro dragoncito. Se nos escapó por el espacio.|—Perdona —dice Glup—. Estamos buscando a Chispa, nuestro dragoncito. Se nos escapó por el espacio.}}
+{{—Perdonad —dice Glup—. Estamos buscando a Lucero, nuestro dragoncito. Se nos escapó por el espacio.|—Perdona —dice Glup—. Estamos buscando a Lucero, nuestro dragoncito. Se nos escapó por el espacio.}}
 {{{lectora} y {hermana} se miran. Tienen exactamente lo que hace falta: unas detectives.|{lectora} sonríe. Han llegado al sitio justo, porque ella es detective.}}
 
 ### superlectora
@@ -80,7 +80,7 @@ Es una noche de verano tan clara que en el jardín se ven hasta las estrellas m�
 > De pronto, una luz baja del cielo dando vueltas, se hace cada vez más grande y aterriza junto al columpio con un suave «plof».
 Es un cohete pequeño, rojo y blanco, con una ventana redonda que echa vapor.
 Se abre una puerta y salen Tuerca, un robot con ruedas y ojos de bombilla, y Glup, un extraterrestre verde que cambia de color según cómo se siente. Ahora está gris, que es el color de la preocupación.
-{{—Hemos perdido a Chispa, nuestro dragoncito espacial —explica Tuerca—. Y nos han dicho que en la Tierra viven las mejores detectives.|—Hemos perdido a Chispa, nuestro dragoncito espacial —explica Tuerca—. Y nos han dicho que en la Tierra vive la mejor detective.}}
+{{—Hemos perdido a Lucero, nuestro dragoncito espacial —explica Tuerca—. Y nos han dicho que en la Tierra viven las mejores detectives.|—Hemos perdido a Lucero, nuestro dragoncito espacial —explica Tuerca—. Y nos han dicho que en la Tierra vive la mejor detective.}}
 {lectora} abre su cuaderno por una página nueva y escribe: «Caso número uno: viaje a la Luna».
 
 ## despegue
@@ -295,19 +295,19 @@ Glup mira una pantalla.
 
 ### novatilla
 Ya en el cohete, Glup mira una pantalla con muchos puntitos.
-—¡Mirad! Chispa ha estado en un planeta rojo —dice.
+—¡Mirad! Lucero ha estado en un planeta rojo —dice.
 El cohete despega otra vez. Pero, al llegar, Tuerca sale a mirar… y no vuelve.
 
 ### lectora
 {{De vuelta en el cohete, {hermana} se come por fin una galleta. Bueno, tres.|De vuelta en el cohete, {lectora} se come por fin una galleta. Bueno, tres.}}
 Glup señala un puntito rojo en la pantalla.
-—Chispa ha pasado por aquí. Es un planeta rojo, con dos lunas.
+—Lucero ha pasado por aquí. Es un planeta rojo, con dos lunas.
 El cohete vuela toda la noche y aterriza en un suelo de arena roja.
 Tuerca sale el primero a mirar. «Bip, bip…», se oye por la radio. Y luego, nada.
 
 ### superlectora
 En el cohete, {mascota} se queda dormid{mo} encima de los cascos, cansadísim{mo} de tanto saltar.
 Glup estudia una pantalla llena de puntitos y se pone de color morado, que es el color de las buenas ideas.
-—Chispa ha dejado un rastro de chispas hasta un planeta rojo con dos lunas —dice—. ¡Vamos allá!
+—Lucero ha dejado un rastro de chispas hasta un planeta rojo con dos lunas —dice—. ¡Vamos allá!
 Al aterrizar, Tuerca sale a explorar con su linterna. Durante un rato se oye su voz por la radio: «Bip… todo bien… bip…».
 Y de repente, la radio se queda en silencio.

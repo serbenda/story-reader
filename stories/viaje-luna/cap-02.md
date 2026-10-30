@@ -156,7 +156,7 @@ Allí, con una rueda atascada entre dos piedras y la radio llena de arena, está
 - Que {pista_falsa}.
 - Que Tuerca dejó un mapa del tesoro.
 Glup se pone de color rosa con lunares, que es el color de la alegría más grande que existe.
-—Me distraje siguiendo un rastro de chispas —explica Tuerca—. ¡Chispa ha estado aquí!
+—Me distraje siguiendo un rastro de chispas —explica Tuerca—. ¡Lucero ha estado aquí!
 
 ## final
 @final
@@ -171,19 +171,19 @@ De pronto, algo da un golpe en la ventana.
 
 ### novatilla
 Ya en el cohete, Tuerca les enseña algo que ha encontrado: una escama brillante.
-—¡Es de Chispa! —grita Glup—. Ha volado hacia las estrellas.
+—¡Es de Lucero! —grita Glup—. Ha volado hacia las estrellas.
 El cohete despega. Y en mitad del espacio, algo da tres golpes en la ventana: toc, toc, toc.
 
 ### lectora
 De vuelta en el cohete, Tuerca abre una puertecita de su tripa y saca una escama dorada.
-—La encontré siguiendo el rastro de chispas —dice—. Es de Chispa, estoy seguro.
+—La encontré siguiendo el rastro de chispas —dice—. Es de Lucero, estoy seguro.
 Glup mira la pantalla: el rastro sube y sube hacia el espacio.
 El cohete despega y vuela entre las estrellas.
 Entonces, en mitad del silencio, algo golpea la ventana redonda: toc, toc, toc.
 
 ### superlectora
 Ya dentro del cohete, Tuerca abre una puertecita que tiene en la tripa y saca una escama dorada, del tamaño de una moneda.
-—Chispa debió de pasar por aquí hace poco —dice—. Las escamas de dragoncito todavía están calientes.
+—Lucero debió de pasar por aquí hace poco —dice—. Las escamas de dragoncito todavía están calientes.
 {lectora} la apunta en el cuaderno: [[una escama dorada y calentita]].
 Glup se pone a los mandos, el cohete despega y el planeta rojo se hace pequeño por la ventana.
 {{Viajan un buen rato entre las estrellas, en silencio. {hermana} empieza a bostezar.|Viajan un buen rato entre las estrellas, en silencio. {mascota} empieza a bostezar.}}

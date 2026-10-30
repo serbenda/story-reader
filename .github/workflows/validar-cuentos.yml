@@ -2,6 +2,7 @@ name: Comprobar cuentos
 
 # Se ejecuta en cada pull request hacia main y en cada subida a development.
 # Juega cientos de partidas al azar de cada libro y falla si algún cuento tiene errores.
+# Después juega partidas completas con un micrófono simulado y prueba la tienda, la meta, las sílabas, etc.
 on:
   pull_request:
     branches: [main]
@@ -20,7 +21,7 @@ jobs:
   validar:
     name: Validar los cuentos
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - name: Descargar el código
         uses: actions/checkout@v4
@@ -37,7 +38,10 @@ jobs:
           python -m playwright install --with-deps chromium
 
       - name: Comprobar el JavaScript
-        run: for f in js/*.js sw.js; do node --check "$f"; done
+        run: for f in js/*.js js/juego/*.js sw.js; do node --check "$f"; done
 
       - name: Comprobar todos los cuentos
         run: python herramientas/validar.py todos
+
+      - name: Jugar partidas de prueba
+        run: python tests/partidas.py
