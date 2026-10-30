@@ -115,6 +115,7 @@ En la pantalla de inicio, **mantén pulsado «⚙️ Mayores» dos segundos**.
 - **🎙️ Grabar tu voz** para las palabras difíciles (también desde el informe, junto a cada palabra). Se guardan solo en ese dispositivo
 - **Voz** que lee las palabras y su **velocidad**
 - **Pasar el progreso** entre tablet y portátil con un código (se juntan, no se borra nada)
+- **💾 Copia de seguridad** en un archivo, para guardarla en Drive o iCloud y recuperarla
 
 </td>
 </tr>
@@ -158,6 +159,8 @@ La primera vez el navegador pide permiso para usar el micro.
 <summary><b>🔒 Privacidad</b></summary>
 
 - No hay cuentas, servidores ni publicidad. Todo el progreso se guarda **solo en el navegador** del dispositivo.
+- El juego pide al navegador que **no borre** esos datos. En iPad conviene **instalarlo en la pantalla de inicio**:
+  si no, Safari puede borrar los datos de una web que no se abre en varias semanas.
 - El reconocimiento de voz lo hace el propio navegador (en Chrome, a través de los servicios de Google).
 - Los códigos para pasar el progreso solo contienen datos del juego.
 - Las grabaciones de voz se guardan solo en el dispositivo donde se graban y no viajan en el código de progreso.
