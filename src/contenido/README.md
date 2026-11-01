@@ -8,4 +8,8 @@ Todo lo que convierte los cuentos de `stories/` en texto listo para pintar, **si
 4. [`bloques.js`](bloques.js) parte el texto en bloques: texto, voz (`>`), pregunta (`?`).
 5. [`silabas.js`](silabas.js) separa palabras en sílabas (para las sílabas de colores y la lectura por sílabas).
 
+Además, para la lectoescritura: [`frases.js`](frases.js) (partir, ordenar y completar frases, diálogos,
+palabras por minuto), [`dictado.js`](dictado.js) (fichas de sílabas con trampas y corrección con teclado)
+y [`letras.js`](letras.js) (letras que se confunden).
+
 Solo importa de `util/`. Probado en `tests/unidad/contenido.test.js`.

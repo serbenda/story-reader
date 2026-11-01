@@ -1,7 +1,7 @@
 /**
  * @file Calentamiento de «palabras mágicas» al empezar un capítulo.
  *
- * Capa: dominio. Si hay palabras que le cuestan, el capítulo empieza con una
+ * Capa: dominio. Si hay palabras que le cuestan (o deberes del cole), el capítulo empieza con una
  * escena extra para leerlas, adaptada al nivel:
  *   Aprendiz     → 2–3 palabras sueltas
  *   Novatilla    → 3–4 palabras sueltas
@@ -14,6 +14,7 @@ import { rellenar, capitalizar } from '../contenido/plantillas.js';
 import { limpiarPistas } from '../contenido/bloques.js';
 import { azar, barajar } from '../util/azar.js';
 import { claveDePalabra, palabrasDificiles } from './registro-lectura.js';
+import { palabrasDeDeberes } from './deberes.js';
 
 /** Hacen falta al menos estas palabras difíciles para que haya calentamiento. */
 const MINIMO_PALABRAS = 2;
@@ -56,7 +57,9 @@ export function frasesConPalabra(palabra, vars, maxPalabras) {
  * @returns {import('../contenido/escenas.js').Escena|null}
  */
 export function escenaRepaso(vars) {
-  const lista = palabrasDificiles().slice(0, CANDIDATAS);
+  // Primero las palabras de los deberes del cole; después, las que le cuestan
+  const deberes = barajar(palabrasDeDeberes()).slice(0, 3).map((w) => [w, { f: 1, a: 0, u: 0 }]);
+  const lista = [...deberes, ...palabrasDificiles().filter(([w]) => !deberes.some(([d]) => d === w))].slice(0, CANDIDATAS);
   if (lista.length < MINIMO_PALABRAS) return null;
   const nivel = estado.nivel;
   const intro = '{ayudante} ha escrito unas palabras mágicas en una hoja.';

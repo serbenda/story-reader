@@ -27,6 +27,7 @@
 @import url("componentes/meta.css");
 @import url("componentes/grabaciones.css");
 @import url("componentes/avisos.css");
+@import url("componentes/fichas.css");
 
 @import url("pantallas/portada.css");
 @import url("pantallas/personalizar.css");
@@ -37,6 +38,8 @@
 @import url("pantallas/tienda.css");
 @import url("pantallas/ajustes.css");
 @import url("pantallas/informe.css");
+@import url("pantallas/practica.css");
 
 @import url("base/lectura-accesible.css");
 @import url("base/adaptable.css");
+@import url("base/impresion.css");

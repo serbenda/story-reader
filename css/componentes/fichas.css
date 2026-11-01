@@ -1,0 +1,37 @@
+/* Fichas que se tocan para construir palabras y frases: dictado mágico y taller de frases
+   (src/pantallas/practica/dictado.js y taller.js). Grandes y separadas para tocarlas bien. */
+
+.bandeja, .huecos, .frase-montada { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.bandeja { margin: 14px 0; min-height: 64px; }
+.huecos { margin: 18px 0 6px; justify-content: flex-start; }
+.ficha {
+  min-width: 64px; min-height: 60px; padding: .2em .7em;
+  border: 3px solid var(--tinta); border-radius: 14px; background: #FFFFFF;
+  font: 600 calc(var(--tam-lectura) * 1.05) var(--fuente-texto); letter-spacing: .05em;
+  box-shadow: 0 4px 0 var(--tinta); touch-action: manipulation;
+}
+.ficha:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--tinta); }
+.hueco-silaba {
+  min-width: 76px; min-height: 64px; padding: .2em .6em;
+  border: 3px dashed var(--borde); border-radius: 14px; background: var(--hoja);
+  font: 600 calc(var(--tam-lectura) * 1.05) var(--fuente-texto); letter-spacing: .05em;
+}
+.hueco-silaba.lleno { border-style: solid; border-color: var(--tinta); background: #FFFFFF; }
+.hueco-silaba.bien, .ficha-puesta.bien { border-color: var(--bien); background: var(--bien-fondo); color: var(--bien); }
+.hueco-silaba.mal, .ficha-puesta.mal { border-color: var(--sol); background: var(--sol-claro); animation: temblor .4s ease; }
+.ayuda-dictado { font-size: calc(var(--tam-lectura) * 1.2); letter-spacing: .08em; }
+.ayuda-dictado .sil.s1 { color: var(--sil-2); }
+.frase-montada {
+  min-height: 84px; padding: 12px; margin: 12px 0;
+  border: 3px dashed var(--borde); border-radius: 18px; background: var(--hoja);
+}
+.ficha-puesta { box-shadow: 0 3px 0 var(--musgo); border-color: var(--musgo); }
+.signo-final { font-size: calc(var(--tam-lectura) * 1.4); font-weight: 700; }
+.herramientas-frase { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.herramientas-frase .elegida { background: var(--musgo); color: #FFFFFF; }
+.frase-hueco { font-size: calc(var(--tam-lectura) * 1.1); }
+.hueco-palabra { display: inline-block; min-width: 4em; border-bottom: 4px solid var(--tinta); text-align: center; color: var(--tinta-suave); }
+.hueco-palabra.puesta { color: var(--bien); border-color: var(--bien); animation: pegar .5s ease; }
+.campo-dictado { max-width: 520px; font-size: calc(var(--tam-lectura) * 1.1); margin: 14px 0 4px; }
+.orden-num { display: inline-grid; place-items: center; min-width: 1.8em; height: 1.8em; margin-right: .5em; border-radius: 50%; background: var(--papel-2); font-weight: 700; }
+.opcion-orden.correcta .orden-num { background: var(--bien); color: #FFFFFF; }

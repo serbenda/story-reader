@@ -39,16 +39,19 @@ export const escuchando = () => !!actual;
 /**
  * Escucha una frase (se para sola al dejar de hablar).
  * Si termina sin resultado final pero había uno parcial, se usa ese.
+ * Con `continua`, sigue escuchando tras las pausas (cada trozo llega a `final`)
+ * hasta que se llama a {@link parar} o el navegador lo corta.
  * @param {OyentesEscucha} cb
+ * @param {{continua?: boolean}} [opciones]
  */
-export function escuchar(cb) {
+export function escuchar(cb, { continua = false } = {}) {
   let rec;
   try { rec = new Reconocedor(); } catch (e) { bloqueado = true; cb.error?.('not-allowed'); cb.fin?.(); return; }
   actual = rec;
   rec.lang = 'es-ES';
   rec.interimResults = true;
   rec.maxAlternatives = 4;
-  rec.continuous = false;
+  rec.continuous = continua;
   let dadoFinal = false, ultimoParcial = '';
   rec.onresult = (ev) => {
     let parcial = '';
@@ -59,7 +62,7 @@ export function escuchar(cb) {
       else parcial += r[0].transcript;
     }
     if (parcial) { ultimoParcial = parcial; cb.parcial?.(parcial); }
-    if (alts.length) { dadoFinal = true; cb.final(alts); }
+    if (alts.length) { dadoFinal = true; if (!parcial) ultimoParcial = ''; cb.final(alts); }
   };
   rec.onerror = (ev) => {
     if (ERRORES_SIN_MICRO.includes(ev.error)) bloqueado = true;
@@ -67,7 +70,7 @@ export function escuchar(cb) {
   };
   rec.onend = () => {
     actual = null;
-    if (!dadoFinal && ultimoParcial) cb.final([ultimoParcial]);
+    if (ultimoParcial && (!dadoFinal || continua)) cb.final([ultimoParcial]);
     cb.fin?.();
   };
   try { rec.start(); } catch (e) { actual = null; cb.error?.('aborted'); cb.fin?.(); }

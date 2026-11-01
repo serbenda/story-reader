@@ -12,7 +12,7 @@
  * haya jugado en los dos dispositivos.
  */
 import { estado } from '../estado/sesion.js';
-import { APP_COPIA, MAX_PARTIDAS_REGISTRO, posicionDeNivel } from '../config/index.js';
+import { APP_COPIA, MAX_PARTIDAS_REGISTRO, MAX_PRACTICAS, MAX_ESCRITOS, posicionDeNivel } from '../config/index.js';
 import { aBase64, deBase64, hayCompresion, transformarGzip } from '../util/base64.js';
 import { claveDia } from '../util/fechas.js';
 import { claveDePalabra } from './registro-lectura.js';
@@ -91,6 +91,19 @@ export function fusionarProgreso(o) {
     E.palabras[w] = q ? { f: max(q.f, p.f), a: max(q.a, p.a), u: max(q.u, p.u) } : p;
   }
   if (!E.ultimoLibro && o.ultimoLibro) E.ultimoLibro = o.ultimoLibro;
+  // Lectoescritura: dictado (máximos), prácticas y frases escritas (unión), deberes (los más recientes)
+  for (const [w, p] of Object.entries(o.dictado || {})) {
+    const q = E.dictado[w];
+    E.dictado[w] = q ? { f: max(q.f, p.f), a: max(q.a, p.a), u: max(q.u, p.u) } : p;
+  }
+  const unir = (propios, ajenos, clave, limite) => {
+    const vistos = new Set(propios.map(clave));
+    const todos = propios.concat((ajenos || []).filter((x) => !vistos.has(clave(x)))).sort((x, y) => x.fecha - y.fecha);
+    return todos.slice(-limite);
+  };
+  E.practicas = unir(E.practicas, o.practicas, (x) => `${x.fecha}|${x.tipo}`, MAX_PRACTICAS);
+  E.escritos = unir(E.escritos, o.escritos, (x) => `${x.fecha}|${x.texto}`, MAX_ESCRITOS);
+  if (o.deberes && (o.deberes.actualizado || 0) > (E.deberes.actualizado || 0)) E.deberes = o.deberes;
 }
 
 /**

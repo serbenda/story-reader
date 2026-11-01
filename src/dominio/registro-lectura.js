@@ -83,8 +83,21 @@ export const palabrasConquistadas = () =>
 export const nuevoRegistro = ({ libro, cap, titulo, micro, repaso }) => ({
   fecha: Date.now(), libro, cap, titulo, nivel: estado.nivel, micro,
   frases: 0, frasesPrimera: 0, intentos: 0, preguntas: 0, preguntasPrimera: 0, retos: 0, retosPrimera: 0,
+  comprension: 0, comprensionPrimera: 0, palabrasCrono: 0, msCrono: 0,
   repaso, escenas: [], seg: 0
 });
+
+/**
+ * Apunta una lectura cronometrada (velocidad lectora). Solo se llama con
+ * medidas creíbles (ver palabrasPorMinuto en src/contenido/frases.js). No guarda.
+ * @param {number} palabras
+ * @param {number} ms
+ */
+export function anotarVelocidad(palabras, ms) {
+  if (!partida || !partida.reg) return;
+  partida.reg.palabrasCrono = (partida.reg.palabrasCrono || 0) + palabras;
+  partida.reg.msCrono = (partida.reg.msCrono || 0) + ms;
+}
 
 /** Suma al registro el tiempo de la escena que se estaba leyendo. */
 export function cerrarEscenaRegistro() {

@@ -15,6 +15,8 @@ Lo que decide cómo funciona el juego, **sin tocar la pantalla** (no hay `docume
 | [`informe.js`](informe.js) | Cifras y recomendación para mayores |
 | [`transferencia.js`](transferencia.js) | Copias de seguridad y código entre dispositivos |
 | [`protagonistas.js`](protagonistas.js) | Una o dos niñas y sus nombres |
+| [`deberes.js`](deberes.js) · [`ejercicios.js`](ejercicios.js) · [`practica.js`](practica.js) | Deberes del cole, de dónde salen los ejercicios de «Practicar» y sus sesiones |
+| [`comprension.js`](comprension.js) | Preguntas del detective al final del capítulo |
 
 Importa de `estado/`, `contenido/`, `config/` y `util/`. Para avisar a la interfaz, emite eventos
 (`util/eventos.js`). Las funciones que modifican sin guardar lo dicen: «No guarda».

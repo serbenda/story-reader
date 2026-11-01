@@ -11,6 +11,7 @@
  *         revelar() enseña bloques hasta el primero que hay que superar
  *           (leer en voz alta, responder, abrir cerradura); al superarlo, sigue
  *         pintarFinEscena() → «Seguir →» o «¡Caso resuelto!»
+ *     → preguntas del detective             (./comprension-final.js, sin el texto delante)
  *     → terminarCapitulo()                  (./fin-capitulo.js)
  */
 import { estado, partida, guardar, fijarPartida } from '../../estado/sesion.js';
@@ -34,6 +35,8 @@ import { tarjetaPregunta } from './tarjeta-pregunta.js';
 import { tarjetaReto } from './tarjeta-reto.js';
 import { actualizarCuaderno, verCuaderno } from './cuaderno.js';
 import { terminarCapitulo } from './fin-capitulo.js';
+import { mostrarComprension } from './comprension-final.js';
+import { preguntasComprension } from '../../dominio/comprension.js';
 
 const BOTON_CASA = '🏠 <span class="solo-ancho">Casa</span>';
 
@@ -55,6 +58,8 @@ function pintarBloque(b) {
 
 /** Enseña bloques hasta el siguiente que hay que superar; si no queda ninguno, el final de escena. */
 function revelar() {
+  // Las tarjetas llaman aquí con un pequeño retraso: si mientras tanto se ha salido, no hay nada que enseñar
+  if (!partida || !partida.escena || !$('#bloques')) return;
   const s = partida.escena, cont = $('#bloques');
   while (s.k < s.bloques.length) {
     const b = s.bloques[s.k];
@@ -77,10 +82,21 @@ function pintarFinEscena() {
   mostrarEnPantalla(btn);
   btn.onclick = () => {
     Sonido.tocar('pagina');
-    if (final) return terminarCapitulo();
+    if (final) return cerrarCapitulo();
     partida.i++;
     mostrarEscena();
   };
+}
+
+/** Antes del final, las preguntas del detective (si se pueden hacer con lo leído). */
+function cerrarCapitulo() {
+  const preguntas = preguntasComprension(partida);
+  if (!preguntas.length) return terminarCapitulo();
+  cerrarEscenaRegistro();
+  partida.tEscena = Date.now();      // el tiempo de las preguntas también cuenta como lectura
+  partida.escena = { e: { id: 'comprension', props: {} }, bloques: [], k: 0 };
+  window.scrollTo({ top: 0 });
+  mostrarComprension(preguntas, terminarCapitulo);
 }
 
 function mostrarEscena() {

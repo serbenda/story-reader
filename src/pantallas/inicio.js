@@ -1,7 +1,7 @@
 /**
  * @file Casa: las protagonistas, la meta del día, «seguir leyendo» y la estantería.
  *
- * Capa: pantallas. Navega a: album, personalizar, tienda, ajustes (manteniendo
+ * Capa: pantallas. Navega a: practica, album, personalizar, tienda, ajustes (manteniendo
  * pulsado), libro y partida.
  */
 import { estado, catalogo, fijarPartida } from '../estado/sesion.js';
@@ -63,6 +63,7 @@ function pantallaInicio() {
         ${seguir ? `<button class="boton boton-principal boton-grande boton-seguir" id="seguir-leyendo">
           ▶ <span><span class="seguir-sub">Seguir leyendo</span>${esc(seguir.libro.meta.titulo || '')} · capítulo ${seguir.capIndex + 1}</span></button>` : ''}
         <div class="acciones-hero">
+          <button class="boton boton-principal" id="practicar">🪄 Practicar</button>
           <button class="boton boton-suave" id="album">📒 Álbum</button>
           <button class="boton boton-suave" id="vestir">🎨 Vestir</button>
           <button class="boton boton-suave" id="tienda">🛍️ Tienda</button>
@@ -76,6 +77,7 @@ function pantallaInicio() {
       <ul class="estanteria">${catalogo.libros.map(htmlLomo).join('')}</ul>
     </section>`;
 
+  $('#practicar').onclick = irA('practica');
   $('#album').onclick = irA('album');
   $('#vestir').onclick = irA('personalizar', { primeraVez: false });
   $('#tienda').onclick = irA('tienda');

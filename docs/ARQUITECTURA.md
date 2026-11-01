@@ -174,6 +174,8 @@ para que se registren.
 | `album` | — | inicio |
 | `ajustes` | — | inicio (manteniendo pulsado «Mayores»), informe |
 | `informe` | — | ajustes |
+| `practica` | — | inicio («Practicar»), fin de cada actividad |
+| `dictado` · `taller` · `lectura-repetida` · `mi-frase` | — | practica |
 
 ## 7. Eventos
 
@@ -220,7 +222,8 @@ flowchart TD
   tarjeta -->|"alTerminar()"| revelar
   revelar -->|"no quedan bloques"| fin["pintarFinEscena(): «Seguir →»"]
   fin -->|"siguiente escena"| escena
-  fin -->|"última"| terminar["fin-capitulo.js · terminarCapitulo()<br/>registro, meta, pegatina, ¿subir de nivel?"]
+  fin -->|"última"| comp["comprension-final.js<br/>preguntas del detective sin el texto delante"]
+  comp --> terminar["fin-capitulo.js · terminarCapitulo()<br/>registro, meta, pegatina, ¿subir de nivel?"]
 ```
 
 - Cada **tarjeta** recibe su bloque y una función `alTerminar`; guarda su progreso dentro del propio
@@ -231,7 +234,22 @@ flowchart TD
   máximo 10 minutos por escena). Las palabras solo cuentan en el **primer intento**, y los nombres propios
   nunca.
 - **Meta diaria** ([`dominio/meta-diaria.js`](../src/dominio/meta-diaria.js)): se comprueba al cambiar de
-  escena, al salir y al terminar; premia una sola vez al día.
+  escena, al salir y al terminar; premia una sola vez al día. El tiempo de «Practicar» también cuenta.
+- **Velocidad lectora**: la tarjeta de voz cronometra desde que el micro oye la primera palabra hasta el
+  resultado que supera la frase; solo cuentan medidas creíbles (5–250 palabras por minuto).
+- **Comprensión** ([`dominio/comprension.js`](../src/dominio/comprension.js)): con lo leído
+  (`partida.leidos`) se generan hasta tres preguntas: ordenar lo que pasó, quién dijo una frase y qué
+  pista salió. Así funciona con todos los libros sin escribir nada nuevo en los cuentos.
+
+### Practicar (lectoescritura)
+
+La zona `pantallas/practica/` refuerza lo que pide el cole: **dictado mágico** (sílabas con trampas
+b/d, p/q y sílabas invertidas; teclado desde Lectora), **taller de frases** (ordenar con mayúscula y
+punto, completar), **lectura relámpago** (lectura repetida cronometrada) y **mi frase** (escribir y
+escuchar lo escrito). Las palabras y frases salen de los **deberes del cole** que ponen los mayores
+([`dominio/deberes.js`](../src/dominio/deberes.js)), de lo que le cuesta y de los cuentos
+([`dominio/ejercicios.js`](../src/dominio/ejercicios.js)). Cada sesión se guarda en
+`estado.practicas` ([`dominio/practica.js`](../src/dominio/practica.js)) para el informe.
 
 ## 10. El arte
 
@@ -304,6 +322,7 @@ cada módulo de `src/` aparece aquí.
 | [`config/index.js`](../src/config/index.js) | Punto único de acceso a la configuración. |
 | [`config/mensajes.js`](../src/config/mensajes.js) | Frases de ánimo que dice el juego. |
 | [`config/niveles.js`](../src/config/niveles.js) | Niveles de lectura y exigencia del micrófono. |
+| [`config/practica.js`](../src/config/practica.js) | Ajustes de la zona «Practicar»: dictado, taller de frases, lectura repetida y mi frase. |
 | [`config/recompensas.js`](../src/config/recompensas.js) | Estrellas que se ganan, meta diaria y límites del registro. |
 | [`config/tienda.js`](../src/config/tienda.js) | Lo que se compra con estrellas. |
 
@@ -324,7 +343,10 @@ cada módulo de `src/` aparece aquí.
 |---|---|
 | [`contenido/bloques.js`](../src/contenido/bloques.js) | Parte el texto de una escena (ya rellenado) en bloques. |
 | [`contenido/catalogo.js`](../src/contenido/catalogo.js) | Carga todos los libros desde la carpeta stories/. |
+| [`contenido/dictado.js`](../src/contenido/dictado.js) | Dictado con fichas de sílabas y corrección de lo escrito con teclado. |
 | [`contenido/escenas.js`](../src/contenido/escenas.js) | Convierte un archivo Markdown de capítulo en datos. |
+| [`contenido/frases.js`](../src/contenido/frases.js) | Trabajo con frases: partirlas, ordenarlas, completarlas, contar palabras, encontrar diálogos y medir la velocidad lectora. |
+| [`contenido/letras.js`](../src/contenido/letras.js) | Letras que se confunden con facilidad en la dislexia. |
 | [`contenido/plantillas.js`](../src/contenido/plantillas.js) | Rellena las plantillas de los cuentos. |
 | [`contenido/silabas.js`](../src/contenido/silabas.js) | Separa palabras en sílabas según las reglas del español. |
 
@@ -374,10 +396,14 @@ cada módulo de `src/` aparece aquí.
 | Módulo | Qué hace |
 |---|---|
 | [`dominio/cerraduras.js`](../src/dominio/cerraduras.js) | Cerraduras mágicas: minijuegos para las confusiones típicas de la dislexia. |
+| [`dominio/comprension.js`](../src/dominio/comprension.js) | Preguntas de comprensión al final del capítulo, sin el texto delante. |
+| [`dominio/deberes.js`](../src/dominio/deberes.js) | Deberes del cole: palabras y frases de la semana que pone la familia. |
+| [`dominio/ejercicios.js`](../src/dominio/ejercicios.js) | De dónde salen las palabras y frases de la zona «Practicar». |
 | [`dominio/estrellas.js`](../src/dominio/estrellas.js) | Estrellas: se ganan leyendo y se gastan en la tienda. |
 | [`dominio/informe.js`](../src/dominio/informe.js) | Cifras del informe de lectura para mayores. |
 | [`dominio/meta-diaria.js`](../src/dominio/meta-diaria.js) | Meta de cada día, racha de días y cofre de la semana. |
 | [`dominio/partida.js`](../src/dominio/partida.js) | Creación de una partida y elección del texto de cada escena. |
+| [`dominio/practica.js`](../src/dominio/practica.js) | Sesiones de práctica (dictado, taller, lectura repetida, mi frase) y lo que se aprende de ellas. |
 | [`dominio/progreso.js`](../src/dominio/progreso.js) | Capítulos terminados, pegatinas y subida de nivel. |
 | [`dominio/protagonistas.js`](../src/dominio/protagonistas.js) | Quiénes protagonizan los cuentos. |
 | [`dominio/registro-lectura.js`](../src/dominio/registro-lectura.js) | Registro de lectura: qué partidas se juegan y qué palabras cuestan. |
@@ -396,6 +422,7 @@ cada módulo de `src/` aparece aquí.
 | [`ui/componentes/copiar.js`](../src/ui/componentes/copiar.js) | Copiar un texto al portapapeles, o enseñarlo para copiarlo a mano. |
 | [`ui/componentes/grabaciones.js`](../src/ui/componentes/grabaciones.js) | Grabar, escuchar y borrar la voz de la familia (en Ajustes y en el Informe). |
 | [`ui/componentes/grafico-dias.js`](../src/ui/componentes/grafico-dias.js) | Gráfico de barras SVG: frases leídas cada día (a la primera y con repetición). |
+| [`ui/componentes/grafico-velocidad.js`](../src/ui/componentes/grafico-velocidad.js) | Gráfico SVG de la velocidad lectora (palabras por minuto) día a día. |
 | [`ui/componentes/meta.js`](../src/ui/componentes/meta.js) | Tarjeta de la meta del día (anillo de progreso, semana y cofre) y su celebración. |
 | [`ui/componentes/opciones.js`](../src/ui/componentes/opciones.js) | Controles de elección: muestras de color, chips e interruptores. |
 | [`ui/componentes/puerta-mayores.js`](../src/ui/componentes/puerta-mayores.js) | Botón que hay que mantener pulsado para entrar en «Para mayores». |
@@ -409,13 +436,14 @@ cada módulo de `src/` aparece aquí.
 
 | Módulo | Qué hace |
 |---|---|
-| [`pantallas/ajustes.js`](../src/pantallas/ajustes.js) | «Para mayores»: nivel, letra, micrófono, meta, voces, pasar el progreso, copia de seguridad y borrar. |
+| [`pantallas/ajustes.js`](../src/pantallas/ajustes.js) | «Para mayores»: nivel, deberes del cole, letra, micrófono, meta, voces, pasar el progreso, copia de seguridad y borrar. |
 | [`pantallas/album.js`](../src/pantallas/album.js) | Álbum: pegatinas de capítulos, amigos de los cuentos y tesoros encontrados. |
 | [`pantallas/bienvenida.js`](../src/pantallas/bienvenida.js) | Pantalla de bienvenida: solo se ve la primera vez (cuando aún no hay perfil). |
 | [`pantallas/index.js`](../src/pantallas/index.js) | Carga todas las pantallas (cada una se registra sola en la navegación). |
-| [`pantallas/informe.js`](../src/pantallas/informe.js) | Informe de lectura para mayores: cifras de la semana, recomendación de nivel, gráfico diario, palabras difíciles y conquistadas, y últimas partidas. |
+| [`pantallas/informe.js`](../src/pantallas/informe.js) | Informe de lectura para mayores: cifras de la semana, lectoescritura (velocidad, comprensión, dictado, taller), recomendación de nivel, gráficos, palabras difíciles de leer y de escribir, sus frases y últimas partidas. Se puede imprimir o guardar en PDF para el cole (css/base/impresion.css). |
 | [`pantallas/inicio.js`](../src/pantallas/inicio.js) | Casa: las protagonistas, la meta del día, «seguir leyendo» y la estantería. |
 | [`pantallas/libro.js`](../src/pantallas/libro.js) | Un libro: portada, resumen y lista de capítulos (con candado los que faltan por abrir). |
+| [`pantallas/partida/comprension-final.js`](../src/pantallas/partida/comprension-final.js) | «Preguntas del detective»: comprensión al final del capítulo, sin el texto delante. |
 | [`pantallas/partida/cuaderno.js`](../src/pantallas/partida/cuaderno.js) | Cuaderno de detective: las pistas [[marcadas]] que van saliendo en el capítulo. |
 | [`pantallas/partida/fin-capitulo.js`](../src/pantallas/partida/fin-capitulo.js) | Final del capítulo: pegatina, resumen, oferta de subir de nivel y qué hacer después. |
 | [`pantallas/partida/index.js`](../src/pantallas/partida/index.js) | Pantalla de partida: va enseñando cada escena del capítulo bloque a bloque. |
@@ -423,6 +451,12 @@ cada módulo de `src/` aparece aquí.
 | [`pantallas/partida/tarjeta-reto.js`](../src/pantallas/partida/tarjeta-reto.js) | Tarjeta «Cerradura mágica»: el minijuego de letras al final de algunas escenas. |
 | [`pantallas/partida/tarjeta-voz.js`](../src/pantallas/partida/tarjeta-voz.js) | Tarjeta «Lee en voz alta»: la niña lee la frase al micrófono y las palabras se van poniendo verdes según las dice. |
 | [`pantallas/personalizar.js`](../src/pantallas/personalizar.js) | Elegir y vestir a las protagonistas y a la mascota, paso a paso. |
+| [`pantallas/practica/comun.js`](../src/pantallas/practica/comun.js) | Piezas comunes de las actividades de «Practicar»: cabecera, progreso, sesión (para el informe y la meta del día) y pantalla final. |
+| [`pantallas/practica/dictado.js`](../src/pantallas/practica/dictado.js) | Dictado mágico: el juego dice una palabra y ella la escribe con fichas de sílabas. |
+| [`pantallas/practica/index.js`](../src/pantallas/practica/index.js) | Menú de «Practicar»: dictado, taller de frases, lectura repetida y mi frase. |
+| [`pantallas/practica/lectura-repetida.js`](../src/pantallas/practica/lectura-repetida.js) | Lectura relámpago: leer el mismo texto corto tres veces y ver cómo sube la velocidad. |
+| [`pantallas/practica/mi-frase.js`](../src/pantallas/practica/mi-frase.js) | Mi frase: escribe su propia frase, la escucha leída en voz alta y la guarda. |
+| [`pantallas/practica/taller.js`](../src/pantallas/practica/taller.js) | Taller de frases: ordenar palabras para formar la frase y completar frases. |
 | [`pantallas/tienda.js`](../src/pantallas/tienda.js) | La tienda: complementos, vestidos y mascotas que se compran con estrellas. |
 
 ## 15. Glosario

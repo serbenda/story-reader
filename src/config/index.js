@@ -9,6 +9,7 @@ export * from './mensajes.js';
 export * from './apariencia.js';
 export * from './tienda.js';
 export * from './recompensas.js';
+export * from './practica.js';
 
 /** Clave de localStorage donde se guarda todo el progreso. Cambiarla «olvida» los progresos. */
 export const CLAVE_GUARDADO = 'biblioteca-magica-v1';

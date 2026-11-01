@@ -11,7 +11,8 @@
 import { estado, partida } from '../estado/sesion.js';
 import { versionesPara } from '../contenido/escenas.js';
 import { rellenar } from '../contenido/plantillas.js';
-import { bloques } from '../contenido/bloques.js';
+import { bloques, ampliarLecturas } from '../contenido/bloques.js';
+import { PALABRAS_POR_LECTURA } from '../config/index.js';
 import { azar } from '../util/azar.js';
 import { prepararPartida, tituloCapitulo } from './variables.js';
 import { escenaRepaso } from './repaso.js';
@@ -38,6 +39,7 @@ import { nuevoRegistro } from './registro-lectura.js';
  *   leidas: number,
  *   cuaderno: string[],
  *   tEscena: number|null,
+ *   leidos: {id: string, texto: string, repaso: boolean}[],
  *   escena?: EscenaEnCurso,
  *   reg: import('../estado/almacen.js').Partida & {guardado?: boolean}
  * }} PartidaEnCurso
@@ -67,6 +69,7 @@ export function crearPartida(libro, capIndex, { micro }) {
     libro, cap, capIndex, escenas, i: 0, ...sorteo,
     semilla: Math.floor(Math.random() * 1e6), estrellas: 0, leidas: 0, cuaderno: [],
     tEscena: null,
+    leidos: [],
     reg: nuevoRegistro({ libro: libro.id, cap: cap.id, titulo: tituloCapitulo(cap), micro, repaso: repaso ? repaso.palabras : [] })
   };
 }
@@ -74,13 +77,17 @@ export function crearPartida(libro, capIndex, { micro }) {
 /**
  * Elige una versión de la escena actual, la rellena y la parte en bloques.
  * Si la escena lleva cerradura, añade al final un bloque «reto».
- * Deja la escena en `partida.escena` y empieza a contar su tiempo.
+ * Deja la escena en `partida.escena`, la apunta en `partida.leidos` y empieza a contar su tiempo.
  * @returns {EscenaEnCurso}
  */
 export function prepararEscenaActual() {
   const e = partida.escenas[partida.i];
   const texto = rellenar(azar(versionesPara(e, estado.nivel)), partida.vars);
-  partida.escena = { e, bloques: bloques(texto), k: 0 };
+  // Cada nivel lee el doble que el anterior: las frases de voz cortas se alargan con las que siguen
+  const lista = e.repaso ? bloques(texto) : ampliarLecturas(bloques(texto), PALABRAS_POR_LECTURA[estado.nivel] || PALABRAS_POR_LECTURA.aprendiz);
+  partida.escena = { e, bloques: lista, k: 0 };
+  // Lo leído alimenta las preguntas de comprensión del final (src/dominio/comprension.js)
+  partida.leidos.push({ id: e.id, texto, repaso: !!e.repaso });
   if (partida.retos.has(e.id)) partida.escena.bloques.push({ tipo: 'reto', texto: '' });
   partida.tEscena = Date.now();
   // Los ayudantes que aparecen se apuntan en el álbum
