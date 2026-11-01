@@ -40,6 +40,7 @@ import { CLAVE_GUARDADO, NIVEL_INICIAL, META_INICIAL } from '../config/index.js'
  * @property {string} meta        Clave de METAS.
  * @property {string} [voz]       Nombre de la voz elegida ('' = automática).
  * @property {string} [velocidad] Clave de VELOCIDADES_VOZ.
+ * @property {boolean} dictadoTeclado  Dictado con teclado en vez de fichas (desde Lectora).
  */
 
 /**
@@ -64,10 +65,38 @@ import { CLAVE_GUARDADO, NIVEL_INICIAL, META_INICIAL } from '../config/index.js'
  * @property {number} preguntasPrimera
  * @property {number} retos       Cerraduras abiertas.
  * @property {number} retosPrimera
+ * @property {number} [comprension]         Preguntas del final del capítulo (sin el texto delante).
+ * @property {number} [comprensionPrimera]
+ * @property {number} [palabrasCrono]       Palabras leídas con el micro midiendo el tiempo…
+ * @property {number} [msCrono]             …y lo que tardó en leerlas (velocidad lectora).
  * @property {string[]} repaso    Palabras del calentamiento.
  * @property {{id: string, seg: number}[]} escenas
  * @property {number} seg         Segundos leyendo.
  * @property {boolean} terminado
+ */
+
+/**
+ * @typedef {object} Deberes
+ * @property {string[]} palabras  Palabras de la semana (vocabulario, ortografía…).
+ * @property {string[]} frases    Frases o dictado de la semana.
+ * @property {number} actualizado Cuándo se cambiaron (ms; 0 = nunca).
+ */
+
+/**
+ * @typedef {object} Practica
+ * @property {number} fecha
+ * @property {'dictado'|'taller'|'repetida'|'escribir'} tipo
+ * @property {number} total     Ejercicios hechos.
+ * @property {number} primera   De ellos, bien a la primera.
+ * @property {number} seg       Segundos practicando.
+ * @property {number[]} [ppm]   Lectura repetida: palabras por minuto de cada lectura.
+ */
+
+/**
+ * @typedef {object} Escrito
+ * @property {number} fecha
+ * @property {string} texto
+ * @property {string} [tema]  Sobre qué escribió (título del capítulo).
  */
 
 /**
@@ -85,6 +114,10 @@ import { CLAVE_GUARDADO, NIVEL_INICIAL, META_INICIAL } from '../config/index.js'
  * @property {Record<string, boolean>} cofres        Lunes de las semanas con el cofre abierto.
  * @property {Partida[]} registro
  * @property {Record<string, PalabraRegistrada>} palabras
+ * @property {Deberes} deberes   Palabras y frases del cole que pone la familia.
+ * @property {Record<string, PalabraRegistrada>} dictado  Palabra → aciertos y fallos al escribirla.
+ * @property {Practica[]} practicas  Una entrada por sesión de práctica (dictado, taller, lectura repetida, mi frase).
+ * @property {Escrito[]} escritos    Frases que ha escrito ella misma («Mi frase»), para que las vean los mayores.
  * @property {string} [ultimoLibro]
  * @property {number} [ultimaCopia]  Fecha de la última copia de seguridad.
  */
@@ -96,13 +129,17 @@ import { CLAVE_GUARDADO, NIVEL_INICIAL, META_INICIAL } from '../config/index.js'
 export const estadoInicial = () => ({
   perfil: null, nivel: NIVEL_INICIAL, progreso: {}, estrellas: 0, ofrecidos: {},
   album: { amigos: {}, tesoros: {}, pegatinas: {} },
-  ajustes: { tamano: 'normal', tolerancia: 'normal', sinMicro: false, resaltar: true, sonido: true, silabas: false, regla: false, meta: META_INICIAL },
+  ajustes: { tamano: 'normal', tolerancia: 'normal', sinMicro: false, resaltar: true, sonido: true, silabas: false, regla: false, meta: META_INICIAL, dictadoTeclado: false },
   gastadas: 0,
   desbloqueado: {},
   metaDias: {},
   cofres: {},
   registro: [],
-  palabras: {}
+  palabras: {},
+  deberes: { palabras: [], frases: [], actualizado: 0 },
+  dictado: {},
+  practicas: [],
+  escritos: []
 });
 
 /**

@@ -10,6 +10,9 @@
  *   - «Escuchar» se activa después de intentarlo, para que primero lo intente sola.
  *   - Tras 3 intentos aparece «Seguir adelante»: nunca se queda atascada.
  *   - Sin micro (o si falla), se lee en voz alta y se pulsa «¡Ya lo he leído!».
+ *   - Velocidad lectora: se cronometra desde que el micro oye la primera palabra
+ *     hasta el resultado final de la lectura que supera la frase. Solo la ven
+ *     los mayores en el informe (a la niña no se le enseña, para no presionar).
  */
 import { estado, partida, guardar } from '../../estado/sesion.js';
 import { TOLERANCIAS, ELOGIOS, ANIMOS, ESTRELLAS } from '../../config/index.js';
@@ -19,7 +22,8 @@ import { limpiarPistas } from '../../contenido/bloques.js';
 import { $, $$, esc } from '../../util/dom.js';
 import { azar } from '../../util/azar.js';
 import { ganarEstrellas } from '../../dominio/estrellas.js';
-import { claveDePalabra, nombresPropios, anotarPalabra } from '../../dominio/registro-lectura.js';
+import { claveDePalabra, nombresPropios, anotarPalabra, anotarVelocidad } from '../../dominio/registro-lectura.js';
+import { palabrasPorMinuto } from '../../contenido/frases.js';
 import { htmlPalabra } from '../../ui/palabras.js';
 import { aviso, confeti } from '../../ui/avisos.js';
 
@@ -77,8 +81,11 @@ export function tarjetaVoz(b, { alTerminar }) {
   };
   const aprobado = () => { const idx = significativas(); return idx.filter((i) => b.marcadas[i]).length / idx.length >= tol.pasa; };
 
+  /** ¿Se ha salido del capítulo mientras el micro escuchaba? Entonces se ignora lo que llegue tarde. */
+  const abandonada = () => !el.isConnected || !partida;
+
   function superar(conAyuda) {
-    if (b.superado) return;
+    if (b.superado || abandonada()) return;
     b.superado = true;
     b.marcadas = b.marcadas.map(() => true); pintar();
     spans.forEach((s) => s.classList.remove('falta'));
@@ -93,8 +100,12 @@ export function tarjetaVoz(b, { alTerminar }) {
     setTimeout(alTerminar, 650);
   }
 
+  /** Cuándo oyó el micro la primera palabra y cuándo dio el resultado final (velocidad lectora). */
+  let tPrimeraPalabra = null, tFinal = null;
+
   /** @param {string[]} alternativas  Posibles frases entendidas por el reconocedor. */
   function evaluar(alternativas) {
+    if (abandonada()) return;
     let mejor = null, mejorN = -1;
     for (const alt of alternativas) {
       const r = Voz.comparar(b.objetivo, Voz.normalizar(alt), tol.umbral);
@@ -109,7 +120,11 @@ export function tarjetaVoz(b, { alTerminar }) {
     }
     b.intentos++; oir.disabled = false;
     pintar();
-    if (aprobado()) return superar(false);
+    if (aprobado()) {
+      const ms = tPrimeraPalabra && tFinal ? tFinal - tPrimeraPalabra : 0;
+      if (palabrasPorMinuto(b.objetivo.length, ms)) anotarVelocidad(b.objetivo.length, ms);
+      return superar(false);
+    }
     const sig = significativas();
     spans.forEach((s) => s.classList.toggle('falta', sig.includes(+s.dataset.k) && !b.marcadas[+s.dataset.k]));
     mensaje.textContent = azar(ANIMOS);
@@ -132,9 +147,10 @@ export function tarjetaVoz(b, { alTerminar }) {
     Voz.callar();
     el.classList.add('escuchando'); mic.querySelector('.txt').textContent = 'Te escucho…';
     mensaje.textContent = 'Te escucho. Lee la frase con calma.';
+    tPrimeraPalabra = null; tFinal = null;
     Voz.escuchar({
-      parcial: (t) => pintar(Voz.comparar(b.objetivo, Voz.normalizar(t), tol.umbral)),
-      final: evaluar,
+      parcial: (t) => { if (!tPrimeraPalabra) tPrimeraPalabra = Date.now(); pintar(Voz.comparar(b.objetivo, Voz.normalizar(t), tol.umbral)); },
+      final: (alternativas) => { tFinal = Date.now(); evaluar(alternativas); },
       error: (tipo) => {
         if (Voz.ERRORES_SIN_MICRO.includes(tipo)) pasarASinMicro('El micro no está disponible aquí. Lee en voz alta y pulsa «¡Ya lo he leído!».');
         else if (tipo === 'no-speech') mensaje.textContent = 'No te he oído. Pulsa el micro y lee un poco más alto.';

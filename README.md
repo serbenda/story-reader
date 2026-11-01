@@ -90,6 +90,21 @@ Al terminar un libro, el juego propone subir de nivel. El informe para mayores t
 - 🎯 **Práctica dirigida**: palabras mágicas con lo que cuesta y cerraduras con las confusiones típicas.
 - 🎉 **Sin sonidos de error**. Se celebra el esfuerzo, no solo el acierto.
 
+## 🪄 Practicar: lectoescritura
+
+Para reforzar lo que pide el cole (dictados, construir oraciones, comprensión y velocidad lectora):
+
+| Actividad | Qué trabaja |
+|---|---|
+| ✍️ **Dictado mágico** | Escucha una palabra y la escribe con fichas de sílabas. Entre las fichas hay trampas parecidas (b/d, p/q, sílabas invertidas). Desde Lectora, con teclado. |
+| 🧩 **Taller de frases** | Ordena las palabras para formar la frase, con su mayúscula y su punto, y completa frases eligiendo la palabra que falta. |
+| ⚡ **Lectura relámpago** | Lee tres veces el mismo texto corto y ve en una gráfica cómo sube su velocidad (lectura repetida). |
+| 📝 **Mi frase** | Escribe su propia frase, la escucha leída en voz alta para revisarla y la guarda para que la veáis. |
+| 🔎 **Preguntas del detective** | Al final de cada capítulo, sin el texto delante: ordenar lo que pasó, quién lo dijo y qué pista salió. |
+
+En «Para mayores» se ponen los **deberes del cole** de la semana (palabras y frases): salen primero en
+todas estas actividades, en las palabras mágicas y en las cerraduras.
+
 ## 👨‍👩‍👧 Para mayores
 
 En la pantalla de inicio, **mantén pulsado «⚙️ Mayores» dos segundos**.
@@ -103,13 +118,16 @@ En la pantalla de inicio, **mantén pulsado «⚙️ Mayores» dos segundos**.
 - Frases leídas y porcentaje a la primera, comparado con la semana anterior
 - Preguntas y cerraduras acertadas a la primera, minutos de lectura
 - Gráfico de los últimos 14 días
-- **Palabras que le cuestan** (se pueden escuchar) y **palabras conquistadas**
+- **Lectoescritura**: velocidad lectora (palabras por minuto) con su gráfica, comprensión al final del capítulo, dictado, taller de frases y mejora en la lectura relámpago
+- **Palabras que le cuestan** al leer (se pueden escuchar), **palabras que le cuesta escribir** y **palabras conquistadas**
+- **Lo que ha escrito ella** en «Mi frase», para repasarlo juntos
 - Últimas partidas, también las que dejó a medias
 - **Recomendación de nivel** con botón para aplicarla
-- **Copiar resumen** para su profe o logopeda
+- **Copiar resumen** o **🖨️ imprimir / guardar en PDF** para su profe, logopeda o psicopedagoga
 
 **⚙️ Ajustes**
 - Nivel, tamaño de letra, exigencia del micro o jugar sin micro
+- **📚 Deberes del cole**: las palabras y frases de la semana, que salen primero al practicar
 - Sílabas de colores y regla de lectura
 - **Meta de cada día** (5, 10 o 15 minutos, o un capítulo)
 - **🎙️ Grabar tu voz** para las palabras difíciles (también desde el informe, junto a cada palabra). Se guardan solo en ese dispositivo

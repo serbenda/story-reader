@@ -9,7 +9,8 @@ Cada archivo pinta una pantalla en `app` y se registra con `registrarPantalla('n
 | [`personalizar.js`](personalizar.js) | Elegir y vestir a las protagonistas y la mascota |
 | [`inicio.js`](inicio.js) | Casa y estantería |
 | [`libro.js`](libro.js) | Capítulos de un libro |
-| [`partida/`](partida) | El capítulo en juego: controlador ([`index.js`](partida/index.js)), una tarjeta por tipo de bloque, cuaderno y final |
+| [`partida/`](partida) | El capítulo en juego: controlador ([`index.js`](partida/index.js)), una tarjeta por tipo de bloque, cuaderno, preguntas del detective y final |
+| [`practica/`](practica) | Practicar: menú ([`index.js`](practica/index.js)), dictado, taller de frases, lectura relámpago y mi frase, con piezas comunes en [`comun.js`](practica/comun.js) |
 | [`tienda.js`](tienda.js) · [`album.js`](album.js) | Tienda y álbum |
 | [`ajustes.js`](ajustes.js) · [`informe.js`](informe.js) | Para mayores |
 

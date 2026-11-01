@@ -11,6 +11,7 @@ import { METAS, META_INICIAL, ESTRELLAS, DIAS_PARA_COFRE } from '../config/index
 import { DIA_MS, inicioDeHoy, claveDia, lunesDe } from '../util/fechas.js';
 import { ganarEstrellas } from './estrellas.js';
 import { segundosSinGuardar } from './registro-lectura.js';
+import { segundosPracticaHoy } from './practica.js';
 
 /** Días sin leer seguidos que se perdonan en la racha. */
 const DIAS_PERDONADOS = 1;
@@ -28,12 +29,12 @@ export const metaElegida = () => METAS[estado.ajustes.meta] || METAS[META_INICIA
  */
 
 /**
- * Cuánto se lleva hoy (incluye la partida en curso).
+ * Cuánto se lleva hoy (incluye la partida en curso y lo practicado en «Practicar»).
  * @returns {ProgresoMeta}
  */
 export function progresoHoy() {
   const hoy = estado.registro.filter((r) => r.fecha >= inicioDeHoy());
-  const seg = hoy.reduce((s, r) => s + (r.seg || 0), 0) + segundosSinGuardar();
+  const seg = hoy.reduce((s, r) => s + (r.seg || 0), 0) + segundosSinGuardar() + segundosPracticaHoy();
   const caps = hoy.filter((r) => r.terminado).length;
   const meta = metaElegida();
   if (!meta.min) return { parte: Math.min(1, caps), texto: caps ? '¡Capítulo leído!' : 'Lee un capítulo', meta };

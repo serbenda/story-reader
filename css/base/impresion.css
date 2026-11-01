@@ -1,0 +1,13 @@
+/* Al imprimir (o guardar en PDF) el informe para el cole: sin botones, sin cabecera
+   del juego y en blanco, para que se lea bien en papel. Va el último de todos. */
+
+@media print {
+  body { background: #FFFFFF; font-size: 12pt; }
+  #app { max-width: none; padding: 0; }
+  .cabecera, button, .boton, #aviso, #confeti, .capa { display: none !important; }
+  .informe .tarjeta-informe, .informe .cifra, .recomendacion { break-inside: avoid; box-shadow: none; }
+  .grafico { min-width: 0; }
+  .grafico-sitio { overflow: visible; }
+  .dos-columnas { display: block; }
+  .chip { border-width: 1px; }
+}

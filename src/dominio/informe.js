@@ -10,6 +10,7 @@ import { NIVELES, nivelPorId, posicionDeNivel } from '../config/index.js';
 import { DIA_MS, inicioDeHoy, fechaCorta } from '../util/fechas.js';
 import { sumar, porcentaje } from '../util/numeros.js';
 import { palabrasDificiles, palabrasConquistadas } from './registro-lectura.js';
+import { palabrasDificilesDeEscribir } from './practica.js';
 import { protagonistas } from './protagonistas.js';
 
 /** Capítulos terminados con micro en el nivel actual que hacen falta para recomendar. */
@@ -65,7 +66,33 @@ export function recomendacionNivel() {
  * @property {number|null} primeraAnt  Ídem los 7 anteriores (para la tendencia).
  * @property {number|null} preguntas   % preguntas a la primera.
  * @property {number|null} retos       % cerraduras a la primera.
+ * @property {number|null} ppm         Velocidad lectora (palabras por minuto) leyendo con micro.
+ * @property {number|null} ppmAnt      Ídem la semana anterior.
+ * @property {number|null} comprension % preguntas del final del capítulo a la primera.
+ * @property {number|null} dictado     % palabras del dictado bien a la primera.
+ * @property {number|null} taller      % frases del taller bien a la primera.
+ * @property {number|null} mejora      Lectura repetida: cuánto sube la velocidad de la 1.ª a la última lectura (%).
+ * @property {number} practicas        Sesiones de práctica.
  */
+
+/** Velocidad media (palabras por minuto) de unas partidas, o null. */
+const ppmDe = (partidas) => {
+  const ms = sumar(partidas, (r) => r.msCrono);
+  return ms > 0 ? Math.round(sumar(partidas, (r) => r.palabrasCrono) / (ms / 60000)) : null;
+};
+
+/** % a la primera de unas sesiones de práctica de un tipo. */
+const pctPractica = (sesiones, tipo) => {
+  const s = sesiones.filter((p) => p.tipo === tipo);
+  return porcentaje(sumar(s, (p) => p.primera), sumar(s, (p) => p.total));
+};
+
+/** Mejora media (%) de la primera a la última lectura en la lectura repetida. */
+const mejoraRepetida = (sesiones) => {
+  const mejoras = sesiones.filter((p) => p.tipo === 'repetida' && p.ppm && p.ppm.length > 1 && p.ppm[0])
+    .map((p) => (p.ppm[p.ppm.length - 1] - p.ppm[0]) / p.ppm[0] * 100);
+  return mejoras.length ? Math.round(mejoras.reduce((a, b) => a + b, 0) / mejoras.length) : null;
+};
 
 /**
  * Cifras de los últimos 7 días (hoy incluido).
@@ -75,13 +102,20 @@ export function resumenSemana() {
   const R = estado.registro, hoy = inicioDeHoy();
   const semana = R.filter((r) => r.fecha >= hoy - 6 * DIA_MS);
   const anterior = R.filter((r) => r.fecha >= hoy - 13 * DIA_MS && r.fecha < hoy - 6 * DIA_MS);
+  const practicas = (estado.practicas || []).filter((p) => p.fecha >= hoy - 6 * DIA_MS);
   return {
     capitulos: semana.filter((r) => r.terminado).length,
     frases: sumar(semana, (r) => r.frases),
     minutos: Math.round(sumar(semana, (r) => r.seg) / 60),
     primera: pctPrimera(semana), primeraAnt: pctPrimera(anterior),
     preguntas: porcentaje(sumar(semana, (r) => r.preguntasPrimera), sumar(semana, (r) => r.preguntas)),
-    retos: porcentaje(sumar(semana, (r) => r.retosPrimera), sumar(semana, (r) => r.retos))
+    retos: porcentaje(sumar(semana, (r) => r.retosPrimera), sumar(semana, (r) => r.retos)),
+    ppm: ppmDe(semana), ppmAnt: ppmDe(anterior),
+    comprension: porcentaje(sumar(semana, (r) => r.comprensionPrimera), sumar(semana, (r) => r.comprension)),
+    dictado: pctPractica(practicas, 'dictado'),
+    taller: pctPractica(practicas, 'taller'),
+    mejora: mejoraRepetida(practicas),
+    practicas: practicas.length
   };
 }
 
@@ -107,6 +141,26 @@ export function frasesPorDia() {
 }
 
 /**
+ * Velocidad lectora de cada día de las dos últimas semanas (null si ese día no se midió).
+ * @returns {{ini: number, hoy: boolean, ppm: number|null}[]}
+ */
+export function velocidadPorDia() {
+  const R = estado.registro, hoy = inicioDeHoy(), dias = [];
+  for (let i = DIAS_GRAFICO - 1; i >= 0; i--) {
+    const ini = hoy - i * DIA_MS;
+    dias.push({ ini, hoy: i === 0, ppm: ppmDe(R.filter((r) => r.fecha >= ini && r.fecha < ini + DIA_MS)) });
+  }
+  return dias;
+}
+
+/**
+ * Lo último que ha escrito ella en «Mi frase», de lo más nuevo a lo más antiguo.
+ * @param {number} [n=10]
+ * @returns {import('../estado/almacen.js').Escrito[]}
+ */
+export const ultimosEscritos = (n = 10) => [...(estado.escritos || [])].reverse().slice(0, n);
+
+/**
  * Formatea un porcentaje (o «—» si no hay dato).
  * @param {number|null} v @param {string} [sufijo='']
  */
@@ -125,7 +179,12 @@ export function textoResumen() {
     `Frases a la primera: ${formatear(s.primera, ' %')}${s.primeraAnt != null ? ` (semana anterior: ${s.primeraAnt} %)` : ''}`,
     `Preguntas a la primera: ${formatear(s.preguntas, ' %')}`,
     `Cerraduras de letras (b/d, p/q, m/n, sílabas) a la primera: ${formatear(s.retos, ' %')}`,
-    `Palabras que le cuestan: ${palabrasDificiles().slice(0, 12).map(([w]) => w).join(', ') || '—'}`,
+    `Velocidad lectora: ${formatear(s.ppm, ' palabras por minuto')}${s.ppmAnt != null ? ` (semana anterior: ${s.ppmAnt})` : ''}`,
+    `Comprensión al final del capítulo (sin el texto delante), a la primera: ${formatear(s.comprension, ' %')}`,
+    `Dictado, palabras bien a la primera: ${formatear(s.dictado, ' %')} · Taller de frases a la primera: ${formatear(s.taller, ' %')}`,
+    `Lectura repetida: ${s.mejora == null ? '—' : `lee un ${s.mejora} % más rápido la tercera vez que la primera`}`,
+    `Palabras que le cuestan al leer: ${palabrasDificiles().slice(0, 12).map(([w]) => w).join(', ') || '—'}`,
+    `Palabras que le cuesta escribir: ${palabrasDificilesDeEscribir().slice(0, 12).map(([w]) => w).join(', ') || '—'}`,
     `Palabras conquistadas: ${palabrasConquistadas().map(([w]) => w).join(', ') || '—'}`,
     `Recomendación: ${rec.texto}`
   ].join('\n');

@@ -47,8 +47,13 @@ MICRO = r"""
         if (primera) palabras = palabras.map((w) => (w.replace(/[^\p{L}]/gu, '').length > 6 && Math.random() < 0.25 ? 'eh' : w));
         const alternativa = { transcript: palabras.join(' '), confidence: 0.9 };
         const resultado = [alternativa]; resultado.isFinal = true;
-        this.onresult && this.onresult({ resultIndex: 0, results: [resultado] });
-        this.onend && this.onend();
+        // Con window.__microLento se lee a ~120 palabras por minuto (para medir la velocidad lectora)
+        const espera = window.__microLento ? palabras.length * 500 : 0;
+        if (espera) { const parcial = [{ transcript: palabras[0] || '' }]; parcial.isFinal = false; this.onresult && this.onresult({ resultIndex: 0, results: [parcial] }); }
+        setTimeout(() => {
+          this.onresult && this.onresult({ resultIndex: 0, results: [resultado] });
+          this.onend && this.onend();
+        }, espera);
       }, 100);
     }
     stop() {}
@@ -106,6 +111,19 @@ async def jugar(pg, comprobar_una=False):
                 vistos.add(nombre)
         if await pg.locator('.capa [data-cerrar]').count():
             await pg.click('.capa [data-cerrar]'); continue
+        # Preguntas del detective (final del capítulo, sin el texto delante)
+        if await pg.locator('.comprension').count():
+            vistos.add('comprensión')
+            botones = await pg.query_selector_all('.opcion-orden:not([disabled])')
+            if botones:
+                for b in botones:          # el que va ahora se queda marcado; los demás no cambian
+                    if await b.is_enabled():
+                        await b.click(); await pg.wait_for_timeout(120)
+                await pg.wait_for_timeout(300); continue
+            ops = pg.locator('.comprension .opcion:not([disabled])')
+            if await ops.count() and not await pg.locator('.comprension .opcion.correcta').count():
+                await ops.first.click(); await pg.wait_for_timeout(300)
+            continue
         for sel in ['.tarjeta-voz:not(.superada) .boton-ya:visible', '.tarjeta-voz:not(.superada) .boton-mic:visible',
                     '.tarjeta-reto:not(.abierta) .reto-opcion:not([disabled])']:
             loc = pg.locator(sel)
@@ -209,6 +227,78 @@ async def pruebas_funciones(nav, url):
     await ctx.close(); await otro.close()
 
 
+async def pruebas_lectoescritura(nav, url):
+    print('\n▶ Lectoescritura')
+    ctx = await contexto(nav)
+    pg = await pagina(ctx, url, PERFIL_DOS, json.dumps({'nivel': 'aprendiz'}))
+
+    # Deberes del cole desde «Para mayores»
+    await abrir_mayores(pg)
+    await pg.fill('#deberes-palabras', 'pelota')
+    await pg.fill('#deberes-frases', 'el gato come pescado')
+    await pg.click('#guardar-deberes'); await pg.wait_for_timeout(200)
+    ok(await pg.evaluate("Juego.estado.deberes.palabras[0] === 'pelota' && Juego.estado.deberes.frases[0] === 'El gato come pescado.'"), 'los deberes del cole se guardan')
+    await pg.click('#volver'); await pg.wait_for_selector('.estanteria')
+
+    # Dictado mágico: la primera palabra es la de los deberes; se escribe con sus sílabas
+    await pg.click('#practicar'); await pg.wait_for_selector('.rejilla-practica')
+    ok('deberes' in await pg.inner_text('.practica'), 'el menú de practicar avisa de los deberes')
+    await pg.click('[data-actividad="dictado"]'); await pg.wait_for_selector('.hueco-silaba')
+    for s in ['pe', 'lo', 'ta']:
+        await pg.locator('.ficha:visible', has_text=s).first.click(); await pg.wait_for_timeout(80)
+    await pg.wait_for_timeout(1500)
+    ok(await pg.evaluate("Juego.estado.dictado.pelota && Juego.estado.dictado.pelota.a === 1"), 'dictado: se escribe la palabra con sílabas')
+    await pg.click('#volver'); await pg.wait_for_selector('.rejilla-practica')
+    ok(await pg.evaluate("Juego.estado.practicas.some((p) => p.tipo === 'dictado' && p.primera === 1)"), 'la sesión de dictado queda en el registro')
+
+    # Taller de frases: ordenar la frase de los deberes con mayúscula y punto
+    await pg.click('[data-actividad="taller"]'); await pg.wait_for_selector('.frase-montada')
+    for w in ['el', 'gato', 'come', 'pescado']:
+        await pg.locator('.ficha-palabra:visible', has_text=w).first.click(); await pg.wait_for_timeout(60)
+    await pg.click('#comprobar'); await pg.wait_for_timeout(200)
+    ok('mayúscula' in await pg.inner_text('.respuesta') or 'letra' in await pg.inner_text('.respuesta'), 'taller: recuerda la mayúscula sin decir «mal»')
+    await pg.click('#mayuscula'); await pg.click('[data-signo="."]'); await pg.click('#comprobar'); await pg.wait_for_timeout(1800)
+    ok(await pg.locator('#pasos-practica .hecho').count() == 1, 'taller: la frase ordenada con mayúscula y punto vale')
+    await pg.click('#volver'); await pg.wait_for_selector('.rejilla-practica')
+
+    # Lectura relámpago: tres lecturas cronometradas
+    await pg.click('[data-actividad="lectura-repetida"]'); await pg.wait_for_selector('#empezar-lectura')
+    for espera in (6500, 6000, 5500):
+        await pg.click('#empezar-lectura'); await pg.wait_for_timeout(espera); await pg.click('#empezar-lectura'); await pg.wait_for_timeout(300)
+    ok(await pg.locator('.barras-velocidad .barra-vel').count() == 3, 'lectura relámpago: tres lecturas con su velocidad')
+    ok(await pg.evaluate("Juego.estado.practicas.some((p) => p.tipo === 'repetida' && p.ppm.length === 3)"), 'lectura relámpago: queda en el registro')
+    await pg.click('#a-practicar'); await pg.wait_for_selector('.rejilla-practica')
+
+    # Mi frase
+    await pg.click('[data-actividad="mi-frase"]'); await pg.wait_for_selector('#mi-frase')
+    await pg.fill('#mi-frase', 'mi gato es negro'); await pg.click('#guardar-frase')
+    ok('mayúscula' in await pg.inner_text('.respuesta'), 'mi frase: recuerda la mayúscula')
+    await pg.fill('#mi-frase', 'Mi gato es negro.'); await pg.click('#guardar-frase'); await pg.wait_for_timeout(300)
+    ok(await pg.evaluate("Juego.estado.escritos.length === 1 && Juego.estado.escritos[0].texto === 'Mi gato es negro.'"), 'mi frase: se guarda para el informe')
+    await pg.click('#a-practicar'); await pg.click('#volver'); await pg.wait_for_selector('.estanteria')
+
+    # Velocidad lectora: con el micro leyendo a ritmo real, la partida mide palabras por minuto
+    await pg.evaluate("window.__microLento = true")
+    await pg.click('[data-libro-abrir="bosque-susurros"]'); await pg.click('[data-capitulo="0"]'); await pg.wait_for_selector('.tarjeta-voz')
+    for _ in range(30):
+        if await pg.locator('.tarjeta-voz.superada').count():
+            break
+        boton = pg.locator('.tarjeta-voz:not(.superada) .boton-mic:visible')
+        if await boton.count() and not await pg.locator('.tarjeta-voz.escuchando').count():
+            await boton.first.click()
+        await pg.wait_for_timeout(500)
+    await pg.evaluate("window.__microLento = false")
+    await pg.click('#salir'); await pg.click('#salir'); await pg.wait_for_selector('.estanteria')
+    ppm = await pg.evaluate("(() => { const r = Juego.estado.registro.at(-1); return r.msCrono ? Math.round(r.palabrasCrono / (r.msCrono / 60000)) : 0; })()")
+    ok(60 <= ppm <= 200, f'velocidad lectora medida con el micro ({ppm} palabras por minuto)')
+
+    # Informe para el cole
+    await abrir_mayores(pg); await pg.click('#ver-informe'); await pg.wait_for_selector('.informe')
+    texto = await pg.inner_text('.informe')
+    ok('palabras por minuto' in texto and 'Mi gato es negro.' in texto and await pg.locator('#imprimir').count() == 1, 'el informe muestra velocidad, dictado, frases escritas y se puede imprimir')
+    await ctx.close()
+
+
 async def pruebas_partidas(nav, url):
     libros = json.load(open(os.path.join(RAIZ, 'stories', 'index.json'), encoding='utf-8'))['libros']
     if RAPIDO:
@@ -219,7 +309,7 @@ async def pruebas_partidas(nav, url):
     for libro in libros:
         await pg.click(f'[data-libro-abrir="{libro["id"]}"]'); await pg.click('[data-capitulo="0"]')
         v = await jugar(pg)
-        ok({'voz', 'pregunta', 'cerradura'} <= v, f'{libro["id"]} · cap. 1 · Superlectora · dos niñas ({", ".join(sorted(v))})')
+        ok({'voz', 'pregunta', 'cerradura', 'comprensión'} <= v, f'{libro["id"]} · cap. 1 · Superlectora · dos niñas ({", ".join(sorted(v))})')
         await pg.click('#a-casa'); await pg.wait_for_selector('.estanteria')
     await ctx.close()
 
@@ -244,6 +334,7 @@ async def main():
         async with async_playwright() as p:
             nav = await p.chromium.launch()
             await pruebas_funciones(nav, url)
+            await pruebas_lectoescritura(nav, url)
             await pruebas_partidas(nav, url)
             await nav.close()
     finally:

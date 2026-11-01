@@ -1,5 +1,5 @@
 /**
- * @file «Para mayores»: nivel, letra, micrófono, meta, voces, pasar el progreso,
+ * @file «Para mayores»: nivel, deberes del cole, letra, micrófono, meta, voces, pasar el progreso,
  * copia de seguridad y borrar.
  *
  * Capa: pantallas. Navega a: inicio, informe. Se entra manteniendo pulsado el
@@ -20,6 +20,7 @@ import { almacenamientoPersistente, instalada, esIOS } from '../servicios/plataf
 import { $, $$, esc, descargar, confirmarConSegundoToque } from '../util/dom.js';
 import { fechaLarga } from '../util/fechas.js';
 import { protagonistas } from '../dominio/protagonistas.js';
+import { deberes, ponerDeberes, borrarDeberes } from '../dominio/deberes.js';
 import { codificarProgreso, decodificarProgreso, fusionarProgreso, crearCopiaDeSeguridad, recuperarCopiaDeSeguridad } from '../dominio/transferencia.js';
 import { app, irA, registrarPantalla } from '../ui/navegacion.js';
 import { cabecera, botonVolver } from '../ui/cabecera.js';
@@ -80,6 +81,18 @@ const bloqueMicro = (a) => bloque('Micrófono', `
 const bloqueMeta = (a) => bloque('Meta de cada día', `
   <p class="nota">Al cumplirla gana 3 estrellas. Si la cumple 5 días en una semana, abre un cofre con 15 más. Saltarse un día no rompe la racha.</p>
   <div class="chips">${chipsAjuste('meta', nombresDe(METAS), a.meta || META_INICIAL)}</div>`);
+
+const bloqueDeberes = () => {
+  const d = deberes();
+  return bloque('Deberes del cole', `
+  <p class="nota">Lo que trabaja en clase esta semana. Estas palabras y frases salen primero en el dictado, el taller de frases, la lectura relámpago, las palabras mágicas y las cerraduras.</p>
+  <label class="etiqueta-opcion" for="deberes-palabras">Palabras (separadas por comas o en líneas)</label>
+  <textarea id="deberes-palabras" class="resumen-copia" rows="3" placeholder="mariposa, bicicleta, globo…">${esc(d.palabras.join(', '))}</textarea>
+  <label class="etiqueta-opcion" for="deberes-frases">Frases o dictado (una por línea)</label>
+  <textarea id="deberes-frases" class="resumen-copia" rows="4" placeholder="El perro juega en el parque.">${esc(d.frases.join('\n'))}</textarea>
+  ${filaBotones(`<button class="boton boton-principal" id="guardar-deberes">💾 Guardar deberes</button>${d.palabras.length || d.frases.length ? '<button class="boton boton-suave" id="borrar-deberes">Quitar los deberes</button>' : ''}`)}
+  ${d.actualizado && (d.palabras.length || d.frases.length) ? `<p class="nota">Puestos el ${fechaLarga(d.actualizado)}.</p>` : ''}`);
+};
 
 const bloqueGrabaciones = () => bloque('Tu voz para las palabras difíciles', `
   <p class="nota">Graba cómo dices una palabra y, cuando ${esc(protagonistas().lectora)} la toque, sonará con tu voz. Las grabaciones se quedan en este dispositivo.</p>
@@ -164,6 +177,13 @@ function conectar() {
     pantallaAjustes();
   };
 
+  $('#guardar-deberes').onclick = () => {
+    ponerDeberes($('#deberes-palabras').value, $('#deberes-frases').value); guardar();
+    aviso('📚 Deberes guardados. Ya salen en «Practicar».'); pantallaAjustes();
+  };
+  const quitar = $('#borrar-deberes');
+  if (quitar) confirmarConSegundoToque(quitar, { pregunta: '¿Quitar? Toca otra vez', alConfirmar: () => { borrarDeberes(); guardar(); aviso('Deberes quitados.'); pantallaAjustes(); } });
+
   confirmarConSegundoToque($('#borrar'), {
     pregunta: 'Seguro: toca otra vez para borrarlo',
     restaurar: false,
@@ -184,7 +204,7 @@ function pantallaAjustes() {
     <section class="ajustes">
       <h1 class="titulo-grande">Para mayores</h1>
       <button class="boton boton-principal boton-informe" id="ver-informe">📊 Ver el informe de lectura</button>
-      ${bloqueNivel()}${bloqueLetra(a)}${bloqueMicro(a)}${bloqueMeta(a)}${bloqueGrabaciones()}${bloqueVoz(a)}${bloqueTransferencia()}${bloqueCopia()}${bloqueBorrar()}
+      ${bloqueNivel()}${bloqueDeberes()}${bloqueLetra(a)}${bloqueMicro(a)}${bloqueMeta(a)}${bloqueGrabaciones()}${bloqueVoz(a)}${bloqueTransferencia()}${bloqueCopia()}${bloqueBorrar()}
     </section>`;
   conectar();
 }

@@ -15,7 +15,7 @@ cuentos, a la **[guía de escritura](stories/GUIA-ESCRITURA.md)**.
   - [Un libro nuevo](#un-libro-nuevo) · [Un paisaje nuevo](#un-paisaje-nuevo) · [Una pantalla nueva](#una-pantalla-nueva)
   - [Algo nuevo en la tienda](#algo-nuevo-en-la-tienda) · [Una mascota nueva](#una-mascota-nueva) · [Un ajuste para mayores](#un-ajuste-para-mayores)
   - [Un tipo de bloque nuevo](#un-tipo-de-bloque-nuevo) · [Un nivel nuevo](#un-nivel-nuevo) · [Un campo nuevo en el progreso](#un-campo-nuevo-en-el-progreso)
-  - [Un evento nuevo](#un-evento-nuevo) · [Un sonido nuevo](#un-sonido-nuevo) · [Una hoja de estilos nueva](#una-hoja-de-estilos-nueva)
+  - [Una actividad de práctica nueva](#una-actividad-de-práctica-nueva) · [Un evento nuevo](#un-evento-nuevo) · [Un sonido nuevo](#un-sonido-nuevo) · [Una hoja de estilos nueva](#una-hoja-de-estilos-nueva)
 - [Lista para el pull request](#lista-para-el-pull-request)
 
 ## Preparar el entorno
@@ -177,6 +177,16 @@ tienda; sin él, es gratis.
 2. Si debe viajar entre dispositivos, decide cómo se junta en `fusionarProgreso()`
    (`src/dominio/transferencia.js`): máximo, unión… nunca perder datos.
 3. No cambies `CLAVE_GUARDADO`: haría que todas las familias perdieran su progreso.
+
+### Una actividad de práctica nueva
+
+1. La lógica que no toca la pantalla (de dónde salen las palabras, cómo se corrige) va en `src/dominio/ejercicios.js`
+   o en `src/contenido/` si es solo texto (y con pruebas en `tests/unidad/`).
+2. Crea `src/pantallas/practica/mi-actividad.js`: usa `abrirSesion`, `marcoActividad`, `contarEjercicio` y
+   `pintarFinSesion` de `./comun.js`, así cuenta para la meta, las estrellas y el informe.
+3. Regístrala con `registrarPantalla('mi-actividad', …)`, impórtala en `src/pantallas/index.js` y añádela a
+   `ACTIVIDADES` en `src/pantallas/practica/index.js`.
+4. Si tiene un tipo de sesión nuevo, añádelo al `@typedef Practica` y a las cifras de `src/dominio/informe.js`.
 
 ### Un evento nuevo
 

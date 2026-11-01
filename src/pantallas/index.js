@@ -13,3 +13,8 @@ import './album.js';
 import './ajustes.js';
 import './informe.js';
 import './partida/index.js';
+import './practica/index.js';
+import './practica/dictado.js';
+import './practica/taller.js';
+import './practica/lectura-repetida.js';
+import './practica/mi-frase.js';

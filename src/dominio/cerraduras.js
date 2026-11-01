@@ -5,19 +5,18 @@
  *   «letra»   → falta una letra que se confunde por su forma (b d p q, m n u): ¿cuál es?
  *   «escrita» → tres versiones de una palabra; solo una está bien escrita
  *               (las falsas cambian una letra parecida o invierten una sílaba: pla → pal).
- * Las palabras salen del texto de la escena y de las que le cuestan.
+ * Las palabras salen del texto de la escena, de las que le cuestan y de los
+ * deberes del cole (src/dominio/deberes.js). Los grupos de letras están en
+ * src/contenido/letras.js.
  */
 import { limpiarPistas } from '../contenido/bloques.js';
+import { grupoDe, ES_VOCAL } from '../contenido/letras.js';
 import { azar, barajar } from '../util/azar.js';
 import { claveDePalabra, nombresPropios, palabrasDificiles } from './registro-lectura.js';
+import { palabrasDeDeberes } from './deberes.js';
 
-/** Letras que se confunden entre sí. Añade un grupo para practicar otras. */
-export const GRUPOS_LETRAS = Object.freeze([['b', 'd', 'p', 'q'], ['m', 'n', 'u']]);
-const ES_VOCAL = /[aeiouáéíóú]/;
+/** Las palabras de los retos tienen entre estas letras. */
 const LARGO = { min: 4, max: 10 };
-
-/** @param {string} c @returns {string[]|undefined} */
-const grupoDe = (c) => GRUPOS_LETRAS.find((g) => g.includes(c));
 
 /**
  * @typedef {object} Reto
@@ -38,6 +37,7 @@ export function palabrasParaReto(textos) {
   const anadir = (w) => { const k = claveDePalabra(w); if (k.length >= LARGO.min && k.length <= LARGO.max && !propios.has(k)) lista.add(k); };
   for (const t of textos) for (const w of limpiarPistas(t).split(/\s+/)) anadir(w);
   for (const [w] of palabrasDificiles().slice(0, 8)) anadir(w);
+  for (const w of palabrasDeDeberes()) anadir(w);
   return [...lista];
 }
 

@@ -10,6 +10,10 @@ export const ESTRELLAS = Object.freeze({
   frase: 1,           // leer una frase en voz alta
   pregunta: 1,        // acertar una pregunta a la primera
   cerradura: 1,       // abrir una cerradura a la primera
+  practica: 1,        // cada ejercicio de práctica bien a la primera (dictado, taller)
+  comprension: 1,     // cada pregunta del final del capítulo a la primera
+  mejora: 2,          // leer más rápido en la lectura repetida
+  escrito: 2,         // escribir su propia frase
   meta: 3,            // cumplir la meta del día
   cofre: 15           // cumplir la meta 5 días en una semana
 });

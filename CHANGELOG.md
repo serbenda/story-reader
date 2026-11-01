@@ -2,6 +2,27 @@
 
 Lo importante de cada versión. Formato inspirado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
+## [2.1.0] · 2026-11-01
+
+Lectoescritura: lo que pide el cole (dictados, construir oraciones, comprensión y velocidad lectora).
+
+### Añadido
+- **Practicar**, una zona nueva con cuatro actividades: **dictado mágico** (fichas de sílabas con trampas
+  b/d, p/q y sílabas invertidas; teclado desde Lectora), **taller de frases** (ordenar con mayúscula y
+  punto, completar), **lectura relámpago** (lectura repetida cronometrada) y **mi frase**.
+- **Deberes del cole** en «Para mayores»: sus palabras y frases salen primero al practicar, en las
+  palabras mágicas y en las cerraduras.
+- **Preguntas del detective** al final de cada capítulo, sin el texto delante: ordenar lo que pasó,
+  quién lo dijo y qué pista salió. Se generan solas en los seis libros.
+- **Velocidad lectora**: el micro cronometra cada frase leída (a la niña no se le enseña).
+- **Informe para el cole**: velocidad con gráfica, comprensión, dictado, taller, lectura relámpago,
+  palabras que le cuesta escribir y sus frases; se puede imprimir o guardar en PDF.
+- El tiempo de práctica cuenta para la meta del día. Todo viaja en la copia de seguridad y en el código.
+- 12 pruebas unitarias y 12 pruebas en navegador nuevas.
+
+### Arreglado
+- Si se salía del capítulo mientras el micro escuchaba, o justo al acertar, salía un error.
+
 ## [2.0.0] · 2026-10-30
 
 Reorganización completa del código. **Para la niña no cambia nada**: el juego se ve y se comporta igual
