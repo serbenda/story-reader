@@ -13,7 +13,7 @@
  */
 
 // <recursos> (generado por herramientas/recursos-sin-conexion.js)
-const VERSION = 'biblioteca-6e85349de05c';
+const VERSION = 'biblioteca-811bd3b1327b';
 const RECURSOS = [
   './',
   'index.html',

@@ -26,6 +26,14 @@ export const NIVELES = Object.freeze([
   { id: 'superlectora', nombre: 'Superlectora', icono: '🔎', desc: 'Pistas repartidas para resolver el caso.' }
 ]);
 
+/**
+ * Palabras que hay que leer en voz alta de una vez en cada nivel: cada nivel,
+ * el doble que el anterior. Si una frase de voz del cuento es más corta, se le
+ * suman las frases que siguen hasta llegar (ver ampliarLecturas en
+ * src/contenido/bloques.js). Las lecturas largas se escuchan sin cortar en las pausas.
+ */
+export const PALABRAS_POR_LECTURA = Object.freeze({ aprendiz: 6, novatilla: 12, lectora: 24, superlectora: 48 });
+
 /** Nivel con el que empieza una partida nueva. */
 export const NIVEL_INICIAL = NIVELES[0].id;
 

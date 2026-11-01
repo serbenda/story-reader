@@ -10,6 +10,9 @@
  *   - «Escuchar» se activa después de intentarlo, para que primero lo intente sola.
  *   - Tras 3 intentos aparece «Seguir adelante»: nunca se queda atascada.
  *   - Sin micro (o si falla), se lee en voz alta y se pulsa «¡Ya lo he leído!».
+ *   - Lecturas largas (Lectora y Superlectora, ver PALABRAS_POR_LECTURA): el micro
+ *     escucha de forma continua, así las pausas para respirar entre frases no lo
+ *     cortan, y se para solo en cuanto se ha leído lo suficiente.
  *   - Velocidad lectora: se cronometra desde que el micro oye la primera palabra
  *     hasta el resultado final de la lectura que supera la frase. Solo la ven
  *     los mayores en el informe (a la niña no se le enseña, para no presionar).
@@ -31,6 +34,8 @@ import { aviso, confeti } from '../../ui/avisos.js';
 const INTENTOS_PARA_SEGUIR = 3;
 /** Sin micro, «Escuchar» se activa tras este tiempo (para que lo intente primero). */
 const ESPERA_ESCUCHAR_MS = 4000;
+/** Desde este número de palabras, el micro escucha de forma continua. */
+const PALABRAS_ESCUCHA_CONTINUA = 18;
 /** Palabras de este largo o menos no cuentan para aprobar («el», «de»…). */
 const LARGO_NO_SIGNIFICATIVO = 2;
 
@@ -100,23 +105,48 @@ export function tarjetaVoz(b, { alTerminar }) {
     setTimeout(alTerminar, 650);
   }
 
-  /** Cuándo oyó el micro la primera palabra y cuándo dio el resultado final (velocidad lectora). */
+  /** Cuándo oyó el micro la primera palabra y cuándo dio el último resultado (velocidad lectora). */
   let tPrimeraPalabra = null, tFinal = null;
+  /** ¿Ha llegado algún resultado en esta escucha? */
+  let oidoEnEsteIntento = false;
+  const continua = b.objetivo.length >= PALABRAS_ESCUCHA_CONTINUA;
 
-  /** @param {string[]} alternativas  Posibles frases entendidas por el reconocedor. */
-  function evaluar(alternativas) {
-    if (abandonada()) return;
-    let mejor = null, mejorN = -1;
-    for (const alt of alternativas) {
-      const r = Voz.comparar(b.objetivo, Voz.normalizar(alt), tol.umbral);
-      const cuenta = r.filter(Boolean).length;
-      if (cuenta > mejorN) { mejorN = cuenta; mejor = r; }
+  /**
+   * Compara lo oído con lo que hay que leer. Prueba desde el principio y desde
+   * la primera palabra aún sin leer (en las lecturas largas, cada trozo oído
+   * es la continuación). Devuelve la mejor coincidencia en posiciones de b.objetivo.
+   * @param {string[]} alternativas
+   * @returns {boolean[]}
+   */
+  function coincidencias(alternativas) {
+    const primeraSinLeer = Math.max(0, b.marcadas.indexOf(false));
+    let mejor = b.objetivo.map(() => false), mejorN = -1;
+    for (const alt of alternativas) for (const desde of new Set([0, primeraSinLeer])) {
+      const r = Voz.comparar(b.objetivo.slice(desde), Voz.normalizar(alt), tol.umbral);
+      const n = r.filter(Boolean).length;
+      if (n > mejorN) { mejorN = n; mejor = b.objetivo.map((_, i) => i >= desde && r[i - desde]); }
     }
-    if (mejor) b.marcadas = b.marcadas.map((m, i) => m || mejor[i]);
+    return mejor;
+  }
+
+  /** Suma lo oído a lo ya leído. En escucha continua, para en cuanto basta. */
+  function acumular(alternativas) {
+    if (abandonada()) return;
+    oidoEnEsteIntento = true;
+    const r = coincidencias(alternativas);
+    b.marcadas = b.marcadas.map((m, i) => m || r[i]);
+    pintar();
+    if (continua && aprobado()) Voz.parar();
+  }
+
+  /** Al terminar de escuchar: cuenta el intento, apunta las palabras y decide si se supera. */
+  function evaluar() {
+    if (abandonada() || !oidoEnEsteIntento) return;
+    oidoEnEsteIntento = false;
     // Solo cuenta el primer intento: así se ve qué palabras le cuestan de verdad
     if (b.intentos === 0) {
       const propios = nombresPropios();
-      for (const i of significativas()) if (!propios.has(b.claves[i])) anotarPalabra(b.claves[i], !!(mejor && mejor[i]));
+      for (const i of significativas()) if (!propios.has(b.claves[i])) anotarPalabra(b.claves[i], !!b.marcadas[i]);
     }
     b.intentos++; oir.disabled = false;
     pintar();
@@ -146,18 +176,22 @@ export function tarjetaVoz(b, { alTerminar }) {
     if (!Voz.disponible()) return pasarASinMicro();
     Voz.callar();
     el.classList.add('escuchando'); mic.querySelector('.txt').textContent = 'Te escucho…';
-    mensaje.textContent = 'Te escucho. Lee la frase con calma.';
-    tPrimeraPalabra = null; tFinal = null;
+    mensaje.textContent = continua ? 'Te escucho. Lee todo con calma; puedes respirar entre frase y frase.' : 'Te escucho. Lee la frase con calma.';
+    tPrimeraPalabra = null; tFinal = null; oidoEnEsteIntento = false;
     Voz.escuchar({
-      parcial: (t) => { if (!tPrimeraPalabra) tPrimeraPalabra = Date.now(); pintar(Voz.comparar(b.objetivo, Voz.normalizar(t), tol.umbral)); },
-      final: (alternativas) => { tFinal = Date.now(); evaluar(alternativas); },
+      parcial: (t) => { if (!tPrimeraPalabra) tPrimeraPalabra = Date.now(); pintar(coincidencias([t])); },
+      final: (alternativas) => { if (!tPrimeraPalabra) tPrimeraPalabra = Date.now(); tFinal = Date.now(); acumular(alternativas); },
       error: (tipo) => {
         if (Voz.ERRORES_SIN_MICRO.includes(tipo)) pasarASinMicro('El micro no está disponible aquí. Lee en voz alta y pulsa «¡Ya lo he leído!».');
         else if (tipo === 'no-speech') mensaje.textContent = 'No te he oído. Pulsa el micro y lee un poco más alto.';
         else if (tipo === 'network') mensaje.textContent = 'No hay internet para escuchar. Prueba otra vez en un momento.';
       },
-      fin: () => { el.classList.remove('escuchando'); if (!b.superado) mic.querySelector('.txt').textContent = 'Leer otra vez'; pintar(); }
-    });
+      fin: () => {
+        el.classList.remove('escuchando');
+        evaluar();
+        if (!b.superado && !abandonada()) { mic.querySelector('.txt').textContent = 'Leer otra vez'; pintar(); }
+      }
+    }, { continua });
   });
   ya.addEventListener('click', () => superar(b.intentos >= INTENTOS_PARA_SEGUIR));
   oir.addEventListener('click', () => Voz.hablar(limpio, 0.8));

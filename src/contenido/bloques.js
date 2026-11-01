@@ -47,6 +47,45 @@ export function bloques(texto) {
   return out;
 }
 
+/** Palabras de un texto (sin contar signos ni marcas de pista). */
+const palabrasDe = (t) => (t.replace(/\[\[|\]\]/g, '').match(/[\p{L}\p{N}]+/gu) || []).length;
+
+/** Margen por encima del objetivo que se acepta al sumar frases (para no cortar una frase a medias). */
+const MARGEN_LECTURA = 1.3;
+
+/**
+ * Alarga las lecturas en voz alta hasta el largo del nivel: a cada bloque
+ * «voz» más corto que el objetivo se le suman las líneas de texto que vienen
+ * justo después (y, si no hay, las de justo antes), sin pasar de un margen.
+ * Las preguntas y otras lecturas cortan la suma. No modifica la lista original.
+ * @example ampliarLecturas(bloques('Hola.\n> Lee esto.\nY esto otro.'), 6)
+ *   // [{tipo:'texto', texto:'Hola.'}, {tipo:'voz', texto:'Lee esto. Y esto otro.'}]
+ * @param {Bloque[]} lista
+ * @param {number} objetivo  Palabras por lectura (PALABRAS_POR_LECTURA del nivel).
+ * @returns {Bloque[]}
+ */
+export function ampliarLecturas(lista, objetivo) {
+  const out = lista.map((b) => ({ ...b }));
+  const minimo = objetivo * 0.75, maximo = objetivo * MARGEN_LECTURA;
+  for (let i = 0; i < out.length; i++) {
+    const b = out[i];
+    if (b.tipo !== 'voz') continue;
+    let n = palabrasDe(b.texto);
+    while (n < minimo && out[i + 1] && out[i + 1].tipo === 'texto' && n + palabrasDe(out[i + 1].texto) <= maximo) {
+      n += palabrasDe(out[i + 1].texto);
+      b.texto += ' ' + out[i + 1].texto;
+      out.splice(i + 1, 1);
+    }
+    while (n < minimo && out[i - 1] && out[i - 1].tipo === 'texto' && n + palabrasDe(out[i - 1].texto) <= maximo) {
+      n += palabrasDe(out[i - 1].texto);
+      b.texto = out[i - 1].texto + ' ' + b.texto;
+      out.splice(i - 1, 1);
+      i--;
+    }
+  }
+  return out;
+}
+
 /**
  * Quita las marcas de pista [[ ]] dejando el texto.
  * @param {string} t

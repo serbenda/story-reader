@@ -11,7 +11,8 @@
 import { estado, partida } from '../estado/sesion.js';
 import { versionesPara } from '../contenido/escenas.js';
 import { rellenar } from '../contenido/plantillas.js';
-import { bloques } from '../contenido/bloques.js';
+import { bloques, ampliarLecturas } from '../contenido/bloques.js';
+import { PALABRAS_POR_LECTURA } from '../config/index.js';
 import { azar } from '../util/azar.js';
 import { prepararPartida, tituloCapitulo } from './variables.js';
 import { escenaRepaso } from './repaso.js';
@@ -82,7 +83,9 @@ export function crearPartida(libro, capIndex, { micro }) {
 export function prepararEscenaActual() {
   const e = partida.escenas[partida.i];
   const texto = rellenar(azar(versionesPara(e, estado.nivel)), partida.vars);
-  partida.escena = { e, bloques: bloques(texto), k: 0 };
+  // Cada nivel lee el doble que el anterior: las frases de voz cortas se alargan con las que siguen
+  const lista = e.repaso ? bloques(texto) : ampliarLecturas(bloques(texto), PALABRAS_POR_LECTURA[estado.nivel] || PALABRAS_POR_LECTURA.aprendiz);
+  partida.escena = { e, bloques: lista, k: 0 };
   // Lo leído alimenta las preguntas de comprensión del final (src/dominio/comprension.js)
   partida.leidos.push({ id: e.id, texto, repaso: !!e.repaso });
   if (partida.retos.has(e.id)) partida.escena.bloques.push({ tipo: 'reto', texto: '' });

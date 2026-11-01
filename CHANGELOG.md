@@ -14,6 +14,9 @@ Lectoescritura: lo que pide el cole (dictados, construir oraciones, comprensión
   palabras mágicas y en las cerraduras.
 - **Preguntas del detective** al final de cada capítulo, sin el texto delante: ordenar lo que pasó,
   quién lo dijo y qué pista salió. Se generan solas en los seis libros.
+- **Cada nivel lee el doble que el anterior** al leer en voz alta (unas 6, 12, 24 y 48 palabras): las
+  frases cortas del cuento se juntan con las que siguen, y en las lecturas largas el micro no se corta
+  al respirar entre frases.
 - **Velocidad lectora**: el micro cronometra cada frase leída (a la niña no se le enseña).
 - **Informe para el cole**: velocidad con gráfica, comprensión, dictado, taller, lectura relámpago,
   palabras que le cuesta escribir y sus frases; se puede imprimir o guardar en PDF.

@@ -67,12 +67,15 @@ Los dibujos se generan con código y cambian un poco en cada partida, también d
 
 ## 🌱 Cuatro niveles
 
-| Nivel | Textos | Pistas | Preguntas |
-|---|---|---|---|
-| 🌱 **Aprendiz** | 3-5 frases cortas | directas: *«fue hacia el río»* | ¿A dónde fue? |
-| 🌼 **Novatilla** | 4-6 frases | con trampa: *«primero fue al puente, pero luego…»* | de lugar |
-| 📖 **Lectora** | 6-9 frases, palabras nuevas | hay que deducir: *«tenía las patas mojadas»* | de lugar y «¿por qué…?» |
-| 🔎 **Superlectora** | textos largos | repartidas entre varios personajes y apuntadas en el **cuaderno de detective** | juntar pistas |
+| Nivel | Textos | Lee en voz alta de una vez | Pistas | Preguntas |
+|---|---|---|---|---|
+| 🌱 **Aprendiz** | 3-5 frases cortas | ~6 palabras | directas: *«fue hacia el río»* | ¿A dónde fue? |
+| 🌼 **Novatilla** | 4-6 frases | ~12 palabras | con trampa: *«primero fue al puente, pero luego…»* | de lugar |
+| 📖 **Lectora** | 6-9 frases, palabras nuevas | ~24 palabras | hay que deducir: *«tenía las patas mojadas»* | de lugar y «¿por qué…?» |
+| 🔎 **Superlectora** | textos largos | ~48 palabras | repartidas entre varios personajes y apuntadas en el **cuaderno de detective** | juntar pistas |
+
+Cada nivel lee en voz alta el doble que el anterior. En las lecturas largas, el micro espera mientras
+respira entre frase y frase.
 
 Al terminar un libro, el juego propone subir de nivel. El informe para mayores también recomienda cuándo hacerlo.
 

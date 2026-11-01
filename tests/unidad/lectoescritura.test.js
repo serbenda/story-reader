@@ -75,3 +75,28 @@ describe('dictado', () => {
     assert.deepEqual(m.palabras, [true, false, true]);
   });
 });
+
+describe('lecturas más largas según el nivel', async () => {
+  const { bloques, ampliarLecturas } = await import('../../src/contenido/bloques.js');
+  const { PALABRAS_POR_LECTURA } = await import('../../src/config/niveles.js');
+  const texto = 'Había una vez un bosque.\n> El búho mira la luna.\nLa luna brilla mucho esta noche.\nTodos los animales duermen ya.\n? ¿Qué mira el búho?\n* La luna\n- El sol';
+  test('cada nivel lee el doble que el anterior', () => {
+    const n = Object.values(PALABRAS_POR_LECTURA);
+    for (let i = 1; i < n.length; i++) assert.equal(n[i], n[i - 1] * 2);
+  });
+  test('a nivel corto, la frase de voz se queda como está', () => {
+    const b = ampliarLecturas(bloques(texto), 6);
+    assert.equal(b.find((x) => x.tipo === 'voz').texto, 'El búho mira la luna.');
+  });
+  test('a nivel largo, la voz suma las frases que siguen y nunca la pregunta', () => {
+    const b = ampliarLecturas(bloques(texto), 16);
+    assert.equal(b.find((x) => x.tipo === 'voz').texto, 'El búho mira la luna. La luna brilla mucho esta noche. Todos los animales duermen ya.');
+    assert.equal(b.filter((x) => x.tipo === 'pregunta').length, 1);
+    assert.equal(b[0].texto, 'Había una vez un bosque.');
+  });
+  test('si no hay texto después, suma el de antes', () => {
+    const b = ampliarLecturas(bloques('Era de noche en el bosque.\n> El búho mira la luna.'), 12);
+    assert.deepEqual(b.map((x) => x.tipo), ['voz']);
+    assert.equal(b[0].texto, 'Era de noche en el bosque. El búho mira la luna.');
+  });
+});
